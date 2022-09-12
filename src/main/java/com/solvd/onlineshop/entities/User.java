@@ -16,7 +16,7 @@ public class User {
 
     private long address_id;
 
-    public User(long userId, String firstName, String lastName, String middleName, String phone, String email, String password, int addressID) throws SQLException {
+    public User(long userId, String firstName, String lastName, String middleName, String phone, String email, String password, int addressID) {
         this.id = userId;
         this.firstName = firstName;
         this.lastName = lastName;
