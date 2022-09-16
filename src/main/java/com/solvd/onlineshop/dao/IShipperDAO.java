@@ -1,2 +1,6 @@
-package com.solvd.onlineshop.dao;public interface IShipperDAO {
+package com.solvd.onlineshop.dao;
+
+import com.solvd.onlineshop.entities.Shipper;
+
+public interface IShipperDAO extends IBaseDAO<Shipper>{
 }

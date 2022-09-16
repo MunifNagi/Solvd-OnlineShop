@@ -4,13 +4,13 @@ public class Report {
     private long id;
     private long userId;
     private long productId;
-    private long OrderId;
+    private long orderId;
 
     public Report(long id, long userId, long productId, long orderId) {
         this.id = id;
         this.userId = userId;
         this.productId = productId;
-        OrderId = orderId;
+        this.orderId = orderId;
     }
 
     public long getReportId() {
@@ -26,6 +26,6 @@ public class Report {
     }
 
     public long getOrderId() {
-        return OrderId;
+        return orderId;
     }
 }

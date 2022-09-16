@@ -18,7 +18,7 @@ public class Cart {
         this.total= total;
     }
 
-    public long getPurchasedProductId() {
+    public long getCartId() {
         return id;
     }
 

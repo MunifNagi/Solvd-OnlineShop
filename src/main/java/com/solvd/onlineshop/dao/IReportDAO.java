@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface IReportDAO extends IBaseDAO<Report>  {
     List<Report> getAllReports();
-    List<Report> getAllReportsByUserId(long userID);
-    List<Report> getAllReportsByProductId(long productID);
+    List<Report> getAllReportsByUserId(long userId);
+    List<Report> getAllReportsByProductId(long productId);
 }

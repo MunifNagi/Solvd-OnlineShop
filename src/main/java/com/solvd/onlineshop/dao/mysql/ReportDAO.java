@@ -1,2 +1,166 @@
-package com.solvd.onlineshop.dao.mysql;public class ReportDAO {
+package com.solvd.onlineshop.dao.mysql;
+
+import com.solvd.onlineshop.ConnectionPool;
+import com.solvd.onlineshop.dao.ICartDAO;
+import com.solvd.onlineshop.dao.IReportDAO;
+import com.solvd.onlineshop.entities.Order;
+import com.solvd.onlineshop.entities.Report;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ReportDAO extends MySQLDAO implements IReportDAO {
+    private static String readQuery = "SELECT * FROM Report where id=?";
+    private static String removeQuery = "DElETE FROM Report WHERE id = ?";
+    private static String insertQuery = "INSERT INTO Report VALUES(?,?,?,?)";
+    private static String updateQuery = "UPDATE Report SET user_id = ?, product_id = ?, order_id = ? WHERE id = ?";
+    private static String readAllQuery = "SELECT * FROM Report";
+    private static String readByUserIdQuery = "SELECT * FROM Report WHERE user_id = ?" ;
+    private static String readByProductIdQuery = "SELECT * FROM Report WHERE product_id = ?";
+    @Override
+    public Report getByID(long id) {
+        Connection con = ConnectionPool.getInstance().getConnection();
+        try(PreparedStatement ps = con.prepareStatement(readQuery)) {
+            ps.setLong(1,id);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()) {
+                long userId = rs.getLong("user_id");
+                long productId = rs.getLong("product_id");
+                long orderId = rs.getLong("order_id");
+                Report report = new Report(id, userId, productId, orderId);
+                return report;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            ConnectionPool.getInstance().returnConnection(con);
+        }
+        return null;
+    }
+
+    @Override
+    public void remove(long id) {
+        Connection con = ConnectionPool.getInstance().getConnection();
+        try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
+            ps.setLong(1,id);
+            if (ps.executeUpdate() > 0) {
+                System.out.println("delete is done");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            ConnectionPool.getInstance().returnConnection(con);
+        }
+
+    }
+
+    @Override
+    public void create(Report report) {
+        Connection con = ConnectionPool.getInstance().getConnection();
+        try (PreparedStatement ps = con.prepareStatement(insertQuery)) {
+            ps.setLong(1, report.getReportId());
+            ps.setLong(2, report.getUserId());
+            ps.setLong(3, report.getProductId());
+            ps.setLong(4, report.getOrderId());
+            ps.executeUpdate();
+            System.out.println("Insert Query Executed");
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            ConnectionPool.getInstance().returnConnection(con);
+        }
+
+    }
+
+    @Override
+    public void update(Report report) {
+        Connection con = ConnectionPool.getInstance().getConnection();
+        try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
+            ps.setLong(1,report.getUserId());
+            ps.setLong(2,report.getProductId());
+            ps.setLong(3,report.getOrderId());
+            ps.setLong(4,report.getReportId());
+            if (ps.executeUpdate() > 0) {
+                System.out.println("Update is done");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            ConnectionPool.getInstance().returnConnection(con);
+        }
+
+    }
+
+    @Override
+    public List<Report> getAllReports() {
+        Connection con = ConnectionPool.getInstance().getConnection();
+        List<Report> reports = new ArrayList<>();
+        try(PreparedStatement ps =con.prepareStatement(readAllQuery)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                long id = rs.getLong("id");
+                long userId = rs.getLong("user_id");
+                long productId = rs.getLong("product_id");
+                long orderId = rs.getLong("order_id");
+                Report report = new Report(id, userId, productId, orderId);
+                reports.add(report);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            ConnectionPool.getInstance().returnConnection(con);
+        }
+        return reports;
+    }
+
+    @Override
+    public List<Report> getAllReportsByUserId(long userId) {
+        Connection con = ConnectionPool.getInstance().getConnection();
+        List<Report> reports = new ArrayList<>();
+        try(PreparedStatement ps =con.prepareStatement(readAllQuery)) {
+            ps.setLong(1,userId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                long id = rs.getLong("id");
+                long productId = rs.getLong("product_id");
+                long orderId = rs.getLong("order_id");
+                Report report = new Report(id, userId, productId, orderId);
+                reports.add(report);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            ConnectionPool.getInstance().returnConnection(con);
+        }
+        return reports;
+    }
+
+    @Override
+    public List<Report> getAllReportsByProductId(long productId) {
+        Connection con = ConnectionPool.getInstance().getConnection();
+        List<Report> reports = new ArrayList<>();
+        try(PreparedStatement ps =con.prepareStatement(readAllQuery)) {
+            ps.setLong(1,productId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()){
+                long id = rs.getLong("id");
+                long userId = rs.getLong("user_id");
+                long orderId = rs.getLong("order_id");
+                Report report = new Report(id, userId, productId, orderId);
+                reports.add(report);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            ConnectionPool.getInstance().returnConnection(con);
+        }
+        return reports;
+    }
 }

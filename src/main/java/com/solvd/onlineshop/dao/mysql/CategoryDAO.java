@@ -13,10 +13,16 @@ import java.util.List;
 
 public class CategoryDAO extends MySQLDAO implements ICategoryDAO {
 
+    private static String readQuery = "Select * FROM Category  WHERE id = ?";
+    private static String removeQuery = "DElETE FROM Category WHERE id = ?";
+    private static String insertQuery = "INSERT INTO Category VALUES(?,?)";
+    private static String updateQuery = "UPDATE Category SET name = ? WHERE id = ?";
+    private static String readAllQuery = "SELECT * FROM Category";
+
     @Override
     public Category getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement("select * from Category where id=?")) {
+        try(PreparedStatement ps =con.prepareStatement(readQuery)) {
             ps.setLong(1,id);
             ResultSet rs = ps.executeQuery();
             if(rs.next()) {
@@ -35,8 +41,7 @@ public class CategoryDAO extends MySQLDAO implements ICategoryDAO {
     @Override
     public void remove(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        String query = "DElETE FROM Category WHERE id = ?";
-        try(PreparedStatement ps =con.prepareStatement(query)) {
+        try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
             ps.setLong(1,id);
             if (ps.executeUpdate()>0) {
                 System.out.println("delete is done");
@@ -51,8 +56,7 @@ public class CategoryDAO extends MySQLDAO implements ICategoryDAO {
     @Override
     public void create(Category category) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        String query = "INSERT INTO Category VALUES(?,?)";
-        try (PreparedStatement ps = con.prepareStatement(query)) {
+        try (PreparedStatement ps = con.prepareStatement(insertQuery)) {
             ps.setLong(1, category.getCategoryId());
             ps.setString(2, category.getName());
             ps.executeUpdate();
@@ -70,8 +74,7 @@ public class CategoryDAO extends MySQLDAO implements ICategoryDAO {
     @Override
     public void update(Category category) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        String query = "UPDATE User SET name = ? WHERE id = ?";
-        try (PreparedStatement ps = con.prepareStatement(query)) {
+        try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
             ps.setString(1,category.getName());
             ps.setLong(2,category.getCategoryId());
             if (ps.executeUpdate() > 0) {
@@ -89,8 +92,7 @@ public class CategoryDAO extends MySQLDAO implements ICategoryDAO {
     public List<Category> getAllCategories() {
         Connection con = ConnectionPool.getInstance().getConnection();
         List<Category> categories = new ArrayList<>();
-        String query = "select * from Category";
-        try(PreparedStatement ps =con.prepareStatement(query)) {
+        try(PreparedStatement ps =con.prepareStatement(readAllQuery)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
                 long id = rs.getLong("id");

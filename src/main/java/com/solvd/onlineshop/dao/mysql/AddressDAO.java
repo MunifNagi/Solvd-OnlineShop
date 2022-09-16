@@ -3,14 +3,21 @@ package com.solvd.onlineshop.dao.mysql;
 import com.solvd.onlineshop.entities.Address;
 import com.solvd.onlineshop.ConnectionPool;
 import com.solvd.onlineshop.dao.IAddressDAO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 import java.sql.*;
 
 public class AddressDAO extends MySQLDAO implements IAddressDAO {
-    public  Address getByID(long id){
+    private static String readQuery = "Select * Address FROM WHERE id = ?";
+    private static String removeQuery = "DElETE FROM Address WHERE id = ?";
+    private static String insertQuery = "INSERT INTO Address VALUES(?,?,?,?,?,?)";
+    private static String updateQuery = "UPDATE Address SET country = ? , state = ? , city = ? , zipcode = ? , street = ? WHERE id = ?";
+
+    public Address getByID(long id){
         Connection con = ConnectionPool.getInstance().getConnection();
-        String query ="select * from Address where id=?";
-        try(PreparedStatement ps = con.prepareStatement(query)){
+        try(PreparedStatement ps = con.prepareStatement(readQuery)){
             ps.setLong(1,id);
             ResultSet rs = ps.executeQuery();
             if(rs.next()) {
@@ -33,8 +40,7 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
     @Override
     public void remove(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        String query = "DElETE FROM Address WHERE id = ?";
-        try(PreparedStatement ps =con.prepareStatement(query)) {
+        try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
             ps.setLong(1,id);
             if (ps.executeUpdate()>0) {
                 System.out.println("delete is done");
@@ -50,8 +56,7 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
     @Override
     public void create(Address address) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        String query = "INSERT INTO Address VALUES(?,?,?,?,?,?)";
-        try (PreparedStatement ps = con.prepareStatement(query)) {
+        try (PreparedStatement ps = con.prepareStatement(insertQuery)) {
             ps.setLong(1, address.getAddressId());
             ps.setString(2, address.getCountry());
             ps.setString(3, address.getState());
@@ -67,14 +72,12 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
         finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
-
     }
 
     @Override
     public void update(Address address) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        String query = "UPDATE Address SET country = ? , state = ? , city = ? , zipcode = ? , street = ? WHERE id = ?";
-        try (PreparedStatement ps = con.prepareStatement(query)) {
+        try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
             ps.setString(1,address.getCountry());
             ps.setString(2,address.getState());
             ps.setString(3,address.getCity());

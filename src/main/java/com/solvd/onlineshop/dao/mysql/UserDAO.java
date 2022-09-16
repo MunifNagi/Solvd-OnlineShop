@@ -10,10 +10,16 @@ import java.util.List;
 
 public class UserDAO extends MySQLDAO implements IUserDAO {
 
-     public void create(User user) {
+    private static String readQuery = "SELECT * FROM User where id=?";
+    private static String removeQuery = "DElETE FROM User WHERE id = ?";
+    private static String insertQuery = "INSERT INTO User VALUES(?,?,?,?,?,?,?)";
+    private static String updateQuery = "UPDATE User SET  phone = ? WHERE id = ?";
+    private static String readAllQuery = "SELECT * FROM User";
+
+
+    public void create(User user) {
          Connection con = ConnectionPool.getInstance().getConnection();
-         String query = "INSERT INTO User VALUES(?,?,?,?,?,?,?,?)";
-         try (PreparedStatement ps = con.prepareStatement(query)) {
+         try (PreparedStatement ps = con.prepareStatement(insertQuery)) {
              ps.setLong(1, user.getUserId());
              ps.setString(2, user.getFirstName());
              ps.setString(3, user.getLastName());
@@ -21,7 +27,6 @@ public class UserDAO extends MySQLDAO implements IUserDAO {
              ps.setString(5, user.getPhone());
              ps.setString(6, user.getEmail());
              ps.setString(7, user.getPassword());
-             ps.setLong(8, user.getAddress_id());
              ps.executeUpdate();
              System.out.println("Insert Query Executed");
          }
@@ -35,11 +40,9 @@ public class UserDAO extends MySQLDAO implements IUserDAO {
 
     public void update(User user) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        String query = "UPDATE User SET address_id = ? , phone = ? WHERE id = ?";
-        try (PreparedStatement ps = con.prepareStatement(query)) {
-            ps.setLong(1,user.getAddress_id());
-            ps.setString(2,user.getPhone());
-            ps.setLong(3,user.getUserId());
+        try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
+            ps.setString(1,user.getPhone());
+            ps.setLong(2,user.getUserId());
             if (ps.executeUpdate() > 0) {
                 System.out.println("Update is done");
             }
@@ -53,7 +56,7 @@ public class UserDAO extends MySQLDAO implements IUserDAO {
     @Override
     public User getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps = con.prepareStatement("select * from User where id=?")) {
+        try(PreparedStatement ps = con.prepareStatement(readQuery)) {
             ps.setLong(1,id);
             ResultSet rs = ps.executeQuery();
             if(rs.next()) {
@@ -63,8 +66,7 @@ public class UserDAO extends MySQLDAO implements IUserDAO {
                 String phone = rs.getString("phone");
                 String email = rs.getString("email");
                 String password = rs.getString("password");
-                int addressID = rs.getInt("address_id");
-                User user = new User(id, firstName, lastName, middleName, phone, email, password, addressID);
+                User user = new User(id, firstName, lastName, middleName, phone, email, password);
                 return user;
             }
         } catch (SQLException e) {
@@ -72,17 +74,12 @@ public class UserDAO extends MySQLDAO implements IUserDAO {
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
-
-//        Statement stmt = con.createStatement();
-//        String query = String.format("select * from User where id=%d",id);
-//        ResultSet rs = stmt.executeQuery(query);
         return null;
     }
 
     public void remove(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        String query = "DElETE FROM User WHERE id = ?";
-        try(PreparedStatement ps =con.prepareStatement(query)) {
+        try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
             ps.setLong(1,id);
             if (ps.executeUpdate() > 0) {
                 System.out.println("delete is done");
@@ -98,8 +95,7 @@ public class UserDAO extends MySQLDAO implements IUserDAO {
     public List<User> getAllUsers() {
         Connection con = ConnectionPool.getInstance().getConnection();
         List<User> userList = new ArrayList<>();
-        String query = "select * from User";
-        try(PreparedStatement ps =con.prepareStatement(query)) {
+        try(PreparedStatement ps =con.prepareStatement(readAllQuery)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
                 long id = rs.getLong("id");
@@ -109,8 +105,7 @@ public class UserDAO extends MySQLDAO implements IUserDAO {
                 String phone = rs.getString("phone");
                 String email = rs.getString("email");
                 String password = rs.getString("password");
-                int addressID = rs.getInt("address_id");
-                User user = new User(id, firstName, lastName, middleName, phone, email, password, addressID);
+                User user = new User(id, firstName, lastName, middleName, phone, email, password);
                 userList.add(user);
             }
         } catch (SQLException e) {

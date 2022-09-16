@@ -8,8 +8,10 @@ public class Product {
     private long categoryId;
     private double weight;
     private long inStock;
+    private long discountId;
+    private long manufacturerId;
 
-    public Product(long id, String name, double price, String description, long categoryId, double weight, long inStock) {
+    public Product(long id, String name, double price, String description, long categoryId, double weight, long inStock, long discountId, long manufacturerId) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -17,6 +19,8 @@ public class Product {
         this.categoryId = categoryId;
         this.weight = weight;
         this.inStock = inStock;
+        this.discountId = discountId;
+        this.manufacturerId = manufacturerId;
     }
 
     public long getProductId() {
@@ -47,5 +51,11 @@ public class Product {
         return inStock;
     }
 
+    public long getDiscountId() {
+        return discountId;
+    }
 
+    public long getManufacturerId() {
+        return manufacturerId;
+    }
 }
