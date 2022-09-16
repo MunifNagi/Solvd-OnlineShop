@@ -11,7 +11,7 @@ import com.solvd.onlineshop.dao.mysql.UserDAO;
 import java.sql.SQLException;
 import java.util.List;
 
-public class UserService {
+public class UserService implements IUserService{
     private IUserDAO userDAO = new UserDAO();
     private IOrderDAO orderDAO = new OrderDAO();
     private IAddressDAO addressDAO = new AddressDAO();
@@ -34,11 +34,11 @@ public class UserService {
         return usersList;
     }
 
-    public void update(User user) {
+    public void updateUser(User user) {
         userDAO.update(user);
     }
 
-    public void remove(long id) {
+    public void removeUser(long id) {
         userDAO.remove(id);
     }
 
