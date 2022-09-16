@@ -3,6 +3,8 @@ package com.solvd.onlineshop.dao.mysql;
 import com.solvd.onlineshop.ConnectionPool;
 import com.solvd.onlineshop.entities.Product;
 import com.solvd.onlineshop.dao.IProductDAO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDAO extends MySQLDAO implements IProductDAO {
-
+    private static final Logger logger = LogManager.getLogger(ProductDAO.class);
     private static String readQuery = "SELECT * FROM Product where id=?";
     private static String removeQuery = "DElETE FROM Product WHERE id = ?";
     private static String insertQuery = "INSERT INTO Order VALUES(?,?,?,?,?,?,?,?,?)";
@@ -39,7 +41,8 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
                 return product;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Getting product with ID:%d wasn't successful", id);
+            logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -51,11 +54,13 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
         Connection con = ConnectionPool.getInstance().getConnection();
         try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
             ps.setLong(1,id);
-            if (ps.executeUpdate() > 0) {
-                System.out.println("delete is done");
+            if (ps.executeUpdate()>0) {
+                String message = String.format("Product with ID: %d was removed successfully", id);
+                logger.info(message);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Product with ID: %d was not removed from DateBase", id);
+            logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -76,10 +81,9 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
             ps.setLong(8, product.getDiscountId());
             ps.setLong(9, product.getManufacturerId());
             ps.executeUpdate();
-            System.out.println("Insert Query Executed");
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Inserting record into the Product Table Failed",e);
         }
         finally {
             ConnectionPool.getInstance().returnConnection(con);
@@ -95,11 +99,13 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
             ps.setLong(3,product.getCategoryId());
             ps.setLong(4,product.getInStock());
             ps.setLong(5,product.getProductId());
-            if (ps.executeUpdate() > 0) {
-                System.out.println("Update is done");
+            if (ps.executeUpdate()>0) {
+                String message = String.format("Product with ID: %d was updated successfully",product.getProductId());
+                logger.info(message);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Product with ID: %d was not updated successfully",product.getProductId());
+            logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -126,7 +132,7 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
                 products.add(product);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error("Getting all records from Report Table Failed", e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -153,7 +159,8 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
                 products.add(product);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Getting products by Category ID:%d wasn't successful", categoryId);
+            logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -180,7 +187,8 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
                 products.add(product);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Getting Products by Manufacturer ID:%d wasn't successful", manufacturerId);
+            logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }

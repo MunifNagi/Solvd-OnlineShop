@@ -3,6 +3,8 @@ package com.solvd.onlineshop.dao.mysql;
 import com.solvd.onlineshop.entities.Category;
 import com.solvd.onlineshop.ConnectionPool;
 import com.solvd.onlineshop.dao.ICategoryDAO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryDAO extends MySQLDAO implements ICategoryDAO {
-
+    private static final Logger logger = LogManager.getLogger(CategoryDAO.class);
     private static String readQuery = "Select * FROM Category  WHERE id = ?";
     private static String removeQuery = "DElETE FROM Category WHERE id = ?";
     private static String insertQuery = "INSERT INTO Category VALUES(?,?)";
@@ -31,7 +33,8 @@ public class CategoryDAO extends MySQLDAO implements ICategoryDAO {
                 return category;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Getting category with ID:%d wasn't successful", id);
+            logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -44,10 +47,12 @@ public class CategoryDAO extends MySQLDAO implements ICategoryDAO {
         try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
             ps.setLong(1,id);
             if (ps.executeUpdate()>0) {
-                System.out.println("delete is done");
+                String message = String.format("Category with ID: %d was removed successfully", id);
+                logger.info(message);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Category with ID: %d was not removed successfully", id);
+            logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -60,10 +65,9 @@ public class CategoryDAO extends MySQLDAO implements ICategoryDAO {
             ps.setLong(1, category.getCategoryId());
             ps.setString(2, category.getName());
             ps.executeUpdate();
-            System.out.println("Insert Query Executed");
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Inserting record into the Category Table Failed",e);
         }
         finally {
             ConnectionPool.getInstance().returnConnection(con);
@@ -77,11 +81,13 @@ public class CategoryDAO extends MySQLDAO implements ICategoryDAO {
         try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
             ps.setString(1,category.getName());
             ps.setLong(2,category.getCategoryId());
-            if (ps.executeUpdate() > 0) {
-                System.out.println("Update is done");
+            if (ps.executeUpdate()>0) {
+                String message = String.format("Category with ID: %d was updated successfully",category.getCategoryId());
+                logger.info(message);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Category with ID: %d was not updated successfully",category.getCategoryId());
+            logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -101,7 +107,7 @@ public class CategoryDAO extends MySQLDAO implements ICategoryDAO {
                 categories.add(category);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error("Failed getting all categories records",e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }

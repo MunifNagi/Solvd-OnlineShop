@@ -3,6 +3,7 @@ package com.solvd.onlineshop.dao.mysql;
 import com.solvd.onlineshop.entities.Address;
 import com.solvd.onlineshop.ConnectionPool;
 import com.solvd.onlineshop.dao.IAddressDAO;
+import com.solvd.onlineshop.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import java.sql.*;
 
 public class AddressDAO extends MySQLDAO implements IAddressDAO {
+    private static final Logger logger = LogManager.getLogger(AddressDAO.class);
     private static String readQuery = "Select * Address FROM WHERE id = ?";
     private static String removeQuery = "DElETE FROM Address WHERE id = ?";
     private static String insertQuery = "INSERT INTO Address VALUES(?,?,?,?,?,?)";
@@ -18,7 +20,7 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
     public Address getByID(long id){
         Connection con = ConnectionPool.getInstance().getConnection();
         try(PreparedStatement ps = con.prepareStatement(readQuery)){
-            ps.setLong(1,id);
+            ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             if(rs.next()) {
                 String country = rs.getString("country");
@@ -30,7 +32,9 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
                 return address;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Getting address with ID:%d wasn't successful", id);
+            logger.error(message, e);
+            return null;
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -43,10 +47,12 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
         try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
             ps.setLong(1,id);
             if (ps.executeUpdate()>0) {
-                System.out.println("delete is done");
+                String message = String.format("Address with ID: %d was removed successfully", id);
+                logger.info(message);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Address with ID: %d was not removed from DateBase", id);
+            logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -64,10 +70,9 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
             ps.setString(5, address.getZipcode());
             ps.setString(6, address.getStreet());
             ps.executeUpdate();
-            System.out.println("Insert Query Executed");
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Inserting record into the Address Table Failed",e);
         }
         finally {
             ConnectionPool.getInstance().returnConnection(con);
@@ -83,11 +88,13 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
             ps.setString(3,address.getCity());
             ps.setString(4,address.getZipcode());
             ps.setString(5,address.getStreet());
-            if (ps.executeUpdate() > 0) {
-                System.out.println("Update is done");
+            if (ps.executeUpdate()>0) {
+                String message = String.format("Address with ID: %d was updated successfully",address.getAddressId());
+                logger.info(message);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Address with ID: %d was not updated successfully",address.getAddressId());
+            logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }

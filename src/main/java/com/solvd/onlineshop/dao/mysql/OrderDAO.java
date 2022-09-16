@@ -3,6 +3,8 @@ package com.solvd.onlineshop.dao.mysql;
 import com.solvd.onlineshop.ConnectionPool;
 import com.solvd.onlineshop.entities.Order;
 import com.solvd.onlineshop.dao.IOrderDAO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDAO extends  MySQLDAO implements IOrderDAO {
+    private static final Logger logger = LogManager.getLogger(OrderDAO.class);
     private static String readQuery = "SELECT * FROM Order where id=?";
     private static String removeQuery = "DElETE FROM Order WHERE id = ?";
     private static String insertQuery = "INSERT INTO Order VALUES(?,?,?,?,?,?,?,?)";
@@ -32,12 +35,13 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
                 long shippingAddressId = rs.getLong("shipping_address_id");
                 int orderStatusId = rs.getInt("order_status_id");
                 long paymentId = rs.getLong("payment_id");
-                long shipperId = rs.getLong("shipper_id");
-                Order order = new Order(id, totalPrice, productsQuantity, date, shippingAddressId, orderStatusId, paymentId, shipperId);
+                long shipmentId = rs.getLong("shipment_id");
+                Order order = new Order(id, totalPrice, productsQuantity, date, shippingAddressId, orderStatusId, paymentId, shipmentId);
                 return order;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Getting order with ID:%d wasn't successful", id);
+            logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -54,12 +58,11 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
             ps.setLong(5, order.getShippingAddressId());
             ps.setLong(6, order.getOrderStatusId());
             ps.setLong(7, order.getPaymentId());
-            ps.setLong(8, order.getShipperId());
+            ps.setLong(8, order.getShipmentId());
             ps.executeUpdate();
-            System.out.println("Insert Query Executed");
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Inserting record into the Order Table Failed",e);
         }
         finally {
             ConnectionPool.getInstance().returnConnection(con);
@@ -70,11 +73,13 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
         try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
             ps.setLong(1,order.getOrderStatusId());
             ps.setLong(2,order.getOrderId());
-            if (ps.executeUpdate() > 0) {
-                System.out.println("Update is done");
+            if (ps.executeUpdate()>0) {
+                String message = String.format("Order with ID: %d was updated successfully",order.getOrderId());
+                logger.info(message);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Order with ID: %d was not updated successfully",order.getOrderId());
+            logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -84,11 +89,13 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
         Connection con = ConnectionPool.getInstance().getConnection();
         try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
             ps.setLong(1,id);
-            if (ps.executeUpdate() > 0) {
-                System.out.println("delete is done");
+            if (ps.executeUpdate()>0) {
+                String message = String.format("Order with ID: %d was removed successfully", id);
+                logger.info(message);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Order with ID: %d was not removed from DateBase", id);
+            logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -109,12 +116,12 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
                 long shippingAddressId = rs.getLong("shipping_address_id");
                 int orderStatusId = rs.getInt("order_status_id");
                 long paymentId = rs.getLong("payment_id");
-                long shipperId = rs.getLong("shipper_id");
-                Order order = new Order(id, totalPrice, productsQuantity, date, shippingAddressId, orderStatusId, paymentId, shipperId);
+                long shipmentId = rs.getLong("shipment_id");
+                Order order = new Order(id, totalPrice, productsQuantity, date, shippingAddressId, orderStatusId, paymentId, shipmentId);
                 orderList.add(order);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error("Getting all records from Report Table Failed", e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -137,12 +144,13 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
                 long shippingAddressId = rs.getLong("shipping_address_id");
                 int orderStatusId = rs.getInt("order_status_id");
                 long paymentId = rs.getLong("payment_id");
-                long shipperId = rs.getLong("shipper_id");
-                Order order = new Order(id, totalPrice, productsQuantity, date, shippingAddressId, orderStatusId, paymentId, shipperId);
+                long shipmentId = rs.getLong("shipment_id");
+                Order order = new Order(id, totalPrice, productsQuantity, date, shippingAddressId, orderStatusId, paymentId, shipmentId);
                 orderList.add(order);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Getting Orders by status ID:%d wasn't successful", statusID);
+            logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }

@@ -4,6 +4,8 @@ import com.solvd.onlineshop.ConnectionPool;
 import com.solvd.onlineshop.dao.IDiscountDAO;
 import com.solvd.onlineshop.entities.Category;
 import com.solvd.onlineshop.entities.Discount;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DiscountDAO extends MySQLDAO implements IDiscountDAO {
-
+    private static final Logger logger = LogManager.getLogger(DiscountDAO.class);
     private static String readQuery = "SELECT * Discount FROM WHERE id = ?";
     private static String removeQuery = "DElETE FROM Discount WHERE id = ?";
     private static String insertQuery = "INSERT INTO Discount VALUES(?,?,?)";
@@ -32,7 +34,8 @@ public class DiscountDAO extends MySQLDAO implements IDiscountDAO {
                 return discount;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Getting discount with ID:%d wasn't successful", id);
+            logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -45,10 +48,12 @@ public class DiscountDAO extends MySQLDAO implements IDiscountDAO {
         try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
             ps.setLong(1,id);
             if (ps.executeUpdate()>0) {
-                System.out.println("delete is done");
+                String message = String.format("Discount with ID: %d was removed successfully", id);
+                logger.info(message);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Discount with ID: %d was not removed successfully", id);
+            logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -63,10 +68,9 @@ public class DiscountDAO extends MySQLDAO implements IDiscountDAO {
             ps.setString(2, discount.getName());
             ps.setDouble(3,discount.getPercentage());
             ps.executeUpdate();
-            System.out.println("Insert Query Executed");
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Inserting record into the Discount Table Failed",e);
         }
         finally {
             ConnectionPool.getInstance().returnConnection(con);
@@ -81,11 +85,13 @@ public class DiscountDAO extends MySQLDAO implements IDiscountDAO {
             ps.setString(1,discount.getName());
             ps.setDouble(2,discount.getPercentage());
             ps.setLong(3,discount.getDiscountId());
-            if (ps.executeUpdate() > 0) {
-                System.out.println("Update is done");
+            if (ps.executeUpdate()>0) {
+                String message = String.format("Discount with ID: %d was updated successfully",discount.getDiscountId());
+                logger.info(message);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Discount with ID: %d was not updated successfully",discount.getDiscountId());
+            logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -106,7 +112,7 @@ public class DiscountDAO extends MySQLDAO implements IDiscountDAO {
                 discountList.add(discount);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error("Getting all records from Report Table Failed", e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }

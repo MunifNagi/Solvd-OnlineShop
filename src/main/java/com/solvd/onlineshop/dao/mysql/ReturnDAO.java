@@ -5,6 +5,8 @@ import com.solvd.onlineshop.dao.IReturnDAO;
 import com.solvd.onlineshop.entities.Cart;
 import com.solvd.onlineshop.entities.Order;
 import com.solvd.onlineshop.entities.Return;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ReturnDAO extends MySQLDAO implements IReturnDAO {
+    private static final Logger logger = LogManager.getLogger(ReturnDAO.class);
     private static String readQuery = "Select * Return FROM WHERE id = ?";
     private static String removeQuery = "DElETE FROM Return WHERE id = ?";
     private static String insertQuery = "INSERT INTO Return VALUES(?,?,?,?)";
@@ -32,7 +35,8 @@ public class ReturnDAO extends MySQLDAO implements IReturnDAO {
                 return returnObject;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Getting return with ID:%d wasn't successful", id);
+            logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -44,11 +48,13 @@ public class ReturnDAO extends MySQLDAO implements IReturnDAO {
         Connection con = ConnectionPool.getInstance().getConnection();
         try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
             ps.setLong(1,id);
-            if (ps.executeUpdate() > 0) {
-                System.out.println("delete is done");
+            if (ps.executeUpdate()>0) {
+                String message = String.format("Return with ID: %d was removed successfully", id);
+                logger.info(message);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Return with ID: %d was not removed from DateBase", id);
+            logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -64,10 +70,9 @@ public class ReturnDAO extends MySQLDAO implements IReturnDAO {
             ps.setString(3, object.getDate());
             ps.setString(4, object.getReason());
             ps.executeUpdate();
-            System.out.println("Insert Query Executed");
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Inserting record into the Return Table Failed",e);
         }
         finally {
             ConnectionPool.getInstance().returnConnection(con);
@@ -81,11 +86,13 @@ public class ReturnDAO extends MySQLDAO implements IReturnDAO {
         try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
             ps.setString(1,object.getReason());
             ps.setLong(2,object.getReturnId());
-            if (ps.executeUpdate() > 0) {
-                System.out.println("Update is done");
+            if (ps.executeUpdate()>0) {
+                String message = String.format("Return with ID: %d was updated successfully",object.getReturnId());
+                logger.info(message);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Return with ID: %d was not updated successfully",object.getReturnId());
+            logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }

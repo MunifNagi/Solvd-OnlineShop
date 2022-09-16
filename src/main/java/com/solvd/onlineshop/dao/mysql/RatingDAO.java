@@ -3,6 +3,8 @@ package com.solvd.onlineshop.dao.mysql;
 import com.solvd.onlineshop.ConnectionPool;
 import com.solvd.onlineshop.dao.IRatingDAO;
 import com.solvd.onlineshop.entities.Rating;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RatingDAO extends MySQLDAO implements IRatingDAO {
+    private static final Logger logger = LogManager.getLogger(RatingDAO.class);
     private static String readQuery = "Select * Rating FROM WHERE id = ?";
     private static String removeQuery = "DElETE FROM Rating WHERE id = ?";
     private static String insertQuery = "INSERT INTO Rating VALUES(?,?,?,?,?)";
@@ -35,7 +38,8 @@ public class RatingDAO extends MySQLDAO implements IRatingDAO {
                 return rate;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Getting rating with ID:%d wasn't successful", id);
+            logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -48,10 +52,12 @@ public class RatingDAO extends MySQLDAO implements IRatingDAO {
         try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
             ps.setLong(1,id);
             if (ps.executeUpdate()>0) {
-                System.out.println("delete is done");
+                String message = String.format("Rating with ID: %d was removed successfully", id);
+                logger.info(message);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Rating with ID: %d was not removed from DateBase", id);
+            logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -67,10 +73,9 @@ public class RatingDAO extends MySQLDAO implements IRatingDAO {
             ps.setInt(4, rate.getRating());
             ps.setString(5, rate.getReview());
             ps.executeUpdate();
-            System.out.println("Insert Query Executed");
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Inserting record into the Rating Table Failed",e);
         }
         finally {
             ConnectionPool.getInstance().returnConnection(con);
@@ -85,11 +90,13 @@ public class RatingDAO extends MySQLDAO implements IRatingDAO {
             ps.setInt(1, rating.getRating());
             ps.setString(2, rating.getReview());
             ps.setLong(3, rating.getRatingId());
-            if (ps.executeUpdate() > 0) {
-                System.out.println("Update is done");
+            if (ps.executeUpdate()>0) {
+                String message = String.format("Rating with ID: %d was updated successfully",rating.getRatingId());
+                logger.info(message);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Rating with ID: %d was not updated successfully",rating.getRatingId());
+            logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -112,7 +119,8 @@ public class RatingDAO extends MySQLDAO implements IRatingDAO {
                 ratings.add(rate);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Getting Ratings by product ID:%d wasn't successful", productId);
+            logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -135,7 +143,8 @@ public class RatingDAO extends MySQLDAO implements IRatingDAO {
                 ratings.add(rate);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Getting ratings by review ID:%d wasn't successful", reviewerId);
+            logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }

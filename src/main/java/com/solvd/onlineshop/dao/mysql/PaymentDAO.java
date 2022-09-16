@@ -4,6 +4,8 @@ import com.solvd.onlineshop.ConnectionPool;
 import com.solvd.onlineshop.dao.IPaymentDAO;
 import com.solvd.onlineshop.entities.Address;
 import com.solvd.onlineshop.entities.Payment;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PaymentDAO extends MySQLDAO implements IPaymentDAO {
+    private static final Logger logger = LogManager.getLogger(PaymentDAO.class);
     private static String readQuery = "Select * Payment FROM WHERE id = ?";
     private static String removeQuery = "DElETE FROM Payment WHERE id = ?";
     private static String insertQuery = "INSERT INTO Payment VALUES(?,?,?,?,?)";
@@ -31,7 +34,8 @@ public class PaymentDAO extends MySQLDAO implements IPaymentDAO {
                 return payment;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Getting payment with ID:%d wasn't successful", id);
+            logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -44,10 +48,12 @@ public class PaymentDAO extends MySQLDAO implements IPaymentDAO {
         try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
             ps.setLong(1,id);
             if (ps.executeUpdate()>0) {
-                System.out.println("delete is done");
+                String message = String.format("Payment with ID: %d was removed successfully", id);
+                logger.info(message);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Payment with ID: %d was not removed from DateBase", id);
+            logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -63,10 +69,9 @@ public class PaymentDAO extends MySQLDAO implements IPaymentDAO {
             ps.setString(4, payment.getDate());
             ps.setLong(5, payment.getUserId());
             ps.executeUpdate();
-            System.out.println("Insert Query Executed");
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Inserting record into the Payment Table Failed",e);
         }
         finally {
             ConnectionPool.getInstance().returnConnection(con);
@@ -81,11 +86,13 @@ public class PaymentDAO extends MySQLDAO implements IPaymentDAO {
             ps.setString(1, payment.getType());
             ps.setDouble(2, payment.getAmount());
             ps.setLong(3, payment.getPaymentId());
-            if (ps.executeUpdate() > 0) {
-                System.out.println("Update is done");
+            if (ps.executeUpdate()>0) {
+                String message = String.format("Payment with ID: %d was updated successfully",payment.getPaymentId());
+                logger.info(message);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Payment with ID: %d was not updated successfully",payment.getPaymentId());
+            logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -107,7 +114,8 @@ public class PaymentDAO extends MySQLDAO implements IPaymentDAO {
                 return payment;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Getting payments by user ID:%d wasn't successful", userId);
+            logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }

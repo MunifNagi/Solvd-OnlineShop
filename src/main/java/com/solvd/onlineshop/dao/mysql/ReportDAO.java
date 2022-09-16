@@ -5,6 +5,8 @@ import com.solvd.onlineshop.dao.ICartDAO;
 import com.solvd.onlineshop.dao.IReportDAO;
 import com.solvd.onlineshop.entities.Order;
 import com.solvd.onlineshop.entities.Report;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReportDAO extends MySQLDAO implements IReportDAO {
+    private static final Logger logger = LogManager.getLogger(ReportDAO.class);
     private static String readQuery = "SELECT * FROM Report where id=?";
     private static String removeQuery = "DElETE FROM Report WHERE id = ?";
     private static String insertQuery = "INSERT INTO Report VALUES(?,?,?,?)";
@@ -35,7 +38,8 @@ public class ReportDAO extends MySQLDAO implements IReportDAO {
                 return report;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Getting report with ID:%d wasn't successful", id);
+            logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -47,11 +51,13 @@ public class ReportDAO extends MySQLDAO implements IReportDAO {
         Connection con = ConnectionPool.getInstance().getConnection();
         try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
             ps.setLong(1,id);
-            if (ps.executeUpdate() > 0) {
-                System.out.println("delete is done");
+            if (ps.executeUpdate()>0) {
+                String message = String.format("Report with ID: %d was removed successfully", id);
+                logger.info(message);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Report with ID: %d was not removed from DateBase", id);
+            logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -67,10 +73,9 @@ public class ReportDAO extends MySQLDAO implements IReportDAO {
             ps.setLong(3, report.getProductId());
             ps.setLong(4, report.getOrderId());
             ps.executeUpdate();
-            System.out.println("Insert Query Executed");
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Inserting record into the Report Table Failed",e);
         }
         finally {
             ConnectionPool.getInstance().returnConnection(con);
@@ -86,11 +91,13 @@ public class ReportDAO extends MySQLDAO implements IReportDAO {
             ps.setLong(2,report.getProductId());
             ps.setLong(3,report.getOrderId());
             ps.setLong(4,report.getReportId());
-            if (ps.executeUpdate() > 0) {
-                System.out.println("Update is done");
+            if (ps.executeUpdate()>0) {
+                String message = String.format("Report with ID: %d was updated successfully",report.getReportId());
+                logger.info(message);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("report with ID: %d was not updated successfully",report.getReportId());
+            logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -112,7 +119,7 @@ public class ReportDAO extends MySQLDAO implements IReportDAO {
                 reports.add(report);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error("Getting all records from Report Table Failed");
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -134,7 +141,8 @@ public class ReportDAO extends MySQLDAO implements IReportDAO {
                 reports.add(report);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Getting Reports by user ID:%d wasn't successful", userId);
+            logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -157,7 +165,8 @@ public class ReportDAO extends MySQLDAO implements IReportDAO {
                 reports.add(report);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Getting Reports by product ID:%d wasn't successful", productId);
+            logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }

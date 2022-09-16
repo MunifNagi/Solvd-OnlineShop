@@ -4,6 +4,8 @@ import com.solvd.onlineshop.ConnectionPool;
 import com.solvd.onlineshop.dao.ICartDAO;
 import com.solvd.onlineshop.entities.Address;
 import com.solvd.onlineshop.entities.Cart;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CartDAO extends MySQLDAO implements ICartDAO {
+    private static final Logger logger = LogManager.getLogger(CartDAO.class);
     private static String readQuery = "SELECT * FROM Cart WHERE id = ?";
     private static String removeQuery = "DElETE FROM Cart WHERE id = ?";
     private static String insertQuery = "INSERT INTO Cart VALUES(?,?,?,?,?,?)";
@@ -31,7 +34,8 @@ public class CartDAO extends MySQLDAO implements ICartDAO {
                 return cart;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Getting Cart with ID:%d wasn't successful", id);
+            logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -44,10 +48,12 @@ public class CartDAO extends MySQLDAO implements ICartDAO {
         try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
             ps.setLong(1,id);
             if (ps.executeUpdate()>0) {
-                System.out.println("delete is done");
+                String message = String.format("Cart with ID: %d was removed successfully", id);
+                logger.info(message);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Cart with ID: %d was not removed successfully", id);
+            logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
@@ -65,10 +71,9 @@ public class CartDAO extends MySQLDAO implements ICartDAO {
             ps.setDouble(5, cart.getPrice());
             ps.setDouble(6, cart.getTotal());
             ps.executeUpdate();
-            System.out.println("Insert Query Executed");
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Inserting record into the Cart Table Failed",e);
         }
         finally {
             ConnectionPool.getInstance().returnConnection(con);
@@ -84,11 +89,13 @@ public class CartDAO extends MySQLDAO implements ICartDAO {
             ps.setLong(1,cart.getQuantity());
             ps.setLong(2,cart.getCartId());
             ps.setLong(3,cart.getProductId());
-            if (ps.executeUpdate() > 0) {
-                System.out.println("Update is done");
+            if (ps.executeUpdate()>0) {
+                String message = String.format("Cart with ID: %d was updated successfully",cart.getCartId());
+                logger.info(message);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String message = String.format("Cart with ID: %d was not updated successfully",cart.getCartId());
+            logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }

@@ -8,9 +8,9 @@ public class Order {
     private long shippingAddressId;
     private int orderStatusId;
     private long paymentId;
-    private long shipperId;
+    private long shipmentId;
 
-    public Order(long id, double totalPrice, long quantity, String date, long shippingAddress, int orderStatusId, long paymentId, long shipperId){
+    public Order(long id, double totalPrice, long quantity, String date, long shippingAddress, int orderStatusId, long paymentId, long shipmentId){
         this.id = id;
         this.totalPrice = totalPrice;
         this.productsQuantity = quantity;
@@ -18,7 +18,7 @@ public class Order {
         this.shippingAddressId = shippingAddress;
         this.orderStatusId = orderStatusId;
         this.paymentId = paymentId;
-        this.shipperId = shipperId;
+        this.shipmentId = shipmentId;
     }
 
     public long getOrderId() {
@@ -48,15 +48,15 @@ public class Order {
         return paymentId;
     }
 
-    public long getShipperId() {
-        return shipperId;
+    public long getShipmentId() {
+        return shipmentId;
     }
 
     public void setPaymentId(long paymentId) {
         this.paymentId = paymentId;
     }
 
-    public void setShipperId(long shipperId) {
-        this.shipperId = shipperId;
+    public void setShipmentId(long shipmentId) {
+        this.shipmentId = shipmentId;
     }
 }
