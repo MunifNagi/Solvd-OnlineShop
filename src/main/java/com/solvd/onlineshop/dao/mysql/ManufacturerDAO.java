@@ -16,8 +16,8 @@ public class ManufacturerDAO extends MySQLDAO implements IManufacturerDAO {
     private static final Logger logger = LogManager.getLogger(ManufacturerDAO.class);
     private static String readQuery = "SELECT * Manufacturer FROM WHERE id = ?";
     private static String removeQuery = "DElETE FROM Manufacturer WHERE id = ?";
-    private static String insertQuery = "INSERT INTO Manufacturer VALUES(?,?)";
-    private static String updateQuery = "UPDATE Manufacturer SET name = ? WHERE id = ?";
+    private static String insertQuery = "INSERT INTO Manufacturer VALUES(?,?,?)";
+    private static String updateQuery = "UPDATE Manufacturer SET name = ?, phone = ? WHERE id = ?";
 
     @Override
     public Manufacturer getByID(long id) {
@@ -27,7 +27,8 @@ public class ManufacturerDAO extends MySQLDAO implements IManufacturerDAO {
             ResultSet rs = ps.executeQuery();
             if(rs.next()) {
                 String name = rs.getString("name");
-                Manufacturer manufacturer = new Manufacturer(id, name);
+                String phone = rs.getString("phone");
+                Manufacturer manufacturer = new Manufacturer(id, name, phone);
                 return manufacturer;
             }
         } catch (SQLException e) {
@@ -62,6 +63,7 @@ public class ManufacturerDAO extends MySQLDAO implements IManufacturerDAO {
         try (PreparedStatement ps = con.prepareStatement(insertQuery)) {
             ps.setLong(1, manufacturer.getManufacturerId());
             ps.setString(2, manufacturer.getManufacturerName());
+            ps.setString(3,manufacturer.getManufacturerPhone());
             ps.executeUpdate();
         }
         catch (SQLException e) {
@@ -78,7 +80,9 @@ public class ManufacturerDAO extends MySQLDAO implements IManufacturerDAO {
         Connection con = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
             ps.setString(1,manufacturer.getManufacturerName());
-            ps.setLong(2,manufacturer.getManufacturerId());
+            ps.setString(2,manufacturer.getManufacturerPhone());
+            ps.setLong(3,manufacturer.getManufacturerId());
+
             if (ps.executeUpdate()>0) {
                 String message = String.format("Manufacturer with ID: %d was updated successfully",manufacturer.getManufacturerId());
                 logger.info(message);

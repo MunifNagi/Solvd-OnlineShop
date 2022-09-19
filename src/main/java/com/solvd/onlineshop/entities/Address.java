@@ -17,6 +17,20 @@ public class Address {
         this.street = street;
     }
 
+    public Address() {
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "country='" + country + '\'' +
+                ", state='" + state + '\'' +
+                ", city='" + city + '\'' +
+                ", zipcode='" + zipcode + '\'' +
+                ", street='" + street + '\'' +
+                '}';
+    }
+
     public long getAddressId() {
         return id;
     }
@@ -39,5 +53,29 @@ public class Address {
 
     public String getStreet() {
         return street;
+    }
+
+    public void setaddressId(long id) {
+        this.id = id;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
     }
 }

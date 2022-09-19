@@ -1,7 +1,7 @@
 package com.solvd.onlineshop;
 
 import com.solvd.onlineshop.entities.User;
-import com.solvd.onlineshop.services.UserService;
+import com.solvd.onlineshop.services.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -11,6 +11,9 @@ public class Main {
         System.out.println(user);
         user.setPhone("000-000-0000");
         us.updateUser(user);
+        IParseXML xmlreadr= new XMLParser();
+        xmlreadr.readUserXML("src/main/resources/user.xml");
+        xmlreadr.readAddressXML("src/main/resources/address.xml");
     }
 
 }

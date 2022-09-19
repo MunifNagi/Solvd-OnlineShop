@@ -16,7 +16,7 @@ public class ShipperDAO extends MySQLDAO implements IShipperDAO {
     private static final Logger logger = LogManager.getLogger(ShipperDAO.class);
     private static String readQuery = "SELECT * Shipper FROM WHERE id = ?";
     private static String removeQuery = "DElETE FROM Shipper WHERE id = ?";
-    private static String insertQuery = "INSERT INTO Shipper VALUES(?,?)";
+    private static String insertQuery = "INSERT INTO Shipper VALUES(?,?,?)";
     private static String updateQuery = "UPDATE Shipper SET name = ? WHERE id = ?";
 
     @Override
@@ -27,7 +27,8 @@ public class ShipperDAO extends MySQLDAO implements IShipperDAO {
             ResultSet rs = ps.executeQuery();
             if(rs.next()) {
                 String name = rs.getString("company_name");
-                Shipper shipper = new Shipper(id, name);
+                boolean isInternational = rs.getBoolean("internationalShipping");
+                Shipper shipper = new Shipper(id, name, isInternational);
                 return shipper;
             }
         } catch (SQLException e) {
@@ -62,6 +63,7 @@ public class ShipperDAO extends MySQLDAO implements IShipperDAO {
         try (PreparedStatement ps = con.prepareStatement(insertQuery)) {
             ps.setLong(1, shipper.getShipperId());
             ps.setString(2, shipper.getCompanyName());
+            ps.setBoolean(3, shipper.isInternational());
             ps.executeUpdate();
         }
         catch (SQLException e) {
