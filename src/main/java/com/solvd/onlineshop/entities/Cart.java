@@ -1,6 +1,6 @@
 package com.solvd.onlineshop.entities;
 
-public class PurchasedProduct {
+public class Cart {
     private long id;
     private long orderId;
     private long productId;
@@ -9,7 +9,7 @@ public class PurchasedProduct {
     private double total;
 
 
-    public PurchasedProduct(long id, long orderId, long productId, long quantity, double price, double total) {
+    public Cart(long id, long orderId, long productId, long quantity, double price, double total) {
         this.id = id;
         this.orderId = orderId;
         this.productId = productId;
@@ -18,7 +18,7 @@ public class PurchasedProduct {
         this.total= total;
     }
 
-    public long getPurchasedProductId() {
+    public long getCartId() {
         return id;
     }
 

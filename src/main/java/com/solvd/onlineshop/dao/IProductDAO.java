@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface IProductDAO extends IBaseDAO<Product> {
     List<Product> getAllProduct();
-    List<Product> getProductByCategoryID(long categoryId);
+    List<Product> getProductByCategoryId(long categoryId);
+
+    List<Product> getProductByManufacturerId(long categoryId);
 }

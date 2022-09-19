@@ -4,21 +4,21 @@ public class Order {
     private long id;
     private double totalPrice;
     private long productsQuantity;
-    private long customerId;
     private String date;
     private long shippingAddressId;
-    private int orderStatusID;
+    private int orderStatusId;
+    private long paymentId;
+    private long shipmentId;
 
-
-
-    public Order(long id, double totalPrice, long quantity, long customerId, String date, long shippingAddress, int orderStatusID){
+    public Order(long id, double totalPrice, long quantity, String date, long shippingAddress, int orderStatusId, long paymentId, long shipmentId){
         this.id = id;
         this.totalPrice = totalPrice;
         this.productsQuantity = quantity;
-        this.customerId = customerId;
         this.date = date;
         this.shippingAddressId = shippingAddress;
-        this.orderStatusID = orderStatusID;
+        this.orderStatusId = orderStatusId;
+        this.paymentId = paymentId;
+        this.shipmentId = shipmentId;
     }
 
     public long getOrderId() {
@@ -33,12 +33,8 @@ public class Order {
         return totalPrice;
     }
 
-    public int getOrderStatusID() {
-        return orderStatusID;
-    }
-
-    public long getCustomerId() {
-        return customerId;
+    public int getOrderStatusId() {
+        return orderStatusId;
     }
 
     public long getShippingAddressId() {
@@ -48,5 +44,19 @@ public class Order {
     public String getDate() {
         return date;
     }
+    public long getPaymentId() {
+        return paymentId;
+    }
 
+    public long getShipmentId() {
+        return shipmentId;
+    }
+
+    public void setPaymentId(long paymentId) {
+        this.paymentId = paymentId;
+    }
+
+    public void setShipmentId(long shipmentId) {
+        this.shipmentId = shipmentId;
+    }
 }

@@ -14,9 +14,8 @@ public class User {
     private String email;
     private String password;
 
-    private long address_id;
 
-    public User(long userId, String firstName, String lastName, String middleName, String phone, String email, String password, int addressID) {
+    public User(long userId, String firstName, String lastName, String middleName, String phone, String email, String password) {
         this.id = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -24,15 +23,10 @@ public class User {
         this.phone = phone;
         this.email = email;
         this.password = password;
-        this.address_id = addressID;
     }
 
     public String getFirstName() {
         return firstName;
-    }
-
-    public long getAddress_id() {
-        return address_id;
     }
 
     public long getUserId() {
@@ -73,7 +67,4 @@ public class User {
         this.phone = phone;
     }
 
-    public void setAddress_id(long address_id) {
-        this.address_id = address_id;
-    }
 }

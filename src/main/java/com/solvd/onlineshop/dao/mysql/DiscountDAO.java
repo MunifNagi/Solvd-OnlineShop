@@ -1,8 +1,9 @@
 package com.solvd.onlineshop.dao.mysql;
 
-import com.solvd.onlineshop.entities.Category;
 import com.solvd.onlineshop.ConnectionPool;
-import com.solvd.onlineshop.dao.ICategoryDAO;
+import com.solvd.onlineshop.dao.IDiscountDAO;
+import com.solvd.onlineshop.entities.Category;
+import com.solvd.onlineshop.entities.Discount;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,27 +14,27 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryDAO extends MySQLDAO implements ICategoryDAO {
-    private static final Logger logger = LogManager.getLogger(CategoryDAO.class);
-    private static String readQuery = "Select * FROM Category  WHERE id = ?";
-    private static String removeQuery = "DElETE FROM Category WHERE id = ?";
-    private static String insertQuery = "INSERT INTO Category VALUES(?,?)";
-    private static String updateQuery = "UPDATE Category SET name = ? WHERE id = ?";
-    private static String readAllQuery = "SELECT * FROM Category";
-
+public class DiscountDAO extends MySQLDAO implements IDiscountDAO {
+    private static final Logger logger = LogManager.getLogger(DiscountDAO.class);
+    private static String readQuery = "SELECT * Discount FROM WHERE id = ?";
+    private static String removeQuery = "DElETE FROM Discount WHERE id = ?";
+    private static String insertQuery = "INSERT INTO Discount VALUES(?,?,?)";
+    private static String updateQuery = "UPDATE Discount SET name = ?, percentage = ? WHERE id = ?";
+    private static String readAllQuery = "SELECT * FROM Discount";
     @Override
-    public Category getByID(long id) {
+    public Discount getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
         try(PreparedStatement ps =con.prepareStatement(readQuery)) {
             ps.setLong(1,id);
             ResultSet rs = ps.executeQuery();
             if(rs.next()) {
                 String name = rs.getString("name");
-                Category category = new Category(id, name);
-                return category;
+                Double percentage = rs.getDouble("percentage");
+                Discount discount = new Discount(id, name,percentage);
+                return discount;
             }
         } catch (SQLException e) {
-            String message = String.format("Getting category with ID:%d wasn't successful", id);
+            String message = String.format("Getting discount with ID:%d wasn't successful", id);
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
@@ -47,27 +48,29 @@ public class CategoryDAO extends MySQLDAO implements ICategoryDAO {
         try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
             ps.setLong(1,id);
             if (ps.executeUpdate()>0) {
-                String message = String.format("Category with ID: %d was removed successfully", id);
+                String message = String.format("Discount with ID: %d was removed successfully", id);
                 logger.info(message);
             }
         } catch (SQLException e) {
-            String message = String.format("Category with ID: %d was not removed successfully", id);
+            String message = String.format("Discount with ID: %d was not removed successfully", id);
             logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
+
     }
 
     @Override
-    public void create(Category category) {
+    public void create(Discount discount) {
         Connection con = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = con.prepareStatement(insertQuery)) {
-            ps.setLong(1, category.getCategoryId());
-            ps.setString(2, category.getName());
+            ps.setLong(1, discount.getDiscountId());
+            ps.setString(2, discount.getName());
+            ps.setDouble(3,discount.getPercentage());
             ps.executeUpdate();
         }
         catch (SQLException e) {
-            logger.error("Inserting record into the Category Table Failed",e);
+            logger.error("Inserting record into the Discount Table Failed",e);
         }
         finally {
             ConnectionPool.getInstance().returnConnection(con);
@@ -76,41 +79,43 @@ public class CategoryDAO extends MySQLDAO implements ICategoryDAO {
     }
 
     @Override
-    public void update(Category category) {
+    public void update(Discount discount) {
         Connection con = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
-            ps.setString(1,category.getName());
-            ps.setLong(2,category.getCategoryId());
+            ps.setString(1,discount.getName());
+            ps.setDouble(2,discount.getPercentage());
+            ps.setLong(3,discount.getDiscountId());
             if (ps.executeUpdate()>0) {
-                String message = String.format("Category with ID: %d was updated successfully",category.getCategoryId());
+                String message = String.format("Discount with ID: %d was updated successfully",discount.getDiscountId());
                 logger.info(message);
             }
         } catch (SQLException e) {
-            String message = String.format("Category with ID: %d was not updated successfully",category.getCategoryId());
+            String message = String.format("Discount with ID: %d was not updated successfully",discount.getDiscountId());
             logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
+
     }
 
-
     @Override
-    public List<Category> getAllCategories() {
+    public List<Discount> getAllDiscounts() {
         Connection con = ConnectionPool.getInstance().getConnection();
-        List<Category> categories = new ArrayList<>();
+        List<Discount> discountList = new ArrayList<>();
         try(PreparedStatement ps =con.prepareStatement(readAllQuery)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
                 long id = rs.getLong("id");
                 String name = rs.getString("name");
-                Category category = new Category(id, name);
-                categories.add(category);
+                Double percentage = rs.getDouble("percentage");
+                Discount discount = new Discount(id, name,percentage);
+                discountList.add(discount);
             }
         } catch (SQLException e) {
-            logger.error("Failed getting all categories records",e);
+            logger.error("Getting all records from Report Table Failed", e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
-        return categories;
+        return discountList;
     }
 }
