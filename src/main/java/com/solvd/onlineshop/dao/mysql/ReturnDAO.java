@@ -18,7 +18,7 @@ public class ReturnDAO extends MySQLDAO implements IReturnDAO {
     private static String readQuery = "Select * Return FROM WHERE id = ?";
     private static String removeQuery = "DElETE FROM Return WHERE id = ?";
     private static String insertQuery = "INSERT INTO Return VALUES(?,?,?,?)";
-    private static String updateQuery = "UPDATE Cart SET reason = ? WHERE id = ?";
+    private static String updateQuery = "UPDATE Return SET reason = ? WHERE id = ?";
     private static String readAllQuery = "Select * FROM Return";
 
     @Override

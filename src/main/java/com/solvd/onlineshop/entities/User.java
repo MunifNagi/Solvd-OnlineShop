@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.*;
 import java.sql.SQLException;
 
 @XmlRootElement(name="User")
-//@XmlType(propOrder = {"id","firstName","lastName","middleName","phone","email","password"})
+@XmlType(propOrder = {"id","firstName","lastName","middleName","phone","email","password"})
 @XmlAccessorType(XmlAccessType.FIELD)
 public class User {
 

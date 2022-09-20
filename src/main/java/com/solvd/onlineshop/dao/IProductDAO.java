@@ -8,5 +8,5 @@ public interface IProductDAO extends IBaseDAO<Product> {
     List<Product> getAllProduct();
     List<Product> getProductByCategoryId(long categoryId);
 
-    List<Product> getProductByManufacturerId(long categoryId);
+    List<Product> getProductByManufacturerId(long manufacturerId);
 }

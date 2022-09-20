@@ -9,6 +9,6 @@ public interface IUserService {
     void createUser(User user);
     void updateUser(User user);
     void removeUser(long id);
-    List<User> findAllUsers();
+    List<User> getAllUsers();
 
 }

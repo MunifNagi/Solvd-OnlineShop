@@ -1,14 +1,27 @@
 package com.solvd.onlineshop.entities;
 
+import javax.xml.bind.annotation.*;
+
+@XmlRootElement(name="Product")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Product {
+    @XmlElement
     private long id;
+    @XmlElement
     private String name;
+    @XmlElement
     private double price;
+    @XmlElement
     private String description;
+    @XmlElement(name = "category_id")
     private long categoryId;
+    @XmlElement
     private double weight;
+    @XmlElement(name = "in_stock")
     private long inStock;
+    @XmlElement(name = "discount_id")
     private long discountId;
+    @XmlElement(name = "manufacturer_id")
     private long manufacturerId;
 
     public Product(long id, String name, double price, String description, long categoryId, double weight, long inStock, long discountId, long manufacturerId) {

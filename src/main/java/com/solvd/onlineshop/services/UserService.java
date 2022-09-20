@@ -31,7 +31,7 @@ public class UserService implements IUserService{
         this.userDAO.create(user);
     }
 
-    public List<User> findAllUsers() {
+    public List<User> getAllUsers() {
         List<User> usersList = null;
         usersList = userDAO.getAllUsers();
         return usersList;

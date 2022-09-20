@@ -3,12 +3,15 @@ package com.solvd.onlineshop.dao.mysql;
 import com.solvd.onlineshop.entities.Address;
 import com.solvd.onlineshop.ConnectionPool;
 import com.solvd.onlineshop.dao.IAddressDAO;
+import com.solvd.onlineshop.entities.User;
 import com.solvd.onlineshop.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddressDAO extends MySQLDAO implements IAddressDAO {
     private static final Logger logger = LogManager.getLogger(AddressDAO.class);
@@ -16,7 +19,7 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
     private static String removeQuery = "DElETE FROM Address WHERE id = ?";
     private static String insertQuery = "INSERT INTO Address VALUES(?,?,?,?,?,?)";
     private static String updateQuery = "UPDATE Address SET country = ? , state = ? , city = ? , zipcode = ? , street = ? WHERE id = ?";
-
+    private static String readAllQuery = "SELECT * FROM Address";
     public Address getByID(long id){
         Connection con = ConnectionPool.getInstance().getConnection();
         try(PreparedStatement ps = con.prepareStatement(readQuery)){
@@ -98,5 +101,29 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
+    }
+
+    @Override
+    public List<Address> getAllAddresses() {
+        Connection con = ConnectionPool.getInstance().getConnection();
+        List<Address> addressList = new ArrayList<>();
+        try(PreparedStatement ps =con.prepareStatement(readAllQuery)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                long id = rs.getLong("id");
+                String country = rs.getString("country");
+                String state = rs.getString("state");
+                String city = rs.getString("city");
+                String zipcode = rs.getString("zipcode");
+                String street = rs.getString("street");
+                Address address = new Address(id, country, state, city, zipcode, street);
+                addressList.add(address);
+            }
+        } catch (SQLException e) {
+            logger.error("Getting all records from Address Table Failed");
+        } finally {
+            ConnectionPool.getInstance().returnConnection(con);
+        }
+        return addressList;
     }
 }

@@ -22,12 +22,12 @@ public class XMLParser implements IParseXML{
     private static String productSchema = "src/main/resources/xsd/product.xsd";
     private static final Logger logger = LogManager.getLogger(XMLParser.class);
 
-    public void readUserXML(String filePath) {
+    public List<User> readUserXML(String filePath) {
+        List<User> usersList = new ArrayList<>();
         if(!StAXValidator.validate(filePath,userSchema)) {
             logger.error("The document provided is not valid");
-            return;
+            return usersList;
         }
-        List<User> usersList = new ArrayList<>();
         User user = null;
         boolean id = false;
         boolean firstName = false;
@@ -121,14 +121,15 @@ public class XMLParser implements IParseXML{
             e.printStackTrace();
         }
         usersList.forEach((parsedUser -> logger.info(parsedUser)));
+        return usersList;
     }
 
-    public void readAddressXML(String filePath) {
+    public List<Address> readAddressXML(String filePath) {
+        List<Address> addressList = new ArrayList<>();
         if(!StAXValidator.validate(filePath,addressSchema)) {
             logger.error("The document provided is not valid");
-            return;
+            return addressList;
         }
-        List<Address> addressList = new ArrayList<>();
         Address address = null;
         boolean id = false;
         boolean country = false;
@@ -216,14 +217,15 @@ public class XMLParser implements IParseXML{
             e.printStackTrace();
         }
         addressList.forEach(parsedAddress -> logger.info(parsedAddress));
+        return addressList;
     }
 
-    public void readProductXML(String filePath) {
+    public List<Product> readProductXML(String filePath) {
+        List<Product> productList = new ArrayList<>();
         if(!StAXValidator.validate(filePath,productSchema)) {
             logger.error("The document provided is not valid");
-            return;
+            return productList;
         }
-        List<Product> productList = new ArrayList<>();
         Product product = null;
         boolean id = false;
         boolean name = false;
@@ -327,6 +329,7 @@ public class XMLParser implements IParseXML{
             e.printStackTrace();
         }
         productList.forEach(parsedProduct -> logger.info(parsedProduct));
+        return productList;
     }
 }
 

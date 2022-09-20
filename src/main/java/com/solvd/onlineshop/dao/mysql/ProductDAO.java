@@ -17,8 +17,8 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
     private static final Logger logger = LogManager.getLogger(ProductDAO.class);
     private static String readQuery = "SELECT * FROM Product where id=?";
     private static String removeQuery = "DElETE FROM Product WHERE id = ?";
-    private static String insertQuery = "INSERT INTO Order VALUES(?,?,?,?,?,?,?,?,?)";
-    private static String updateQuery = "UPDATE User SET price = ?, description = ?, category_id = ?, in_stock = ? WHERE id = ?";
+    private static String insertQuery = "INSERT INTO Product VALUES(?,?,?,?,?,?,?,?,?)";
+    private static String updateQuery = "UPDATE Product SET price = ?, description = ?, category_id = ?, in_stock = ? WHERE id = ?";
     private static String readAllQuery = "SELECT * FROM Product";
     private static String readByManuIdQuery = "select * from Product where manufacturer_id = ?";
     private static String readByCategoryIdQuery = "select * from Product where category_id = ?";
