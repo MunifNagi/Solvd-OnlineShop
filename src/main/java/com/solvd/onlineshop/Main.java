@@ -12,8 +12,9 @@ public class Main {
         user.setPhone("000-000-0000");
         us.updateUser(user);
         IParseXML xmlreadr= new XMLParser();
-        xmlreadr.readUserXML("src/main/resources/user.xml");
-        xmlreadr.readAddressXML("src/main/resources/address.xml");
+        xmlreadr.readUserXML("src/main/resources/xml/user.xml");
+        xmlreadr.readAddressXML("src/main/resources/xml/address.xml");
+        xmlreadr.readProductXML("src/main/resources/xml/product.xml");
     }
 
 }

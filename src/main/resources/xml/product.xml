@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Products>
+    <Product>
+        <id>1</id>
+        <name>computer</name>
+        <price>1599.99</price>
+        <description></description>
+        <category_id>2</category_id>
+        <weight>4.3</weight>
+        <in_stock>50</in_stock>
+        <discount_id>1</discount_id>
+        <manufacturer_id>2</manufacturer_id>
+    </Product>
+    <Product>
+        <id>2</id>
+        <name>phone</name>
+        <price>999.99</price>
+        <description></description>
+        <category_id>2</category_id>
+        <weight>4.3</weight>
+        <in_stock>112</in_stock>
+        <discount_id>1</discount_id>
+        <manufacturer_id>2</manufacturer_id>
+    </Product>
+</Products>

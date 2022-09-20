@@ -1,6 +1,7 @@
 package com.solvd.onlineshop.services;
 
 import com.solvd.onlineshop.entities.Address;
+import com.solvd.onlineshop.entities.Product;
 import com.solvd.onlineshop.entities.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,8 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XMLParser implements IParseXML{
-    private static String userSchema = "src/main/resources/user.xsd";
-    private static String addressSchema = "src/main/resources/address.xsd";
+    private static String userSchema = "src/main/resources/xsd/user.xsd";
+    private static String addressSchema = "src/main/resources/xsd/address.xsd";
+    private static String productSchema = "src/main/resources/xsd/product.xsd";
     private static final Logger logger = LogManager.getLogger(XMLParser.class);
 
     public void readUserXML(String filePath) {
@@ -118,7 +120,7 @@ public class XMLParser implements IParseXML{
         } catch (XMLStreamException e) {
             e.printStackTrace();
         }
-        usersList.forEach(System.out::println);
+        usersList.forEach((parsedUser -> logger.info(parsedUser)));
     }
 
     public void readAddressXML(String filePath) {
@@ -213,23 +215,25 @@ public class XMLParser implements IParseXML{
         } catch (XMLStreamException e) {
             e.printStackTrace();
         }
-        addressList.forEach(System.out::println);
+        addressList.forEach(parsedAddress -> logger.info(parsedAddress));
     }
 
     public void readProductXML(String filePath) {
-        if(!StAXValidator.validate(filePath,addressSchema)) {
+        if(!StAXValidator.validate(filePath,productSchema)) {
             logger.error("The document provided is not valid");
             return;
         }
-        List<Address> addressList = new ArrayList<>();
-        Address address = null;
+        List<Product> productList = new ArrayList<>();
+        Product product = null;
         boolean id = false;
-        boolean country = false;
-        boolean state = false;
-        boolean city = false;
-        boolean zipcode= false;
-        boolean street= false;
-
+        boolean name = false;
+        boolean price = false;
+        boolean description = false;
+        boolean categoryId= false;
+        boolean weight= false;
+        boolean inStock= false;
+        boolean discountId= false;
+        boolean manufacturerId= false;
         try {
             XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
             XMLEventReader reader =
@@ -244,61 +248,75 @@ public class XMLParser implements IParseXML{
                         StartElement startElement = event.asStartElement();
                         String nodeName = startElement.getName().getLocalPart();
 
-                        if (nodeName.equalsIgnoreCase("address")) {
-                            address = new Address();
-
+                        if (nodeName.equalsIgnoreCase("product")) {
+                            product = new Product();
                         } else if (nodeName.equalsIgnoreCase("id")) {
                             id = true;
-                        } else if (nodeName.equalsIgnoreCase("country")) {
-                            country = true;
-                        } else if (nodeName.equalsIgnoreCase("state")) {
-                            state = true;
-                        }
-                        else if (nodeName.equalsIgnoreCase("city")) {
-                            city = true;
-                        }
-                        else if (nodeName.equalsIgnoreCase("zipcode")) {
-                            zipcode = true;
-                        }
-                        else if (nodeName.equalsIgnoreCase("street")) {
-                            street = true;
+                        } else if (nodeName.equalsIgnoreCase("name")) {
+                            name = true;
+                        } else if (nodeName.equalsIgnoreCase("price")) {
+                            price = true;
+                        } else if (nodeName.equalsIgnoreCase("description")) {
+                            description = true;
+                        } else if (nodeName.equalsIgnoreCase("category_id")) {
+                            categoryId = true;
+                        } else if (nodeName.equalsIgnoreCase("weight")) {
+                            weight = true;
+                        } else if (nodeName.equalsIgnoreCase("in_stock")) {
+                            inStock = true;
+                        } else if (nodeName.equalsIgnoreCase("discount_id")) {
+                            discountId = true;
+                        } else if (nodeName.equalsIgnoreCase("manufacturer_id")) {
+                            manufacturerId = true;
                         }
                         break;
 
                     case XMLStreamConstants.CHARACTERS:
                         Characters characters = event.asCharacters();
                         if(id) {
-                            address.setaddressId(Integer.parseInt(characters.getData()));
+                            product.setProductId(Integer.parseInt(characters.getData()));
                             id = false;
                         }
-                        if(country) {
-                            address.setCountry(characters.getData());
-                            country = false;
+                        if(name) {
+                            product.setProductName(characters.getData());
+                            name = false;
                         }
-                        if(state) {
-                            address.setState(characters.getData());
-                            state = false;
+                        if(price) {
+                            product.setPrice(Double.parseDouble(characters.getData()));
+                            price = false;
                         }
-                        if(city) {
-                            address.setCity(characters.getData());
-                            city = false;
+                        if(description) {
+                            product.setDescription(characters.getData());
+                            description = false;
                         }
-                        if(zipcode) {
-                            address.setZipcode(characters.getData());
-                            zipcode = false;
+                        if(categoryId) {
+                            product.setCategoryId(Integer.parseInt(characters.getData()));
+                            categoryId = false;
                         }
-                        if(street) {
-                            address.setStreet(characters.getData());
-                            street = false;
+                        if(weight) {
+                            product.setWeight(Double.parseDouble(characters.getData()));
+                            weight = false;
+                        }
+                        if(inStock) {
+                            product.setInStock(Integer.parseInt(characters.getData()));
+                            inStock = false;
+                        }
+                        if(discountId) {
+                            product.setDiscountId(Integer.parseInt(characters.getData()));
+                            discountId = false;
+                        }
+                        if(manufacturerId) {
+                            product.setManufacturerId(Integer.parseInt(characters.getData()));
+                            manufacturerId = false;
                         }
                         break;
 
                     case XMLStreamConstants.END_ELEMENT:
                         EndElement endElement = event.asEndElement();
 
-                        if(endElement.getName().getLocalPart().equalsIgnoreCase("address")) {
-                            addressList.add(address);
-                            address= null;
+                        if(endElement.getName().getLocalPart().equalsIgnoreCase("product")) {
+                            productList.add(product);
+                            product= null;
                         }
                         break;
                 }
@@ -308,7 +326,7 @@ public class XMLParser implements IParseXML{
         } catch (XMLStreamException e) {
             e.printStackTrace();
         }
-        addressList.forEach(System.out::println);
+        productList.forEach(parsedProduct -> logger.info(parsedProduct));
     }
 }
 

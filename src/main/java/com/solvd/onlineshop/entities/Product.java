@@ -22,6 +22,20 @@ public class Product {
         this.discountId = discountId;
         this.manufacturerId = manufacturerId;
     }
+    public Product() {
+
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", weight=" + weight +
+                ", inStock=" + inStock +
+                '}';
+    }
 
     public long getProductId() {
         return id;
@@ -57,5 +71,41 @@ public class Product {
 
     public long getManufacturerId() {
         return manufacturerId;
+    }
+
+    public void setProductId(long id) {
+        this.id = id;
+    }
+
+    public void setProductName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setCategoryId(long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public void setInStock(long inStock) {
+        this.inStock = inStock;
+    }
+
+    public void setDiscountId(long discountId) {
+        this.discountId = discountId;
+    }
+
+    public void setManufacturerId(long manufacturerId) {
+        this.manufacturerId = manufacturerId;
     }
 }
