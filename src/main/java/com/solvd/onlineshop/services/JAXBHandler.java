@@ -1,119 +1,78 @@
 package com.solvd.onlineshop.services;
 
 import com.solvd.onlineshop.entities.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.xml.sax.SAXException;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import java.io.File;
+import javax.xml.XMLConstants;
+import javax.xml.bind.*;
+import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import java.io.*;
 import java.util.List;
 
-public class JAXBHandler implements IJAXB {
+public class JAXBHandler implements IParseXML {
+    private static final Logger logger = LogManager.getLogger(JAXBHandler.class);
 
-    public void usersToXMl (List<User> users, String filePath) {
-        try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(Users.class);
-            Marshaller marshaller = jaxbContext.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
-            File output = new File(filePath);
-            marshaller.marshal(new Users(users), output);
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        }
+    public <T> void writeXML(T entity, String filePath) {
+        GenericClass<T> instance = new GenericClass(entity.getClass());
+        Class<T> clazz = instance.getType();
+        EntityList<T> entityList = new EntityList<T>();
+        entityList.addEntity(entity);
+        marshall(entityList.getEntities(), clazz, filePath);
     }
 
-    public List<User> xmlToUsers(String xmlFile){
-        File file = new File(xmlFile);
-        Users users = new Users();
+    public <T> List<T> readXML(String xmlPath, Class<T> classRef) {
+
+        Source source = new StreamSource(new File(xmlPath));
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(Users.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(classRef, EntityList.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            users = (Users) unmarshaller.unmarshal(file);
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        }
-        return users.getUsers();
-    }
-
-    @Override
-    public void productsToXMl(List<Product> products, String xmlPath) {
-        try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(Products.class);
-            Marshaller marshaller = jaxbContext.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
-            File output = new File(xmlPath);
-            marshaller.marshal(new Products(products), output);
+            JAXBElement<EntityList> jaxbElement = unmarshaller.unmarshal(source, EntityList.class);
+            List<T> entityList = jaxbElement.getValue().getEntities();
+            return entityList;
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public List<Product> xmlToProducts(String xmlPath) {
-        File file = new File(xmlPath);
-        Products prodcuts = new Products();
+    public <T> boolean validate(String xmlFile, String xsdFile, Class<T> classRef) {
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(Products.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(classRef);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            prodcuts = (Products) unmarshaller.unmarshal(file);
+            SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = sf.newSchema(new File(xsdFile));
+            unmarshaller.setSchema(schema);
+            unmarshaller.unmarshal(new StreamSource(xmlFile), classRef);
+            return true;
         } catch (JAXBException e) {
-            throw new RuntimeException(e);
+            logger.error("JAXBException error", e.getMessage());
+        } catch (SAXException e) {
+            logger.error("SAXException error", e.getMessage());
         }
-        return prodcuts.getProducts();
+        return false;
     }
 
-    @Override
-    public void addressesToXML(List<Address> addressList, String xmlPath) {
+
+    public <T> void writeXML(List<T> entityList, Class<T> classRef, String xmlFile) {
+        marshall(entityList, classRef, xmlFile);
+    }
+
+    private static <T> void marshall(List<T> entityList, Class<T> classRef, String xmlFile) {
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(Addresses.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(classRef, EntityList.class);
             Marshaller marshaller = jaxbContext.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
-            File output = new File(xmlPath);
-            marshaller.marshal(new Addresses(addressList), output);
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            String rootElementName = classRef.getSimpleName() + "List";
+            JAXBElement<EntityList> jaxbElement = new JAXBElement<EntityList>(new QName(null, rootElementName), EntityList.class, new EntityList<>(entityList));
+            marshaller.marshal(jaxbElement, new File(xmlFile));
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
     }
-
-    @Override
-    public List<Address> xmlToAddresses(String xmlPath) {
-        File file = new File(xmlPath);
-        Addresses addressList = new Addresses();
-        try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(Addresses.class);
-            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            addressList = (Addresses) unmarshaller.unmarshal(file);
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        }
-        return addressList.getAddressList();
-    }
-
-    public void userToXMl (User user, String filePath) {
-        try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(User.class);
-            Marshaller marshaller = jaxbContext.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
-            File output = new File(filePath);
-            marshaller.marshal(user, output);
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public User xmlToUser(String xmlFile){
-        File file = new File(xmlFile);
-        User user = null;
-        try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(User.class);
-            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            user = (User) unmarshaller.unmarshal(file);
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println(user);
-        return user;
-    }
-
 }

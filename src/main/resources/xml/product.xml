@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Products>
+<ProductList>
     <Product>
         <id>1</id>
         <name>computer</name>
@@ -22,4 +22,4 @@
         <discount_id>1</discount_id>
         <manufacturer_id>2</manufacturer_id>
     </Product>
-</Products>
+</ProductList>

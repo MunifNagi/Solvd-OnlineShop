@@ -5,14 +5,16 @@ import com.solvd.onlineshop.entities.Product;
 import com.solvd.onlineshop.entities.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.xml.sax.SAXException;
 
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
+import javax.xml.XMLConstants;
+import javax.xml.stream.*;
 import javax.xml.stream.events.*;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import javax.xml.transform.stax.StAXSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,12 +24,9 @@ public class XMLParser implements IParseXML{
     private static String productSchema = "src/main/resources/xsd/product.xsd";
     private static final Logger logger = LogManager.getLogger(XMLParser.class);
 
-    public List<User> readUserXML(String filePath) {
+
+    private static List<User> readUserXML(String filePath) {
         List<User> usersList = new ArrayList<>();
-        if(!StAXValidator.validate(filePath,userSchema)) {
-            logger.error("The document provided is not valid");
-            return usersList;
-        }
         User user = null;
         boolean id = false;
         boolean firstName = false;
@@ -124,12 +123,8 @@ public class XMLParser implements IParseXML{
         return usersList;
     }
 
-    public List<Address> readAddressXML(String filePath) {
+    private static List<Address> readAddressXML(String filePath) {
         List<Address> addressList = new ArrayList<>();
-        if(!StAXValidator.validate(filePath,addressSchema)) {
-            logger.error("The document provided is not valid");
-            return addressList;
-        }
         Address address = null;
         boolean id = false;
         boolean country = false;
@@ -220,12 +215,9 @@ public class XMLParser implements IParseXML{
         return addressList;
     }
 
-    public List<Product> readProductXML(String filePath) {
+    private static List<Product> readProductXML(String filePath) {
         List<Product> productList = new ArrayList<>();
-        if(!StAXValidator.validate(filePath,productSchema)) {
-            logger.error("The document provided is not valid");
-            return productList;
-        }
+
         Product product = null;
         boolean id = false;
         boolean name = false;
@@ -331,5 +323,58 @@ public class XMLParser implements IParseXML{
         productList.forEach(parsedProduct -> logger.info(parsedProduct));
         return productList;
     }
+
+    @Override
+    public <T> List<T> readXML(String xmlFile, Class<T> classRef) {
+        switch(classRef.getSimpleName()) {
+            case "Product":
+                if(!validate(xmlFile,productSchema,Product.class)) {
+                    logger.error("The document provided is not valid");
+                    return new ArrayList<>();
+                }
+                return (List<T>) readProductXML(xmlFile);
+
+            case "Address":
+                if(!validate(xmlFile,addressSchema,Address.class)) {
+                    logger.error("The document provided is not valid");
+                    return new ArrayList<>();
+                }
+                return (List<T>) readAddressXML(xmlFile);
+            case "User":
+                if(!validate(xmlFile,userSchema,User.class)) {
+                    logger.error("The document provided is not valid");
+                    return new ArrayList<>();
+                }
+                return (List<T>) readUserXML(xmlFile);
+            default:
+                logger.error("The implementation for the class reference provided have not been implemented");
+                return new ArrayList<>();
+        }
+    }
+
+    @Override
+    public <T> boolean validate(String xmlFile, String xsdFile, Class<T> classRef) {
+        XMLStreamReader reader = null;
+        try {
+            reader = XMLInputFactory.newInstance().createXMLStreamReader(new FileInputStream(xmlFile));
+            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = null;
+            schema = factory.newSchema(new File(xsdFile));
+            Validator validator = schema.newValidator();
+            validator.validate(new StAXSource(reader));
+            logger.info("The Document provided is Valid");
+            return true;
+        } catch (XMLStreamException e) {
+            logger.error("XMLStream error");
+        } catch (FileNotFoundException e) {
+            logger.error("FNFE error");
+        } catch (SAXException e) {
+            logger.error("SAXException error",e.getMessage());
+        } catch (IOException e) {
+            logger.error("IO error");;
+        }
+        return false;
+    }
+
 }
 

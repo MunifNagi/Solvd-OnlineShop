@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Users>
+<UserList>
     <User>
         <id>1</id>
         <first_name>Laurie</first_name>
@@ -17,4 +17,4 @@
         <email>munif@email.com</email>
         <password>Munif1234</password>
     </User>
-</Users>
+</UserList>

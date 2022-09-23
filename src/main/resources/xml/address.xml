@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Addresses>
+<AddressList>
     <Address>
         <id>1</id>
         <country>USA</country>
@@ -16,4 +16,4 @@
         <zipcode>20170</zipcode>
         <street>1817 Forest Drive</street>
     </Address>
-</Addresses>
+</AddressList>

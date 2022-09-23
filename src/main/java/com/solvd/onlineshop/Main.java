@@ -16,14 +16,20 @@ public class Main {
         IAddressService addressService = new AddressService();
         userService.createUser(new User(10,"Alex","John","A","347-000-0000","Alex@test.com","Alex1234"));
         User userObject = userService.getUserByID(10);
-        System.out.println(userObject);
+        logger.info(userObject);
         userObject.setPhone("000-000-0000");
         userService.updateUser(userObject);
 
-        IParseXML xmlreadr= new XMLParser();
-        List<User> userList= xmlreadr.readUserXML("src/main/resources/xml/user.xml");
-        List<Address> addressList =  xmlreadr.readAddressXML("src/main/resources/xml/address.xml");
-        List<Product> productList = xmlreadr.readProductXML("src/main/resources/xml/product.xml");
+        IParseXML xmlReader= new XMLParser();
+        IParseXML jaxb = new JAXBHandler();
+
+        List<User> userList= xmlReader.readXML("src/main/resources/xml/user.xml", User.class);
+        logger.info(userList);
+        logger.info(jaxb.readXML("src/main/resources/xml/user.xml", User.class));
+        List<Address> addressList =  xmlReader.readXML("src/main/resources/xml/address.xml",Address.class);
+        logger.info(addressList);
+        logger.info(jaxb.readXML("src/main/resources/xml/address.xml", Address.class));
+
         logger.info("Before Services Insertions");
         Display.print(userService.getAllUsers());
         Display.print(addressService.getAllAddresses());
@@ -33,11 +39,10 @@ public class Main {
         Display.print(userService.getAllUsers());
         Display.print(addressService.getAllAddresses());
 
-        IJAXB jaxb = new JAXBHandler();
-        List<Address> addressList2 = jaxb.xmlToAddresses("src/main/resources/xml/address.xml");
-        jaxb.usersToXMl(userService.getAllUsers(),"src/main/resources/xml/newUsers.xml");
-        jaxb.productsToXMl(productList, "src/main/resources/xml/newProducts.xml");
-        jaxb.addressesToXML(addressList2, "src/main/resources/xml/newAddresses.xml");
+        JAXBHandler jaxbHandler = new JAXBHandler();
+        jaxbHandler.writeXML(userList, User.class, "src/main/resources/xml/newUsers.xml");
+        jaxbHandler.writeXML(userObject,"src/main/resources/xml/newUser.xml");
+        jaxbHandler.writeXML(addressService.getAllAddresses(), Address.class,"src/main/resources/xml/newAddress.xml");
     }
 
 }
