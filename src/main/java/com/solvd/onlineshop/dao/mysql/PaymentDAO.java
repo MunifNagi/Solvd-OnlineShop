@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 public class PaymentDAO extends MySQLDAO implements IPaymentDAO {
     private static final Logger logger = LogManager.getLogger(PaymentDAO.class);
@@ -28,7 +29,7 @@ public class PaymentDAO extends MySQLDAO implements IPaymentDAO {
             if(rs.next()) {
                 String type = rs.getString("type");
                 Double amount = rs.getDouble("amount");
-                String date = rs.getString("date");
+                Date date = rs.getDate("date");
                 long userId = rs.getLong("user_id");
                 Payment payment = new Payment(id, type, amount, date, userId);
                 return payment;
@@ -66,7 +67,7 @@ public class PaymentDAO extends MySQLDAO implements IPaymentDAO {
             ps.setLong(1, payment.getPaymentId());
             ps.setString(2, payment.getType());
             ps.setDouble(3, payment.getAmount());
-            ps.setString(4, payment.getDate());
+            ps.setDate(4, new java.sql.Date(payment.getDate().getTime()));
             ps.setLong(5, payment.getUserId());
             ps.executeUpdate();
         }
@@ -109,7 +110,7 @@ public class PaymentDAO extends MySQLDAO implements IPaymentDAO {
                 long id = rs.getLong("id");
                 String type = rs.getString("type");
                 Double amount = rs.getDouble("amount");
-                String date = rs.getString("date");
+                Date date = rs.getDate("date");
                 Payment payment = new Payment(id, type, amount, date, userId);
                 return payment;
             }

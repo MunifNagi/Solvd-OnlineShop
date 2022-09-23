@@ -1,6 +1,7 @@
 package com.solvd.onlineshop.services;
 
 import com.solvd.onlineshop.entities.Address;
+import com.solvd.onlineshop.entities.Order;
 import com.solvd.onlineshop.entities.Product;
 import com.solvd.onlineshop.entities.User;
 import org.apache.logging.log4j.LogManager;
@@ -22,6 +23,8 @@ public class XMLParser implements IParseXML{
     private static String userSchema = "src/main/resources/xsd/user.xsd";
     private static String addressSchema = "src/main/resources/xsd/address.xsd";
     private static String productSchema = "src/main/resources/xsd/product.xsd";
+    private static String orderSchema = "src/main/resources/xsd/order.xsd";
+
     private static final Logger logger = LogManager.getLogger(XMLParser.class);
 
 
@@ -121,6 +124,113 @@ public class XMLParser implements IParseXML{
         }
         usersList.forEach((parsedUser -> logger.info(parsedUser)));
         return usersList;
+    }
+    private static List<Order> readOrderXML(String filePath) {
+        List<Order> orderList = new ArrayList<>();
+        Order order = null;
+        boolean id = false;
+        boolean totalPrice = false;
+        boolean productsQuantity = false;
+        boolean date = false;
+        boolean shippingAddressId = false;
+        boolean orderStatusId= false;
+        boolean paymentId= false;
+        boolean shipmentId= false;
+        DateAdaptor dateAdaptor = new DateAdaptor();
+
+
+        try {
+            XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+            XMLEventReader reader =
+                    xmlInputFactory.createXMLEventReader(new FileReader(filePath));
+
+            while(reader.hasNext()) {
+                XMLEvent event = reader.nextEvent();
+
+                switch(event.getEventType()) {
+
+                    case XMLStreamConstants.START_ELEMENT:
+                        StartElement startElement = event.asStartElement();
+                        String nodeName = startElement.getName().getLocalPart();
+
+                        if (nodeName.equalsIgnoreCase("order")) {
+                            order = new Order();
+                        } else if (nodeName.equalsIgnoreCase("id")) {
+                            id = true;
+                        } else if (nodeName.equalsIgnoreCase("total_price")) {
+                            totalPrice = true;
+                        } else if (nodeName.equalsIgnoreCase("products_quantity")) {
+                            productsQuantity = true;
+                        } else if (nodeName.equalsIgnoreCase("date")) {
+                            date = true;
+                        }
+                        else if (nodeName.equalsIgnoreCase("shipping_address_id")) {
+                            shippingAddressId = true;
+                        }
+                        else if (nodeName.equalsIgnoreCase("status_id")) {
+                            orderStatusId = true;
+                        }
+                        else if (nodeName.equalsIgnoreCase("payment_id")) {
+                            paymentId = true;
+                        }
+                        else if (nodeName.equalsIgnoreCase("shipment_id")) {
+                            shipmentId = true;
+                        }
+                        break;
+
+                    case XMLStreamConstants.CHARACTERS:
+                        Characters characters = event.asCharacters();
+                        if (id) {
+                            order.setOrderId((Integer. parseInt(characters.getData())));
+                            id = false;
+                        }
+                        if(totalPrice) {
+                            order.setTotalPrice(Double.parseDouble(characters.getData()));
+                            totalPrice = false;
+                        }
+                        if(productsQuantity) {
+                            order.setProductsQuantity((Integer. parseInt(characters.getData())));
+                            productsQuantity = false;
+                        }
+                        if(date) {
+                            order.setOrderDate(dateAdaptor.unmarshal(characters.getData()));
+                            date = false;
+                        }
+                        if(shippingAddressId) {
+                            order.setShippingAddressId((Integer. parseInt(characters.getData())));
+                            shippingAddressId = false;
+                        }
+                        if(orderStatusId) {
+                            order.setOrderStatusId((Integer. parseInt(characters.getData())));
+                            orderStatusId = false;
+                        }
+                        if(paymentId) {
+                            order.setPaymentId((Integer. parseInt(characters.getData())));
+                            paymentId = false;
+                        }
+                        if(shipmentId) {
+                            order.setShipmentId((Integer. parseInt(characters.getData())));
+                            shipmentId = false;
+                        }
+                        break;
+
+                    case XMLStreamConstants.END_ELEMENT:
+                        EndElement endElement = event.asEndElement();
+
+                        if(endElement.getName().getLocalPart().equalsIgnoreCase("order")) {
+                            orderList.add(order);
+                            order= null;
+                        }
+                        break;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (XMLStreamException e) {
+            e.printStackTrace();
+        }
+        orderList.forEach((parsedUser -> logger.info(parsedUser)));
+        return orderList;
     }
 
     private static List<Address> readAddressXML(String filePath) {
@@ -346,6 +456,12 @@ public class XMLParser implements IParseXML{
                     return new ArrayList<>();
                 }
                 return (List<T>) readUserXML(xmlFile);
+            case "Order":
+                if(!validate(xmlFile,orderSchema,Order.class)) {
+                    logger.error("The document provided is not valid");
+                    return new ArrayList<>();
+                }
+                return (List<T>) readOrderXML(xmlFile);
             default:
                 logger.error("The implementation for the class reference provided have not been implemented");
                 return new ArrayList<>();

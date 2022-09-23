@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 public class ReturnDAO extends MySQLDAO implements IReturnDAO {
     private static final Logger logger = LogManager.getLogger(ReturnDAO.class);
@@ -29,7 +30,7 @@ public class ReturnDAO extends MySQLDAO implements IReturnDAO {
             ResultSet rs = ps.executeQuery();
             if(rs.next()) {
                 long orderId = rs.getLong("order_id");
-                String date = rs.getString("date");
+                Date date = rs.getDate("date");
                 String reason = rs.getString("reason");
                 Return returnObject = new Return(id,orderId, date, reason);
                 return returnObject;
@@ -67,7 +68,7 @@ public class ReturnDAO extends MySQLDAO implements IReturnDAO {
         try (PreparedStatement ps = con.prepareStatement(insertQuery)) {
             ps.setLong(1, object.getReturnId());
             ps.setLong(2, object.getOrderId());
-            ps.setString(3, object.getDate());
+            ps.setDate(3, new java.sql.Date(object.getDate().getTime()));
             ps.setString(4, object.getReason());
             ps.executeUpdate();
         }

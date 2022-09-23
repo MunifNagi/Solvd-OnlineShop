@@ -1,14 +1,16 @@
 package com.solvd.onlineshop.entities;
 
+import java.util.Date;
+
 public class Payment {
 
     private long id;
     private String type;
     private double amount;
-    private String date;
+    private Date date;
     private long userId;
 
-    public Payment(long id, String type, double amount, String date, long userId) {
+    public Payment(long id, String type, double amount, Date date, long userId) {
         this.id = id;
         this.type = type;
         this.amount = amount;
@@ -28,13 +30,11 @@ public class Payment {
         return amount;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
     public long getUserId() {
         return userId;
     }
-
-
 }

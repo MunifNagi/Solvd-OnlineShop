@@ -1,12 +1,15 @@
 package com.solvd.onlineshop;
 
 import com.solvd.onlineshop.entities.Address;
+import com.solvd.onlineshop.entities.Order;
 import com.solvd.onlineshop.entities.Product;
 import com.solvd.onlineshop.entities.User;
 import com.solvd.onlineshop.services.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class Main {
@@ -14,6 +17,7 @@ public class Main {
     public static void main(String[] args) {
         IUserService userService = new UserService();
         IAddressService addressService = new AddressService();
+        IOrderService orderService = new OrderService();
         userService.createUser(new User(10,"Alex","John","A","347-000-0000","Alex@test.com","Alex1234"));
         User userObject = userService.getUserByID(10);
         logger.info(userObject);
@@ -43,6 +47,11 @@ public class Main {
         jaxbHandler.writeXML(userList, User.class, "src/main/resources/xml/newUsers.xml");
         jaxbHandler.writeXML(userObject,"src/main/resources/xml/newUser.xml");
         jaxbHandler.writeXML(addressService.getAllAddresses(), Address.class,"src/main/resources/xml/newAddress.xml");
+        Display.print(xmlReader.readXML("src/main/resources/xml/order.xml", Order.class));
+        Display.print(jaxbHandler.readXML("src/main/resources/xml/order.xml", Order.class));
+        Order order = new Order(3,1109,3,new Date(),1,1,1,1);
+        jaxbHandler.writeXML(order,"src/main/resources/xml/newOrder.xml");
+
     }
 
 }

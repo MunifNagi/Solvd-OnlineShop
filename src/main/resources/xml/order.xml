@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<OrderList>
+    <Order>
+        <id>1</id>
+        <total_price>1109.0</total_price>
+        <products_quantity>3</products_quantity>
+        <date>2022-07-23</date>
+        <shipping_address_id>1</shipping_address_id>
+        <status_id>1</status_id>
+        <payment_id>1</payment_id>
+        <shipment_id>1</shipment_id>
+    </Order>
+    <Order>
+        <id>2</id>
+        <total_price>1209.0</total_price>
+        <products_quantity>4</products_quantity>
+        <date>2022-09-22</date>
+        <shipping_address_id>2</shipping_address_id>
+        <status_id>1</status_id>
+        <payment_id>1</payment_id>
+        <shipment_id>2</shipment_id>
+    </Order>
+</OrderList>

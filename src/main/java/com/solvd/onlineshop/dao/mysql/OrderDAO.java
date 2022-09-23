@@ -3,6 +3,7 @@ package com.solvd.onlineshop.dao.mysql;
 import com.solvd.onlineshop.ConnectionPool;
 import com.solvd.onlineshop.entities.Order;
 import com.solvd.onlineshop.dao.IOrderDAO;
+import com.solvd.onlineshop.services.DateAdaptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class OrderDAO extends  MySQLDAO implements IOrderDAO {
@@ -31,7 +33,7 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
             if(rs.next()) {
                 double totalPrice = rs.getDouble("total_price");
                 long productsQuantity = rs.getLong("products_quantity");
-                String date = rs.getString("date");
+                Date date = rs.getDate("date");
                 long shippingAddressId = rs.getLong("shipping_address_id");
                 int orderStatusId = rs.getInt("order_status_id");
                 long paymentId = rs.getLong("payment_id");
@@ -49,17 +51,19 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
     }
 
     public void create(Order order) {
+        DateAdaptor dateAdaptor = new DateAdaptor();
         Connection con = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = con.prepareStatement(insertQuery)) {
             ps.setLong(1, order.getOrderId());
             ps.setDouble(2, order.getTotalPrice());
             ps.setLong(3, order.getProductsQuantity());
-            ps.setString(4, order.getDate());
+            ps.setDate(4, new java.sql.Date(order.getDate().getTime()));
             ps.setLong(5, order.getShippingAddressId());
             ps.setLong(6, order.getOrderStatusId());
             ps.setLong(7, order.getPaymentId());
             ps.setLong(8, order.getShipmentId());
             ps.executeUpdate();
+            logger.info("Inserting record into the Order Table was successful");
         }
         catch (SQLException e) {
             logger.error("Inserting record into the Order Table Failed",e);
@@ -112,7 +116,7 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
                 long id = rs.getLong("id");
                 double totalPrice = rs.getDouble("total_price");
                 long productsQuantity = rs.getLong("products_quantity");
-                String date = rs.getString("date");
+                Date date = rs.getDate("date");
                 long shippingAddressId = rs.getLong("shipping_address_id");
                 int orderStatusId = rs.getInt("order_status_id");
                 long paymentId = rs.getLong("payment_id");
@@ -140,7 +144,7 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
                 long id = rs.getLong("id");
                 double totalPrice = rs.getDouble("total_price");
                 long productsQuantity = rs.getLong("products_quantity");
-                String date = rs.getString("date");
+                Date date = rs.getDate("date");
                 long shippingAddressId = rs.getLong("shipping_address_id");
                 int orderStatusId = rs.getInt("order_status_id");
                 long paymentId = rs.getLong("payment_id");

@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 public class ShipmentDAO extends MySQLDAO implements IShipmentDAO {
     private static final Logger logger = LogManager.getLogger(ShipmentDAO.class);
@@ -27,7 +28,7 @@ public class ShipmentDAO extends MySQLDAO implements IShipmentDAO {
             ResultSet rs = ps.executeQuery();
             if(rs.next()) {
                 String trackingNumber = rs.getString("tracking_number");
-                String date = rs.getString("date");
+                Date date = rs.getDate("date");
                 long shipperId = rs.getLong("shipper_id");
                 Shipment shipment = new Shipment(id, trackingNumber, date, shipperId);
                 return shipment;
@@ -66,7 +67,7 @@ public class ShipmentDAO extends MySQLDAO implements IShipmentDAO {
         try (PreparedStatement ps = con.prepareStatement(insertQuery)) {
             ps.setLong(1, shipment.getShipmentId());
             ps.setString(2, shipment.getTrackingNumber());
-            ps.setString(3, shipment.getDate());
+            ps.setDate(3, new java.sql.Date(shipment.getDate().getTime()));
             ps.setLong(4, shipment.getShipper_id());
             ps.executeUpdate();
         }

@@ -1,12 +1,14 @@
 package com.solvd.onlineshop.entities;
 
+import java.util.Date;
+
 public class Shipment {
     private long id;
     private String trackingNumber;
-    private String date;
+    private Date date;
     private long shipper_id;
 
-    public Shipment(long id, String trackingNumber, String date, long shipper_id) {
+    public Shipment(long id, String trackingNumber, Date date, long shipper_id) {
         this.id = id;
         this.trackingNumber = trackingNumber;
         this.date = date;
@@ -21,7 +23,7 @@ public class Shipment {
         return trackingNumber;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
