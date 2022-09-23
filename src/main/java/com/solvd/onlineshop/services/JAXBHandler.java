@@ -13,6 +13,7 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class JAXBHandler implements IParseXML {
@@ -36,8 +37,9 @@ public class JAXBHandler implements IParseXML {
             List<T> entityList = jaxbElement.getValue().getEntities();
             return entityList;
         } catch (JAXBException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
         }
+        return new ArrayList<>();
     }
 
     @Override
@@ -72,7 +74,7 @@ public class JAXBHandler implements IParseXML {
             JAXBElement<EntityList> jaxbElement = new JAXBElement<EntityList>(new QName(null, rootElementName), EntityList.class, new EntityList<>(entityList));
             marshaller.marshal(jaxbElement, new File(xmlFile));
         } catch (JAXBException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
         }
     }
 }

@@ -4,6 +4,7 @@ import com.solvd.onlineshop.ConnectionPool;
 import com.solvd.onlineshop.dao.IShipmentDAO;
 import com.solvd.onlineshop.entities.Order;
 import com.solvd.onlineshop.entities.Shipment;
+import com.solvd.onlineshop.exception.InvalidDataBaseConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,6 +35,7 @@ public class ShipmentDAO extends MySQLDAO implements IShipmentDAO {
         } catch (SQLException e) {
             String message = String.format("Getting shipment with ID:%d wasn't successful", id);
             logger.error(message, e);
+            throw new InvalidDataBaseConnection(e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }

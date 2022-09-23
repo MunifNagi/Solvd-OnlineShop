@@ -1,6 +1,7 @@
 package com.solvd.onlineshop;
 
 import com.solvd.onlineshop.dao.mysql.AddressDAO;
+import com.solvd.onlineshop.exception.InvalidDataBaseConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -49,7 +50,7 @@ public class ConnectionPool {
 
     public synchronized Connection getConnection() {
         if (connectionPool.isEmpty()) {
-            throw new RuntimeException("There are no more available connections!");
+            throw new InvalidDataBaseConnection("There are no more available connections!");
             }
         Connection connection = connectionPool.remove(connectionPool.size() - 1);
         return connection;
