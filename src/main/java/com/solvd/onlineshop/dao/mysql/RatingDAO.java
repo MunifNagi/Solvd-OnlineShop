@@ -115,10 +115,11 @@ public class RatingDAO extends MySQLDAO implements IRatingDAO {
     public List<Rating> getRatingsByProduct(long productId) {
         Connection con = ConnectionPool.getInstance().getConnection();
         List<Rating> ratings = new ArrayList<>();
-        try(PreparedStatement ps =con.prepareStatement(readByProductIdQuery)) {
-            ps.setLong(1,productId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readByProductIdQuery)) {
+            ps.setLong(1, productId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
                 long id = rs.getLong("id");
                 long userId = rs.getLong("user_id");
                 int rating = rs.getInt("rating");
@@ -131,6 +132,13 @@ public class RatingDAO extends MySQLDAO implements IRatingDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return ratings;
     }
