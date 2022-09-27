@@ -19,9 +19,9 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
     private static final Logger logger = LogManager.getLogger(OrderDAO.class);
     private static String readQuery = "SELECT * FROM Order where id=?";
     private static String removeQuery = "DElETE FROM Order WHERE id = ?";
-    private static String insertQuery = "INSERT INTO Order VALUES(?,?,?,?,?,?,?,?)";
-    private static String updateQuery = "UPDATE User SET order_status = ? WHERE id = ?";
-    private static String readAllQuery = "SELECT * FROM Order";
+    private static String insertQuery = "INSERT INTO OnlineShop.Order VALUES(?,?,?,?,?,?,?,?)";
+    private static String updateQuery = "UPDATE Order SET order_status = ? WHERE id = ?";
+    private static String readAllQuery = "SELECT * FROM OnlineShop.Order";
     private static String readByStatusIdQuery = "SELECT * FROM Order WHERE order_status_id=?";
 
 
@@ -125,7 +125,7 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
                 orderList.add(order);
             }
         } catch (SQLException e) {
-            logger.error("Getting all records from Report Table Failed", e);
+            logger.error("Getting all records from Order Table Failed", e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }

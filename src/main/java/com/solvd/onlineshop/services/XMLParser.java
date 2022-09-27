@@ -19,7 +19,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class XMLParser implements IParseXML{
+public class XMLParser implements IParseXML {
     private static String userSchema = "src/main/resources/xsd/user.xsd";
     private static String addressSchema = "src/main/resources/xsd/address.xsd";
     private static String productSchema = "src/main/resources/xsd/product.xsd";
@@ -78,7 +78,7 @@ public class XMLParser implements IParseXML{
                     case XMLStreamConstants.CHARACTERS:
                         Characters characters = event.asCharacters();
                         if (id) {
-                            user.setUserId((Integer. parseInt(characters.getData())));
+//                            user.getId((Integer. parseInt(characters.getData())));
                             id = false;
                         }
                         if(firstName) {

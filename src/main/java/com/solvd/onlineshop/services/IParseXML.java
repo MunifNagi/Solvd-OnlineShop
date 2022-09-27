@@ -3,6 +3,6 @@ package com.solvd.onlineshop.services;
 import java.util.List;
 
 public interface IParseXML {
-    <T> List<T> readXML(String xmlFile, Class<T> classRef);
-    <T> boolean validate (String xmlFile, String xsdFile, Class<T> classRef);
+    <T> List<T> readXML(String filePath, Class<T> classRef);
+    <T> boolean validate (String filePath, String schemaPath, Class<T> classRef);
 }

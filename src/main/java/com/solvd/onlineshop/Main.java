@@ -1,9 +1,11 @@
 package com.solvd.onlineshop;
 
-import com.solvd.onlineshop.entities.Address;
-import com.solvd.onlineshop.entities.Order;
-import com.solvd.onlineshop.entities.Product;
-import com.solvd.onlineshop.entities.User;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
+import com.solvd.onlineshop.dao.IPaymentDAO;
+import com.solvd.onlineshop.entities.*;
 import com.solvd.onlineshop.services.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,8 +20,11 @@ public class Main {
         IUserService userService = new UserService();
         IAddressService addressService = new AddressService();
         IOrderService orderService = new OrderService();
-        userService.createUser(new User(10,"Alex","John","A","347-000-0000","Alex@test.com","Alex1234"));
-        User userObject = userService.getUserByID(10);
+        IPaymentService paymentService = new PaymentService();
+        userService.createUser(new User(3000,"Alex","John","A","347-000-0000","Alex@test.com","Alex1234"));
+        paymentService.createPayment(new Payment(3,"VISA",1400,new Date(),3000));
+        System.out.println(paymentService.getAllPayments());
+        User userObject = userService.getUserByID(3000);
         logger.info(userObject);
         userObject.setPhone("000-000-0000");
         userService.updateUser(userObject);
@@ -33,25 +38,28 @@ public class Main {
         List<Address> addressList =  xmlReader.readXML("src/main/resources/xml/address.xml",Address.class);
         logger.info(addressList);
         logger.info(jaxb.readXML("src/main/resources/xml/address.xml", Address.class));
+        List<Order> orderList =  xmlReader.readXML("src/main/resources/xml/order.xml",Order.class);
+        logger.info(jaxb.readXML("src/main/resources/xml/order.xml", Order.class));
 
         logger.info("Before Services Insertions");
         Display.print(userService.getAllUsers());
         Display.print(addressService.getAllAddresses());
+        Display.print(orderService.getAllOrders());
         userList.stream().forEach(user -> userService.createUser(user));
         addressList.stream().forEach(address -> addressService.createAddress(address));
+        orderList.stream().forEach(order1 -> orderService.createOrder(order1));
         logger.info("After Services Insertions");
         Display.print(userService.getAllUsers());
         Display.print(addressService.getAllAddresses());
+        Display.print(orderService.getAllOrders());
 
-        JAXBHandler jaxbHandler = new JAXBHandler();
-        jaxbHandler.writeXML(userList, User.class, "src/main/resources/xml/newUsers.xml");
-        jaxbHandler.writeXML(userObject,"src/main/resources/xml/newUser.xml");
-        jaxbHandler.writeXML(addressService.getAllAddresses(), Address.class,"src/main/resources/xml/newAddress.xml");
-        Display.print(xmlReader.readXML("src/main/resources/xml/order.xml", Order.class));
-        Display.print(jaxbHandler.readXML("src/main/resources/xml/order.xml", Order.class));
-        Order order = new Order(3,1109,3,new Date(),1,1,1,1);
-        jaxbHandler.writeXML(order,"src/main/resources/xml/newOrder.xml");
-
+        JsonMapper jsonMapper = new JsonMapper();
+        List<User> usersList = jsonMapper.readJSON("src/main/resources/json/user.json", User.class);
+        List<Order> ordersList = jsonMapper.readJSON("src/main/resources/json/order.json", Order.class);
+        List<Payment> paymentList = jsonMapper.readJSON("src/main/resources/json/payment.json", Payment.class);
+        jsonMapper.writeJSON(usersList, "src/main/resources/json/new-user.json");
+        jsonMapper.writeJSON(ordersList, "src/main/resources/json/new-order.json");
+        jsonMapper.writeJSON(paymentList, "src/main/resources/json/new-payment.json");
     }
 
 }

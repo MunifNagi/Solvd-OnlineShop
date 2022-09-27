@@ -1,5 +1,8 @@
 package com.solvd.onlineshop.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -9,19 +12,28 @@ import java.util.Date;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Order {
     @XmlElement
+    @JsonProperty
     private long id;
+    @JsonProperty
     @XmlElement(name = "total_price")
     private double totalPrice;
+    @JsonProperty
     @XmlElement(name = "products_quantity")
     private long productsQuantity;
     @XmlElement
+    @JsonProperty
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy/MM/dd")
     private Date date;
+    @JsonProperty
     @XmlElement(name = "shipping_address_id")
     private long shippingAddressId;
+    @JsonProperty
     @XmlElement(name = "status_id")
     private int orderStatusId;
+    @JsonProperty
     @XmlElement(name = "payment_id")
     private long paymentId;
+    @JsonProperty
     @XmlElement(name = "shipment_id")
     private long shipmentId;
 
@@ -48,7 +60,7 @@ public class Order {
                 ", date=" + date +
                 '}';
     }
-
+    @JsonProperty("id")
     public long getOrderId() {
         return id;
     }

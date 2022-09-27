@@ -60,7 +60,6 @@ public class JAXBHandler implements IParseXML {
         return false;
     }
 
-
     public <T> void writeXML(List<T> entityList, Class<T> classRef, String xmlFile) {
         marshall(entityList, classRef, xmlFile);
     }
