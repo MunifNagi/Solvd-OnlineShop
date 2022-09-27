@@ -1,16 +1,15 @@
 package com.solvd.onlineshop;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
-import com.solvd.onlineshop.dao.IPaymentDAO;
+
 import com.solvd.onlineshop.entities.*;
 import com.solvd.onlineshop.services.*;
+import com.solvd.onlineshop.services.jdbcImp.AddressService;
+import com.solvd.onlineshop.services.jdbcImp.OrderService;
+import com.solvd.onlineshop.services.jdbcImp.PaymentService;
+import com.solvd.onlineshop.services.jdbcImp.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -60,6 +59,9 @@ public class Main {
         jsonMapper.writeJSON(usersList, "src/main/resources/json/new-user.json");
         jsonMapper.writeJSON(ordersList, "src/main/resources/json/new-order.json");
         jsonMapper.writeJSON(paymentList, "src/main/resources/json/new-payment.json");
+        IUserService userS = new com.solvd.onlineshop.services.myBatisImp.UserService();
+        userS.createUser(new User(2,"munifff","m","A","347-000-0000","Alex@test.com","Alex1234"));
+        System.out.println(userS.getUserByID(2000));
     }
 
 }

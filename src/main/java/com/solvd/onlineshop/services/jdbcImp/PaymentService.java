@@ -1,18 +1,16 @@
-package com.solvd.onlineshop.services;
+package com.solvd.onlineshop.services.jdbcImp;
 
-import com.solvd.onlineshop.dao.IAddressDAO;
 import com.solvd.onlineshop.dao.IPaymentDAO;
-import com.solvd.onlineshop.dao.mysql.AddressDAO;
 import com.solvd.onlineshop.dao.mysql.PaymentDAO;
-import com.solvd.onlineshop.entities.Address;
 import com.solvd.onlineshop.entities.Payment;
+import com.solvd.onlineshop.services.IPaymentService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PaymentService implements IPaymentService{
+public class PaymentService implements IPaymentService {
     private IPaymentDAO paymentDAO = new PaymentDAO();
     private static final Logger logger = LogManager.getLogger(AddressService.class);
     @Override

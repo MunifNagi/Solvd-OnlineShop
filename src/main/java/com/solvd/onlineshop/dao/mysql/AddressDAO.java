@@ -3,8 +3,6 @@ package com.solvd.onlineshop.dao.mysql;
 import com.solvd.onlineshop.entities.Address;
 import com.solvd.onlineshop.ConnectionPool;
 import com.solvd.onlineshop.dao.IAddressDAO;
-import com.solvd.onlineshop.entities.User;
-import com.solvd.onlineshop.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

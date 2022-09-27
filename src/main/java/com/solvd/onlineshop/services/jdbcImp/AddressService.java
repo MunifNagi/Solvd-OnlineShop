@@ -1,16 +1,16 @@
-package com.solvd.onlineshop.services;
+package com.solvd.onlineshop.services.jdbcImp;
 
 import com.solvd.onlineshop.dao.IAddressDAO;
 import com.solvd.onlineshop.dao.mysql.AddressDAO;
 import com.solvd.onlineshop.entities.Address;
-import com.solvd.onlineshop.entities.User;
+import com.solvd.onlineshop.services.IAddressService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddressService implements IAddressService{
+public class AddressService implements IAddressService {
     private IAddressDAO addressDAO = new AddressDAO();
     private static final Logger logger = LogManager.getLogger(AddressService.class);
 

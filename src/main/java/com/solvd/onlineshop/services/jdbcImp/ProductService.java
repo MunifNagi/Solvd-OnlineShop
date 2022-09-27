@@ -1,14 +1,15 @@
-package com.solvd.onlineshop.services;
+package com.solvd.onlineshop.services.jdbcImp;
 
 import com.solvd.onlineshop.dao.IOrderDAO;
 import com.solvd.onlineshop.dao.IProductDAO;
 import com.solvd.onlineshop.dao.mysql.OrderDAO;
 import com.solvd.onlineshop.dao.mysql.ProductDAO;
 import com.solvd.onlineshop.entities.Product;
+import com.solvd.onlineshop.services.IProductService;
 
 import java.util.List;
 
-public class ProductService implements IProductService{
+public class ProductService implements IProductService {
     private IProductDAO productDAO = new ProductDAO();
 
     @Override
