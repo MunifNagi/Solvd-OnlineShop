@@ -27,10 +27,11 @@ public class ReportDAO extends MySQLDAO implements IReportDAO {
     @Override
     public Report getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps = con.prepareStatement(readQuery)) {
-            ps.setLong(1,id);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readQuery)) {
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
                 long userId = rs.getLong("user_id");
                 long productId = rs.getLong("product_id");
                 long orderId = rs.getLong("order_id");
@@ -42,6 +43,13 @@ public class ReportDAO extends MySQLDAO implements IReportDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return null;
     }
@@ -108,9 +116,10 @@ public class ReportDAO extends MySQLDAO implements IReportDAO {
     public List<Report> getAllReports() {
         Connection con = ConnectionPool.getInstance().getConnection();
         List<Report> reports = new ArrayList<>();
-        try(PreparedStatement ps =con.prepareStatement(readAllQuery)) {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readAllQuery)) {
+            rs = ps.executeQuery();
+            while (rs.next()) {
                 long id = rs.getLong("id");
                 long userId = rs.getLong("user_id");
                 long productId = rs.getLong("product_id");
@@ -122,6 +131,13 @@ public class ReportDAO extends MySQLDAO implements IReportDAO {
             logger.error("Getting all records from Report Table Failed");
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return reports;
     }
@@ -130,10 +146,11 @@ public class ReportDAO extends MySQLDAO implements IReportDAO {
     public List<Report> getAllReportsByUserId(long userId) {
         Connection con = ConnectionPool.getInstance().getConnection();
         List<Report> reports = new ArrayList<>();
-        try(PreparedStatement ps =con.prepareStatement(readAllQuery)) {
-            ps.setLong(1,userId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readAllQuery)) {
+            ps.setLong(1, userId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
                 long id = rs.getLong("id");
                 long productId = rs.getLong("product_id");
                 long orderId = rs.getLong("order_id");
@@ -145,6 +162,13 @@ public class ReportDAO extends MySQLDAO implements IReportDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return reports;
     }
@@ -153,11 +177,12 @@ public class ReportDAO extends MySQLDAO implements IReportDAO {
     public List<Report> getAllReportsByProductId(long productId) {
         Connection con = ConnectionPool.getInstance().getConnection();
         List<Report> reports = new ArrayList<>();
-        try(PreparedStatement ps =con.prepareStatement(readAllQuery)) {
-            ps.setLong(1,productId);
-            ResultSet rs = ps.executeQuery();
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readAllQuery)) {
+            ps.setLong(1, productId);
+            rs = ps.executeQuery();
 
-            while (rs.next()){
+            while (rs.next()) {
                 long id = rs.getLong("id");
                 long userId = rs.getLong("user_id");
                 long orderId = rs.getLong("order_id");
@@ -169,6 +194,13 @@ public class ReportDAO extends MySQLDAO implements IReportDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return reports;
     }

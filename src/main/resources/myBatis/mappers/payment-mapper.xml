@@ -1,0 +1,33 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.solvd.onlineshop.dao.IPaymentDAO">
+    <select id="getByID" resultType="com.solvd.onlineshop.entities.Payment">
+        SELECT *
+        FROM Payment WHERE id = #{id}
+    </select>
+
+    <select id="getAllPayments" resultType="com.solvd.onlineshop.entities.Payment" >
+        SELECT *
+        FROM Payment
+    </select>
+
+    <select id="getPaymentByUserId" resultType="com.solvd.onlineshop.entities.Payment">
+        SELECT * Payment FROM WHERE user_id = #{userId}
+    </select>
+
+
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Payment(id,type,amount,date,user_id)
+        VALUES(#{id},#{type},#{amount},#{date},#{userId})
+    </insert>
+
+    <update id="update" useGeneratedKeys="true" keyProperty="id">
+        UPDATE Payment SET type = #{type}, amount= #{amount} WHERE id = #{id}
+    </update>
+
+    <delete id="remove">
+        DELETE FROM Payment where id = #{id}
+    </delete>
+
+</mapper>

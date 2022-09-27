@@ -21,10 +21,11 @@ public class UserAddressDAO extends MySQLDAO implements IUserAddressDAO {
     @Override
     public UserAddress getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps = con.prepareStatement(readQuery)){
-            ps.setLong(1,id);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readQuery)) {
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
                 long userId = rs.getLong("user_id");
                 long addressId = rs.getLong("address_id");
                 UserAddress userAddress = new UserAddress(id, userId, addressId);
@@ -35,6 +36,13 @@ public class UserAddressDAO extends MySQLDAO implements IUserAddressDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return null;
     }

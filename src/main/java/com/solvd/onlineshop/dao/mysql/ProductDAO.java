@@ -23,17 +23,18 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
     private static String readByManuIdQuery = "select * from Product where manufacturer_id = ?";
     private static String readByCategoryIdQuery = "select * from Product where category_id = ?";
     @Override
-    public Product getByID(long id){
+    public Product getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps = con.prepareStatement(readQuery)) {
-            ps.setLong(1,id);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readQuery)) {
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
                 String name = rs.getString("name");
                 double price = rs.getDouble("price");
                 String description = rs.getString("description");
                 long categoryId = rs.getLong("category_id");
-                double weight = rs.getDouble("weights");
+                double weight = rs.getDouble("weight");
                 int inStock = rs.getInt("in_stock");
                 long discountId = rs.getInt("discount_id");
                 long manufacturerId = rs.getInt("manufacturer_id");
@@ -45,6 +46,13 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return null;
     }

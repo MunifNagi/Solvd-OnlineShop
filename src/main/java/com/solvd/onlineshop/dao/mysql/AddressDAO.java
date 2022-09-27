@@ -19,10 +19,11 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
     private static String updateQuery = "UPDATE Address SET country = ? , state = ? , city = ? , zipcode = ? , street = ? WHERE id = ?";
     private static String readAllQuery = "SELECT * FROM Address";
     public Address getByID(long id){
+        ResultSet rs = null;
         Connection con = ConnectionPool.getInstance().getConnection();
         try(PreparedStatement ps = con.prepareStatement(readQuery)){
             ps.setLong(1, id);
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
             if(rs.next()) {
                 String country = rs.getString("country");
                 String state = rs.getString("state");
@@ -38,6 +39,13 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
             return null;
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if(rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return null;
     }
@@ -103,10 +111,11 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
 
     @Override
     public List<Address> getAllAddresses() {
+        ResultSet rs = null;
         Connection con = ConnectionPool.getInstance().getConnection();
         List<Address> addressList = new ArrayList<>();
         try(PreparedStatement ps =con.prepareStatement(readAllQuery)) {
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
             while (rs.next()){
                 long id = rs.getLong("id");
                 String country = rs.getString("country");
@@ -121,6 +130,13 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
             logger.error("Getting all records from Address Table Failed");
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if(rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return addressList;
     }

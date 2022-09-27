@@ -26,10 +26,11 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
 
 
     public Order getByID(long id) {
+        ResultSet rs = null;
         Connection con = ConnectionPool.getInstance().getConnection();
         try(PreparedStatement ps = con.prepareStatement(readQuery)) {
             ps.setLong(1,id);
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
             if(rs.next()) {
                 double totalPrice = rs.getDouble("total_price");
                 long productsQuantity = rs.getLong("products_quantity");
@@ -46,6 +47,13 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if(rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return null;
     }
@@ -110,9 +118,10 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
     public List<Order> getAllOrders() {
         Connection con = ConnectionPool.getInstance().getConnection();
         List<Order> orderList = new ArrayList<>();
-        try(PreparedStatement ps =con.prepareStatement(readAllQuery)) {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readAllQuery)) {
+            rs = ps.executeQuery();
+            while (rs.next()) {
                 long id = rs.getLong("id");
                 double totalPrice = rs.getDouble("total_price");
                 long productsQuantity = rs.getLong("products_quantity");
@@ -128,6 +137,13 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
             logger.error("Getting all records from Order Table Failed", e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return orderList;
     }
@@ -137,10 +153,11 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
     public List<Order> getOrderByStatusId(long statusID) {
         Connection con = ConnectionPool.getInstance().getConnection();
         List<Order> orderList = new ArrayList<>();
-        try(PreparedStatement ps =con.prepareStatement(readByStatusIdQuery)) {
-            ps.setLong(1,statusID);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readByStatusIdQuery)) {
+            ps.setLong(1, statusID);
+            rs = ps.executeQuery();
+            while (rs.next()) {
                 long id = rs.getLong("id");
                 double totalPrice = rs.getDouble("total_price");
                 long productsQuantity = rs.getLong("products_quantity");
@@ -157,6 +174,13 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return orderList;
     }

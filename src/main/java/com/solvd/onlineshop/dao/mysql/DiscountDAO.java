@@ -24,13 +24,14 @@ public class DiscountDAO extends MySQLDAO implements IDiscountDAO {
     @Override
     public Discount getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement(readQuery)) {
-            ps.setLong(1,id);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readQuery)) {
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
                 String name = rs.getString("name");
                 Double percentage = rs.getDouble("percentage");
-                Discount discount = new Discount(id, name,percentage);
+                Discount discount = new Discount(id, name, percentage);
                 return discount;
             }
         } catch (SQLException e) {
@@ -38,6 +39,13 @@ public class DiscountDAO extends MySQLDAO implements IDiscountDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return null;
     }
@@ -102,19 +110,27 @@ public class DiscountDAO extends MySQLDAO implements IDiscountDAO {
     public List<Discount> getAllDiscounts() {
         Connection con = ConnectionPool.getInstance().getConnection();
         List<Discount> discountList = new ArrayList<>();
-        try(PreparedStatement ps =con.prepareStatement(readAllQuery)) {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readAllQuery)) {
+            rs = ps.executeQuery();
+            while (rs.next()) {
                 long id = rs.getLong("id");
                 String name = rs.getString("name");
                 Double percentage = rs.getDouble("percentage");
-                Discount discount = new Discount(id, name,percentage);
+                Discount discount = new Discount(id, name, percentage);
                 discountList.add(discount);
             }
         } catch (SQLException e) {
             logger.error("Getting all records from Report Table Failed", e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return discountList;
     }

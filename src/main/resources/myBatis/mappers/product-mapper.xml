@@ -1,0 +1,47 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.solvd.onlineshop.dao.IProductDAO">
+        <resultMap id="productResultMap" type="com.solvd.onlineshop.entities.Product">
+            <id column="id" property="id"/>
+            <result column="name" property="name"/>
+            <result column="price" property="price"/>
+            <result column="description" property="description"/>
+            <result column="category_id" property="categoryId"/>
+            <result column="weight" property="weight"/>
+            <result column="in_stock" property="inStock"/>
+            <result column="discount_id" property="discountId"/>
+            <result column="manufacturer_id" property="manufacturerId"/>
+        </resultMap>
+    <select id="getByID" resultMap="productResultMap">
+        SELECT *
+        FROM Product WHERE id = #{id}
+    </select>
+
+    <select id="getAllProduct" resultMap="productResultMap" >
+        SELECT *
+        FROM Product
+    </select>
+
+    <select id="getProductByCategoryId" resultMap="productResultMap">
+        SELECT * Product FROM WHERE category_id = #{categoryId}
+    </select>
+    <select id="getProductByManufacturerId" resultMap="productResultMap">
+        SELECT * Product FROM WHERE manufacturer_id = #{manufacturerId}
+    </select>
+
+
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Product (id,name,price,description,category_id,weight,in_stock,discount_id,manufacturer_id)
+        VALUES(#{id},#{name},#{price},#{description},#{categoryId},#{weight},#{inStock},#{discountId},#{manufacturerId})
+    </insert>
+
+    <update id="update" useGeneratedKeys="true" keyProperty="id">
+        UPDATE Product SET price = #{price}, description = #{description}, category_id = #{categoryId}, in_stock = #{inStock} WHERE id = #{id}
+    </update>
+
+    <delete id="remove">
+        DELETE FROM Product where id = #{id}
+    </delete>
+
+</mapper>

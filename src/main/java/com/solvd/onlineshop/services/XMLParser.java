@@ -78,7 +78,7 @@ public class XMLParser implements IParseXML {
                     case XMLStreamConstants.CHARACTERS:
                         Characters characters = event.asCharacters();
                         if (id) {
-//                            user.getId((Integer. parseInt(characters.getData())));
+                            user.setUserId((Integer. parseInt(characters.getData())));
                             id = false;
                         }
                         if(firstName) {

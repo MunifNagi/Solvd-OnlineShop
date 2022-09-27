@@ -25,10 +25,11 @@ public class PaymentDAO extends MySQLDAO implements IPaymentDAO {
     @Override
     public Payment getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps = con.prepareStatement(readQuery)){
-            ps.setLong(1,id);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readQuery)) {
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
                 String type = rs.getString("type");
                 Double amount = rs.getDouble("amount");
                 Date date = rs.getDate("date");
@@ -41,6 +42,13 @@ public class PaymentDAO extends MySQLDAO implements IPaymentDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return null;
     }
@@ -103,35 +111,46 @@ public class PaymentDAO extends MySQLDAO implements IPaymentDAO {
     }
 
     @Override
-    public Payment getPayemntByUserId(long userId) {
+    public List<Payment> getPaymentByUserId(long userId) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps = con.prepareStatement(readByUserIdQuery)){
-            ps.setLong(1,userId);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
+        List<Payment> paymentList = new ArrayList<>();
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readByUserIdQuery)) {
+            ps.setLong(1, userId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
                 long id = rs.getLong("id");
                 String type = rs.getString("type");
                 Double amount = rs.getDouble("amount");
                 Date date = rs.getDate("date");
                 Payment payment = new Payment(id, type, amount, date, userId);
-                return payment;
+                System.out.println(payment);
+                paymentList.add(payment);
             }
         } catch (SQLException e) {
             String message = String.format("Getting payments by user ID:%d wasn't successful", userId);
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
-        return null;
+        return paymentList;
     }
 
     @Override
     public List<Payment> getAllPayments() {
         Connection con = ConnectionPool.getInstance().getConnection();
         List<Payment> paymentList = new ArrayList<>();
-        try(PreparedStatement ps =con.prepareStatement(readAllQuery)) {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readAllQuery)) {
+            rs = ps.executeQuery();
+            while (rs.next()) {
                 long id = rs.getLong("id");
                 String type = rs.getString("type");
                 Double amount = rs.getDouble("amount");
@@ -141,9 +160,16 @@ public class PaymentDAO extends MySQLDAO implements IPaymentDAO {
                 paymentList.add(payment);
             }
         } catch (SQLException e) {
-            logger.error("Getting all records from Address Table Failed");
+            logger.error("Getting all records from Payments Table Failed");
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return paymentList;
     }

@@ -22,10 +22,11 @@ public class ManufacturerDAO extends MySQLDAO implements IManufacturerDAO {
     @Override
     public Manufacturer getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement(readQuery)) {
-            ps.setLong(1,id);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readQuery)) {
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
                 String name = rs.getString("name");
                 String phone = rs.getString("phone");
                 Manufacturer manufacturer = new Manufacturer(id, name, phone);
@@ -36,6 +37,13 @@ public class ManufacturerDAO extends MySQLDAO implements IManufacturerDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return null;
     }

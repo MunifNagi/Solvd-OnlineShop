@@ -21,10 +21,11 @@ public class ShipperDAO extends MySQLDAO implements IShipperDAO {
 
     @Override
     public Shipper getByID(long id) {
+        ResultSet rs = null;
         Connection con = ConnectionPool.getInstance().getConnection();
         try(PreparedStatement ps =con.prepareStatement(readQuery)) {
             ps.setLong(1, id);
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
             if(rs.next()) {
                 String name = rs.getString("company_name");
                 boolean isInternational = rs.getBoolean("internationalShipping");
@@ -36,6 +37,13 @@ public class ShipperDAO extends MySQLDAO implements IShipperDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if(rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return null;
     }

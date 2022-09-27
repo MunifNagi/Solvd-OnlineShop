@@ -25,14 +25,15 @@ public class ReturnDAO extends MySQLDAO implements IReturnDAO {
     @Override
     public Return getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps = con.prepareStatement(readQuery)){
-            ps.setLong(1,id);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readQuery)) {
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
                 long orderId = rs.getLong("order_id");
                 Date date = rs.getDate("date");
                 String reason = rs.getString("reason");
-                Return returnObject = new Return(id,orderId, date, reason);
+                Return returnObject = new Return(id, orderId, date, reason);
                 return returnObject;
             }
         } catch (SQLException e) {
@@ -40,6 +41,13 @@ public class ReturnDAO extends MySQLDAO implements IReturnDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return null;
     }

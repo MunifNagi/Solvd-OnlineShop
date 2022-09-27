@@ -59,4 +59,16 @@ public class Payment {
     public long getUserId() {
         return userId;
     }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 }

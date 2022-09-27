@@ -43,4 +43,9 @@ public class PaymentService implements IPaymentService {
     public void updatePayment(Payment payment) {
         paymentDAO.update(payment);
     }
+
+    @Override
+    public List<Payment> getPaymentsByUserId(long userID) {
+        return paymentDAO.getPaymentByUserId(userID);
+    }
 }

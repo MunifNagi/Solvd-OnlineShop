@@ -10,4 +10,5 @@ public interface IPaymentService {
     void removePayment(long id);
     void createPayment(Payment payment);
     void updatePayment(Payment payment);
+    List<Payment>  getPaymentsByUserId(long userID);
 }

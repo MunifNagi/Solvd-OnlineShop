@@ -21,10 +21,11 @@ public class CartDAO extends MySQLDAO implements ICartDAO {
     @Override
     public Cart getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps = con.prepareStatement(readQuery)){
-            ps.setLong(1,id);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readQuery)) {
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
                 long orderId = rs.getLong("order_id");
                 long productId = rs.getLong("product_id");
                 long quantity = rs.getLong("quantity");
@@ -38,6 +39,13 @@ public class CartDAO extends MySQLDAO implements ICartDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return null;
     }

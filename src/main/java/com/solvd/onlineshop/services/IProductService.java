@@ -10,4 +10,8 @@ public interface IProductService {
     void removeProduct(long id);
     void createProduct(Product product);
     void updateProduct(Product product);
+
+    List<Product> getProductByCategoryId (long categoryID);
+
+    List<Product> getProductByManufacturerId(long manufacturerId);
 }

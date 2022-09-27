@@ -36,4 +36,14 @@ public class ProductService implements IProductService {
     public void updateProduct(Product product) {
         productDAO.update(product);
     }
+
+    @Override
+    public List<Product> getProductByCategoryId(long categoryID) {
+        return productDAO.getProductByCategoryId(categoryID);
+    }
+
+    @Override
+    public List<Product> getProductByManufacturerId(long manufacturerId) {
+        return productDAO.getProductByManufacturerId(manufacturerId);
+    }
 }

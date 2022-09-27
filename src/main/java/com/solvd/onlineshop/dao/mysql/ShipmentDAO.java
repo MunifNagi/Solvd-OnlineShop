@@ -23,10 +23,11 @@ public class ShipmentDAO extends MySQLDAO implements IShipmentDAO {
     @Override
     public Shipment getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps = con.prepareStatement(readQuery)) {
-            ps.setLong(1,id);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readQuery)) {
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
                 String trackingNumber = rs.getString("tracking_number");
                 Date date = rs.getDate("date");
                 long shipperId = rs.getLong("shipper_id");
@@ -39,6 +40,13 @@ public class ShipmentDAO extends MySQLDAO implements IShipmentDAO {
             throw new InvalidDataBaseConnection(e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return null;
     }
