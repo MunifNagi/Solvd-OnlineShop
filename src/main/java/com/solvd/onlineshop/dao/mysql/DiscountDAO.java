@@ -16,7 +16,7 @@ import java.util.List;
 
 public class DiscountDAO extends MySQLDAO implements IDiscountDAO {
     private static final Logger logger = LogManager.getLogger(DiscountDAO.class);
-    private static String readQuery = "SELECT * Discount FROM WHERE id = ?";
+    private static String readQuery = "SELECT * FROM Discount WHERE id = ?";
     private static String removeQuery = "DElETE FROM Discount WHERE id = ?";
     private static String insertQuery = "INSERT INTO Discount VALUES(?,?,?)";
     private static String updateQuery = "UPDATE Discount SET name = ?, percentage = ? WHERE id = ?";

@@ -13,7 +13,7 @@
     </select>
 
     <select id="getPaymentByUserId" resultType="com.solvd.onlineshop.entities.Payment">
-        SELECT * Payment FROM WHERE user_id = #{userId}
+        SELECT * FROM Payment  WHERE user_id = #{userId}
     </select>
 
 

@@ -13,7 +13,7 @@ import java.util.List;
 
 public class AddressDAO extends MySQLDAO implements IAddressDAO {
     private static final Logger logger = LogManager.getLogger(AddressDAO.class);
-    private static String readQuery = "Select * Address FROM WHERE id = ?";
+    private static String readQuery = "Select * FROM Address WHERE id = ?";
     private static String removeQuery = "DElETE FROM Address WHERE id = ?";
     private static String insertQuery = "INSERT INTO Address VALUES(?,?,?,?,?,?)";
     private static String updateQuery = "UPDATE Address SET country = ? , state = ? , city = ? , zipcode = ? , street = ? WHERE id = ?";

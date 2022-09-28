@@ -16,7 +16,7 @@ import java.util.Date;
 
 public class ReturnDAO extends MySQLDAO implements IReturnDAO {
     private static final Logger logger = LogManager.getLogger(ReturnDAO.class);
-    private static String readQuery = "Select * Return FROM WHERE id = ?";
+    private static String readQuery = "Select * FROM Return WHERE id = ?";
     private static String removeQuery = "DElETE FROM Return WHERE id = ?";
     private static String insertQuery = "INSERT INTO Return VALUES(?,?,?,?)";
     private static String updateQuery = "UPDATE Return SET reason = ? WHERE id = ?";

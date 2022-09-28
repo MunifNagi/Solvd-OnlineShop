@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 public class UserAddressDAO extends MySQLDAO implements IUserAddressDAO {
     private static final Logger logger = LogManager.getLogger(UserAddressDAO.class);
-    private static String readQuery = "Select * UserAddress FROM WHERE id = ?";
+    private static String readQuery = "Select * FROM UserAddress WHERE id = ?";
     private static String removeQuery = "DElETE FROM UserAddress WHERE id = ?";
     private static String insertQuery = "INSERT INTO UserAddress VALUES(?,?,?)";
     private static String updateQuery = "UPDATE UserAddress SET address_id = ? WHERE id = ?";

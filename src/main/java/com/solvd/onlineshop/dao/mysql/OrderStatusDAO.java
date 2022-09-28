@@ -13,7 +13,7 @@ import java.sql.SQLException;
 
 public class OrderStatusDAO extends MySQLDAO implements IOrderStatusDAO {
     private static final Logger logger = LogManager.getLogger(OrderStatusDAO.class);
-    private static String readQuery = "Select * Order_status FROM WHERE id = ?";
+    private static String readQuery = "Select * FROM Order_status WHERE id = ?";
     private static String removeQuery = "DElETE FROM Order_status WHERE id = ?";
     private static String insertQuery = "INSERT INTO Order_status VALUES(?,?)";
     private static String updateQuery = "UPDATE Order_status SET value = ? WHERE id = ?";

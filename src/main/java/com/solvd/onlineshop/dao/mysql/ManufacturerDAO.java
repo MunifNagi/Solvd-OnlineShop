@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 public class ManufacturerDAO extends MySQLDAO implements IManufacturerDAO {
     private static final Logger logger = LogManager.getLogger(ManufacturerDAO.class);
-    private static String readQuery = "SELECT * Manufacturer FROM WHERE id = ?";
+    private static String readQuery = "SELECT * FROM Manufacturer WHERE id = ?";
     private static String removeQuery = "DElETE FROM Manufacturer WHERE id = ?";
     private static String insertQuery = "INSERT INTO Manufacturer VALUES(?,?,?)";
     private static String updateQuery = "UPDATE Manufacturer SET name = ?, phone = ? WHERE id = ?";

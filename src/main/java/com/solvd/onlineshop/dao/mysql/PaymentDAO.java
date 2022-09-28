@@ -16,11 +16,11 @@ import java.util.List;
 
 public class PaymentDAO extends MySQLDAO implements IPaymentDAO {
     private static final Logger logger = LogManager.getLogger(PaymentDAO.class);
-    private static String readQuery = "Select * Payment FROM WHERE id = ?";
+    private static String readQuery = "Select *  FROM Payment WHERE id = ?";
     private static String removeQuery = "DElETE FROM Payment WHERE id = ?";
     private static String insertQuery = "INSERT INTO Payment VALUES(?,?,?,?,?)";
     private static String updateQuery = "UPDATE Payment SET type = ?, amount= ? WHERE id = ?";
-    private static String readByUserIdQuery = "Select * Payment FROM WHERE user_id = ?";
+    private static String readByUserIdQuery = "Select * FROM Payment WHERE user_id = ?";
     private static String readAllQuery = "SELECT * FROM Payment";
     @Override
     public Payment getByID(long id) {

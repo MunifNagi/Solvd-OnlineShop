@@ -24,10 +24,10 @@
     </select>
 
     <select id="getProductByCategoryId" resultMap="productResultMap">
-        SELECT * Product FROM WHERE category_id = #{categoryId}
+        SELECT * FROM Product  WHERE category_id = #{categoryId}
     </select>
     <select id="getProductByManufacturerId" resultMap="productResultMap">
-        SELECT * Product FROM WHERE manufacturer_id = #{manufacturerId}
+        SELECT * FROM Product WHERE manufacturer_id = #{manufacturerId}
     </select>
 
 
