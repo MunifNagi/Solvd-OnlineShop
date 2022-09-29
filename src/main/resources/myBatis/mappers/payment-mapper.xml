@@ -2,18 +2,21 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.solvd.onlineshop.dao.IPaymentDAO">
+    <sql id="body">
+        id, type, amount, date, user_id
+    </sql>
     <select id="getByID" resultType="com.solvd.onlineshop.entities.Payment">
-        SELECT *
+        SELECT <include refid="body"/>
         FROM Payment WHERE id = #{id}
     </select>
 
     <select id="getAllPayments" resultType="com.solvd.onlineshop.entities.Payment" >
-        SELECT *
+        SELECT <include refid="body"/>
         FROM Payment
     </select>
 
     <select id="getPaymentByUserId" resultType="com.solvd.onlineshop.entities.Payment">
-        SELECT * FROM Payment  WHERE user_id = #{userId}
+        SELECT <include refid="body"/> FROM Payment  WHERE user_id = #{userId}
     </select>
 
 

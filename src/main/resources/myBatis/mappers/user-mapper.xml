@@ -13,13 +13,17 @@
         <result column="password" property="password"/>
     </resultMap>
 
+    <sql id="body">
+        id, first_name, last_name, middle_name, phone, email, password
+    </sql>
+
     <select id="getByID" resultMap="usersResultMap">
-        SELECT *
+        SELECT <include refid="body"/>
         FROM User WHERE id = #{id}
     </select>
 
     <select id="getAllUsers" resultMap="usersResultMap">
-        SELECT *
+        SELECT <include refid="body"/>
         FROM User u
     </select>
 

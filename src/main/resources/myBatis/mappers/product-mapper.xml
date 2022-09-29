@@ -13,21 +13,24 @@
             <result column="discount_id" property="discountId"/>
             <result column="manufacturer_id" property="manufacturerId"/>
         </resultMap>
+    <sql id="body">
+        id, name, price, description, category_id, weight, in_stock, discount_id, manufacturer_id
+    </sql>
     <select id="getByID" resultMap="productResultMap">
-        SELECT *
+        SELECT <include refid="body"/>
         FROM Product WHERE id = #{id}
     </select>
 
     <select id="getAllProduct" resultMap="productResultMap" >
-        SELECT *
+        SELECT <include refid="body"/>
         FROM Product
     </select>
 
     <select id="getProductByCategoryId" resultMap="productResultMap">
-        SELECT * FROM Product  WHERE category_id = #{categoryId}
+        SELECT <include refid="body"/> FROM Product  WHERE category_id = #{categoryId}
     </select>
     <select id="getProductByManufacturerId" resultMap="productResultMap">
-        SELECT * FROM Product WHERE manufacturer_id = #{manufacturerId}
+        SELECT <include refid="body"/> FROM Product WHERE manufacturer_id = #{manufacturerId}
     </select>
 
 

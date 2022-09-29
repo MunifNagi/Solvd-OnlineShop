@@ -88,6 +88,8 @@ public class Main {
 
         List<Product> productList = xmlReader.readXML("src/main/resources/xml/product.xml",Product.class);
         productList.stream().forEach(product -> productService2.createProduct(product));
+        productService2.getProductByManufacturerId(1);
+
     }
 
 }
