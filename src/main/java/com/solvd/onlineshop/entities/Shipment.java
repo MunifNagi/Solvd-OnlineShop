@@ -6,13 +6,13 @@ public class Shipment {
     private long id;
     private String trackingNumber;
     private Date date;
-    private long shipper_id;
+    private long shipperId;
 
-    public Shipment(long id, String trackingNumber, Date date, long shipper_id) {
+    public Shipment(long id, String trackingNumber, Date date, long shipperId) {
         this.id = id;
         this.trackingNumber = trackingNumber;
         this.date = date;
-        this.shipper_id = shipper_id;
+        this.shipperId = shipperId;
     }
 
     public long getShipmentId() {
@@ -27,7 +27,7 @@ public class Shipment {
         return date;
     }
 
-    public long getShipper_id() {
-        return shipper_id;
+    public long getShipperId() {
+        return shipperId;
     }
 }

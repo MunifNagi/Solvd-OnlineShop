@@ -17,7 +17,7 @@ public class ShipperDAO extends MySQLDAO implements IShipperDAO {
     private static String readQuery = "SELECT * FROM Shipper WHERE id = ?";
     private static String removeQuery = "DElETE FROM Shipper WHERE id = ?";
     private static String insertQuery = "INSERT INTO Shipper VALUES(?,?,?)";
-    private static String updateQuery = "UPDATE Shipper SET name = ? WHERE id = ?";
+    private static String updateQuery = "UPDATE Shipper SET company_name = ? WHERE id = ?";
 
     @Override
     public Shipper getByID(long id) {

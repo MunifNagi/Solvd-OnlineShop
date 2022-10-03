@@ -22,5 +22,7 @@
         <mapper resource="myBatis/mappers/address-mapper.xml"/>
         <mapper resource="myBatis/mappers/payment-mapper.xml"/>
         <mapper resource="myBatis/mappers/product-mapper.xml"/>
+        <mapper resource="myBatis/mappers/shipment-mapper.xml"/>
+        <mapper resource="myBatis/mappers/shipper-mapper.xml"/>
     </mappers>
 </configuration>

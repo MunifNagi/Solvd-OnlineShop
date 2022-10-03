@@ -11,5 +11,4 @@ public interface IUserService {
     void removeUser(long id);
     List<User> getAllUsers();
 
-
 }

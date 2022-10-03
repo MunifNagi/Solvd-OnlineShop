@@ -76,7 +76,7 @@ public class ShipmentDAO extends MySQLDAO implements IShipmentDAO {
             ps.setLong(1, shipment.getShipmentId());
             ps.setString(2, shipment.getTrackingNumber());
             ps.setDate(3, new java.sql.Date(shipment.getDate().getTime()));
-            ps.setLong(4, shipment.getShipper_id());
+            ps.setLong(4, shipment.getShipperId());
             ps.executeUpdate();
         }
         catch (SQLException e) {
@@ -92,7 +92,7 @@ public class ShipmentDAO extends MySQLDAO implements IShipmentDAO {
     public void update(Shipment shipment) {
         Connection con = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
-            ps.setLong(1,shipment.getShipper_id());
+            ps.setLong(1,shipment.getShipperId());
             ps.setLong(2,shipment.getShipmentId());
             if (ps.executeUpdate()>0) {
                 String message = String.format("Shipment with ID: %d was updated successfully",shipment.getShipmentId());
