@@ -1,14 +1,24 @@
 package com.solvd.onlineshop.entities;
 
-public class Payment {
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Date;
+
+public class Payment {
+    @JsonProperty
     private long id;
+    @JsonProperty
     private String type;
+    @JsonProperty
     private double amount;
-    private String date;
+    @JsonProperty
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy/MM/dd")
+    private Date date;
+    @JsonProperty
     private long userId;
 
-    public Payment(long id, String type, double amount, String date, long userId) {
+    public Payment(long id, String type, double amount, Date date, long userId) {
         this.id = id;
         this.type = type;
         this.amount = amount;
@@ -16,6 +26,20 @@ public class Payment {
         this.userId = userId;
     }
 
+    public Payment() {
+    }
+
+    @Override
+    public String toString() {
+        return "Payment{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                ", amount=" + amount +
+                ", date=" + date +
+                '}';
+    }
+
+    @JsonProperty("id")
     public long getPaymentId() {
         return id;
     }
@@ -28,7 +52,7 @@ public class Payment {
         return amount;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
@@ -36,5 +60,15 @@ public class Payment {
         return userId;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
 
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 }

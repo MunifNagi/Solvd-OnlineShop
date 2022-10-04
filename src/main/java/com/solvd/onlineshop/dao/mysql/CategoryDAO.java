@@ -24,10 +24,11 @@ public class CategoryDAO extends MySQLDAO implements ICategoryDAO {
     @Override
     public Category getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement(readQuery)) {
-            ps.setLong(1,id);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readQuery)) {
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
                 String name = rs.getString("name");
                 Category category = new Category(id, name);
                 return category;
@@ -37,6 +38,14 @@ public class CategoryDAO extends MySQLDAO implements ICategoryDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
         }
         return null;
     }
@@ -98,18 +107,26 @@ public class CategoryDAO extends MySQLDAO implements ICategoryDAO {
     public List<Category> getAllCategories() {
         Connection con = ConnectionPool.getInstance().getConnection();
         List<Category> categories = new ArrayList<>();
-        try(PreparedStatement ps =con.prepareStatement(readAllQuery)) {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readAllQuery)) {
+            rs = ps.executeQuery();
+            while (rs.next()) {
                 long id = rs.getLong("id");
                 String name = rs.getString("name");
                 Category category = new Category(id, name);
                 categories.add(category);
             }
         } catch (SQLException e) {
-            logger.error("Failed getting all categories records",e);
+            logger.error("Failed getting all categories records", e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return categories;
     }

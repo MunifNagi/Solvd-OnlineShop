@@ -3,25 +3,27 @@ package com.solvd.onlineshop.dao.mysql;
 import com.solvd.onlineshop.entities.Address;
 import com.solvd.onlineshop.ConnectionPool;
 import com.solvd.onlineshop.dao.IAddressDAO;
-import com.solvd.onlineshop.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddressDAO extends MySQLDAO implements IAddressDAO {
     private static final Logger logger = LogManager.getLogger(AddressDAO.class);
-    private static String readQuery = "Select * Address FROM WHERE id = ?";
+    private static String readQuery = "Select * FROM Address WHERE id = ?";
     private static String removeQuery = "DElETE FROM Address WHERE id = ?";
     private static String insertQuery = "INSERT INTO Address VALUES(?,?,?,?,?,?)";
     private static String updateQuery = "UPDATE Address SET country = ? , state = ? , city = ? , zipcode = ? , street = ? WHERE id = ?";
-
+    private static String readAllQuery = "SELECT * FROM Address";
     public Address getByID(long id){
+        ResultSet rs = null;
         Connection con = ConnectionPool.getInstance().getConnection();
         try(PreparedStatement ps = con.prepareStatement(readQuery)){
             ps.setLong(1, id);
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
             if(rs.next()) {
                 String country = rs.getString("country");
                 String state = rs.getString("state");
@@ -37,6 +39,13 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
             return null;
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if(rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return null;
     }
@@ -98,5 +107,37 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
+    }
+
+    @Override
+    public List<Address> getAllAddresses() {
+        ResultSet rs = null;
+        Connection con = ConnectionPool.getInstance().getConnection();
+        List<Address> addressList = new ArrayList<>();
+        try(PreparedStatement ps =con.prepareStatement(readAllQuery)) {
+            rs = ps.executeQuery();
+            while (rs.next()){
+                long id = rs.getLong("id");
+                String country = rs.getString("country");
+                String state = rs.getString("state");
+                String city = rs.getString("city");
+                String zipcode = rs.getString("zipcode");
+                String street = rs.getString("street");
+                Address address = new Address(id, country, state, city, zipcode, street);
+                addressList.add(address);
+            }
+        } catch (SQLException e) {
+            logger.error("Getting all records from Address Table Failed");
+        } finally {
+            ConnectionPool.getInstance().returnConnection(con);
+            if(rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return addressList;
     }
 }

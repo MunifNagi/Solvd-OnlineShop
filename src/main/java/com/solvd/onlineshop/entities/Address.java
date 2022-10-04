@@ -1,5 +1,11 @@
 package com.solvd.onlineshop.entities;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name="Address")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Address {
     private long id;
     private String country;
@@ -15,6 +21,20 @@ public class Address {
         this.city = city;
         this.zipcode = zipcode;
         this.street = street;
+    }
+
+    public Address() {
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "country='" + country + '\'' +
+                ", state='" + state + '\'' +
+                ", city='" + city + '\'' +
+                ", zipcode='" + zipcode + '\'' +
+                ", street='" + street + '\'' +
+                '}';
     }
 
     public long getAddressId() {
@@ -39,5 +59,29 @@ public class Address {
 
     public String getStreet() {
         return street;
+    }
+
+    public void setaddressId(long id) {
+        this.id = id;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
     }
 }

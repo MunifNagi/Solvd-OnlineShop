@@ -14,17 +14,18 @@ import java.sql.SQLException;
 
 public class UserAddressDAO extends MySQLDAO implements IUserAddressDAO {
     private static final Logger logger = LogManager.getLogger(UserAddressDAO.class);
-    private static String readQuery = "Select * UserAddress FROM WHERE id = ?";
+    private static String readQuery = "Select * FROM UserAddress WHERE id = ?";
     private static String removeQuery = "DElETE FROM UserAddress WHERE id = ?";
     private static String insertQuery = "INSERT INTO UserAddress VALUES(?,?,?)";
     private static String updateQuery = "UPDATE UserAddress SET address_id = ? WHERE id = ?";
     @Override
     public UserAddress getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps = con.prepareStatement(readQuery)){
-            ps.setLong(1,id);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readQuery)) {
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
                 long userId = rs.getLong("user_id");
                 long addressId = rs.getLong("address_id");
                 UserAddress userAddress = new UserAddress(id, userId, addressId);
@@ -35,6 +36,13 @@ public class UserAddressDAO extends MySQLDAO implements IUserAddressDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return null;
     }

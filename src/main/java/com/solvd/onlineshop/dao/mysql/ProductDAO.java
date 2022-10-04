@@ -17,23 +17,24 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
     private static final Logger logger = LogManager.getLogger(ProductDAO.class);
     private static String readQuery = "SELECT * FROM Product where id=?";
     private static String removeQuery = "DElETE FROM Product WHERE id = ?";
-    private static String insertQuery = "INSERT INTO Order VALUES(?,?,?,?,?,?,?,?,?)";
-    private static String updateQuery = "UPDATE User SET price = ?, description = ?, category_id = ?, in_stock = ? WHERE id = ?";
+    private static String insertQuery = "INSERT INTO Product VALUES(?,?,?,?,?,?,?,?,?)";
+    private static String updateQuery = "UPDATE Product SET price = ?, description = ?, category_id = ?, in_stock = ? WHERE id = ?";
     private static String readAllQuery = "SELECT * FROM Product";
     private static String readByManuIdQuery = "select * from Product where manufacturer_id = ?";
     private static String readByCategoryIdQuery = "select * from Product where category_id = ?";
     @Override
-    public Product getByID(long id){
+    public Product getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps = con.prepareStatement(readQuery)) {
-            ps.setLong(1,id);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readQuery)) {
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
                 String name = rs.getString("name");
                 double price = rs.getDouble("price");
                 String description = rs.getString("description");
                 long categoryId = rs.getLong("category_id");
-                double weight = rs.getDouble("weights");
+                double weight = rs.getDouble("weight");
                 int inStock = rs.getInt("in_stock");
                 long discountId = rs.getInt("discount_id");
                 long manufacturerId = rs.getInt("manufacturer_id");
@@ -45,6 +46,13 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return null;
     }
@@ -116,9 +124,10 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
     public List<Product> getAllProduct() {
         Connection con = ConnectionPool.getInstance().getConnection();
         List<Product> products = new ArrayList<>();
-        try(PreparedStatement ps =con.prepareStatement(readAllQuery)) {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readAllQuery)) {
+            rs = ps.executeQuery();
+            while (rs.next()) {
                 long id = rs.getLong("id");
                 String name = rs.getString("name");
                 double price = rs.getDouble("price");
@@ -135,6 +144,13 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
             logger.error("Getting all records from Report Table Failed", e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return products;
     }
@@ -143,10 +159,11 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
     public List<Product> getProductByCategoryId(long categoryId) {
         Connection con = ConnectionPool.getInstance().getConnection();
         List<Product> products = new ArrayList<>();
-        try(PreparedStatement ps =con.prepareStatement(readByCategoryIdQuery)) {
-            ps.setLong(1,categoryId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readByCategoryIdQuery)) {
+            ps.setLong(1, categoryId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
                 long id = rs.getLong("id");
                 String name = rs.getString("name");
                 double price = rs.getDouble("price");
@@ -163,6 +180,13 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return products;
     }
@@ -171,10 +195,11 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
     public List<Product> getProductByManufacturerId(long manufacturerId) {
         Connection con = ConnectionPool.getInstance().getConnection();
         List<Product> products = new ArrayList<>();
-        try(PreparedStatement ps =con.prepareStatement(readByManuIdQuery)) {
-            ps.setLong(1,manufacturerId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readByManuIdQuery)) {
+            ps.setLong(1, manufacturerId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
                 long id = rs.getLong("id");
                 String name = rs.getString("name");
                 double price = rs.getDouble("price");
@@ -191,6 +216,13 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return products;
     }

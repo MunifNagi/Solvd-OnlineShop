@@ -1,14 +1,27 @@
 package com.solvd.onlineshop.entities;
 
+import javax.xml.bind.annotation.*;
+
+@XmlRootElement(name="Product")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Product {
+    @XmlElement
     private long id;
+    @XmlElement
     private String name;
+    @XmlElement
     private double price;
+    @XmlElement
     private String description;
+    @XmlElement(name = "category_id")
     private long categoryId;
+    @XmlElement
     private double weight;
+    @XmlElement(name = "in_stock")
     private long inStock;
+    @XmlElement(name = "discount_id")
     private long discountId;
+    @XmlElement(name = "manufacturer_id")
     private long manufacturerId;
 
     public Product(long id, String name, double price, String description, long categoryId, double weight, long inStock, long discountId, long manufacturerId) {
@@ -21,6 +34,20 @@ public class Product {
         this.inStock = inStock;
         this.discountId = discountId;
         this.manufacturerId = manufacturerId;
+    }
+    public Product() {
+
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", weight=" + weight +
+                ", inStock=" + inStock +
+                '}';
     }
 
     public long getProductId() {
@@ -57,5 +84,41 @@ public class Product {
 
     public long getManufacturerId() {
         return manufacturerId;
+    }
+
+    public void setProductId(long id) {
+        this.id = id;
+    }
+
+    public void setProductName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setCategoryId(long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public void setInStock(long inStock) {
+        this.inStock = inStock;
+    }
+
+    public void setDiscountId(long discountId) {
+        this.discountId = discountId;
+    }
+
+    public void setManufacturerId(long manufacturerId) {
+        this.manufacturerId = manufacturerId;
     }
 }

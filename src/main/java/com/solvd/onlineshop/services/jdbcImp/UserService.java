@@ -1,19 +1,15 @@
-package com.solvd.onlineshop.services;
+package com.solvd.onlineshop.services.jdbcImp;
 
 import com.solvd.onlineshop.entities.User;
-import com.solvd.onlineshop.dao.IAddressDAO;
-import com.solvd.onlineshop.dao.IOrderDAO;
 import com.solvd.onlineshop.dao.IUserDAO;
-import com.solvd.onlineshop.dao.mysql.AddressDAO;
-import com.solvd.onlineshop.dao.mysql.OrderDAO;
 import com.solvd.onlineshop.dao.mysql.UserDAO;
+import com.solvd.onlineshop.services.IUserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.SQLException;
 import java.util.List;
 
-public class UserService implements IUserService{
+public class UserService implements IUserService {
     private IUserDAO userDAO = new UserDAO();
 
     private static final Logger logger = LogManager.getLogger(UserService.class);
@@ -31,7 +27,7 @@ public class UserService implements IUserService{
         this.userDAO.create(user);
     }
 
-    public List<User> findAllUsers() {
+    public List<User> getAllUsers() {
         List<User> usersList = null;
         usersList = userDAO.getAllUsers();
         return usersList;

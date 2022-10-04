@@ -1,0 +1,33 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.solvd.onlineshop.dao.IShipperDAO">
+
+    <resultMap id="shipperResultMap" type="com.solvd.onlineshop.entities.Shipper">
+        <id column="id" property="id"/>
+        <result column="company_name" property="companyName"/>
+        <result column="internationalShipping" property="isInternational"/>
+    </resultMap>
+
+    <sql id="body">
+        id, company_name, internationalShipping
+    </sql>
+
+    <select id="getByID" resultMap="shipperResultMap">
+        SELECT <include refid="body"/>
+        FROM Shipper WHERE id = #{id}
+    </select>
+
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Shipper(id, company_name, internationalShipping)
+        VALUES(#{id},#{companyName},#{isInternational})
+    </insert>
+
+    <update id="update" useGeneratedKeys="true" keyProperty="id">
+        UPDATE Shipper SET company_name = #{companyName} WHERE id = #{id}
+    </update>
+
+    <delete id="remove">
+        DELETE FROM Shipper where id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,33 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.solvd.onlineshop.dao.IAddressDAO">
+    <sql id="body">
+        id, country, state, city, zipcode, street
+    </sql>
+
+    <select id="getByID" resultType="com.solvd.onlineshop.entities.Address">
+        SELECT <include refid="body"/>
+        FROM Address WHERE id = #{id}
+    </select>
+
+    <select id="getAllAddresses" resultType="com.solvd.onlineshop.entities.Address" >
+        SELECT <include refid="body"/>
+        FROM Address
+    </select>
+
+
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Address(id,country,state,city,zipcode, street)
+        VALUES(#{id},#{country},#{state},#{city},#{zipcode},#{street})
+    </insert>
+
+    <update id="update" useGeneratedKeys="true" keyProperty="id">
+        UPDATE Address SET country = #{country} , state = #{state}, city = #{city} , zipcode = #{zipcode} , street = #{street} WHERE id = #{id}
+    </update>
+
+    <delete id="remove">
+        DELETE FROM Address where id = #{id}
+    </delete>
+
+</mapper>

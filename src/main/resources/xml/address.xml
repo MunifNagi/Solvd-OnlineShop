@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AddressList>
+    <Address>
+        <id>1</id>
+        <country>USA</country>
+        <state>NY</state>
+        <city>Queens</city>
+        <zipcode>11106</zipcode>
+        <street>3735 35th st</street>
+    </Address>
+    <Address>
+        <id>2</id>
+        <country>USA</country>
+        <state>VA</state>
+        <city>Hrendon</city>
+        <zipcode>20170</zipcode>
+        <street>1817 Forest Drive</street>
+    </Address>
+</AddressList>

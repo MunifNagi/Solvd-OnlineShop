@@ -4,6 +4,7 @@ import com.solvd.onlineshop.ConnectionPool;
 import com.solvd.onlineshop.dao.IShipmentDAO;
 import com.solvd.onlineshop.entities.Order;
 import com.solvd.onlineshop.entities.Shipment;
+import com.solvd.onlineshop.exception.InvalidDataBaseConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 public class ShipmentDAO extends MySQLDAO implements IShipmentDAO {
     private static final Logger logger = LogManager.getLogger(ShipmentDAO.class);
@@ -21,12 +23,13 @@ public class ShipmentDAO extends MySQLDAO implements IShipmentDAO {
     @Override
     public Shipment getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps = con.prepareStatement(readQuery)) {
-            ps.setLong(1,id);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readQuery)) {
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
                 String trackingNumber = rs.getString("tracking_number");
-                String date = rs.getString("date");
+                Date date = rs.getDate("date");
                 long shipperId = rs.getLong("shipper_id");
                 Shipment shipment = new Shipment(id, trackingNumber, date, shipperId);
                 return shipment;
@@ -34,8 +37,16 @@ public class ShipmentDAO extends MySQLDAO implements IShipmentDAO {
         } catch (SQLException e) {
             String message = String.format("Getting shipment with ID:%d wasn't successful", id);
             logger.error(message, e);
+            throw new InvalidDataBaseConnection(e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return null;
     }
@@ -64,8 +75,8 @@ public class ShipmentDAO extends MySQLDAO implements IShipmentDAO {
         try (PreparedStatement ps = con.prepareStatement(insertQuery)) {
             ps.setLong(1, shipment.getShipmentId());
             ps.setString(2, shipment.getTrackingNumber());
-            ps.setString(3, shipment.getDate());
-            ps.setLong(4, shipment.getShipper_id());
+            ps.setDate(3, new java.sql.Date(shipment.getDate().getTime()));
+            ps.setLong(4, shipment.getShipperId());
             ps.executeUpdate();
         }
         catch (SQLException e) {
@@ -81,7 +92,7 @@ public class ShipmentDAO extends MySQLDAO implements IShipmentDAO {
     public void update(Shipment shipment) {
         Connection con = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
-            ps.setLong(1,shipment.getShipper_id());
+            ps.setLong(1,shipment.getShipperId());
             ps.setLong(2,shipment.getShipmentId());
             if (ps.executeUpdate()>0) {
                 String message = String.format("Shipment with ID: %d was updated successfully",shipment.getShipmentId());

@@ -3,6 +3,7 @@ package com.solvd.onlineshop.dao.mysql;
 import com.solvd.onlineshop.ConnectionPool;
 import com.solvd.onlineshop.entities.Order;
 import com.solvd.onlineshop.dao.IOrderDAO;
+import com.solvd.onlineshop.services.DateAdaptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,27 +12,29 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class OrderDAO extends  MySQLDAO implements IOrderDAO {
     private static final Logger logger = LogManager.getLogger(OrderDAO.class);
     private static String readQuery = "SELECT * FROM Order where id=?";
     private static String removeQuery = "DElETE FROM Order WHERE id = ?";
-    private static String insertQuery = "INSERT INTO Order VALUES(?,?,?,?,?,?,?,?)";
-    private static String updateQuery = "UPDATE User SET order_status = ? WHERE id = ?";
-    private static String readAllQuery = "SELECT * FROM Order";
+    private static String insertQuery = "INSERT INTO OnlineShop.Order VALUES(?,?,?,?,?,?,?,?)";
+    private static String updateQuery = "UPDATE Order SET order_status = ? WHERE id = ?";
+    private static String readAllQuery = "SELECT * FROM OnlineShop.Order";
     private static String readByStatusIdQuery = "SELECT * FROM Order WHERE order_status_id=?";
 
 
     public Order getByID(long id) {
+        ResultSet rs = null;
         Connection con = ConnectionPool.getInstance().getConnection();
         try(PreparedStatement ps = con.prepareStatement(readQuery)) {
             ps.setLong(1,id);
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
             if(rs.next()) {
                 double totalPrice = rs.getDouble("total_price");
                 long productsQuantity = rs.getLong("products_quantity");
-                String date = rs.getString("date");
+                Date date = rs.getDate("date");
                 long shippingAddressId = rs.getLong("shipping_address_id");
                 int orderStatusId = rs.getInt("order_status_id");
                 long paymentId = rs.getLong("payment_id");
@@ -44,22 +47,31 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if(rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return null;
     }
 
     public void create(Order order) {
+        DateAdaptor dateAdaptor = new DateAdaptor();
         Connection con = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = con.prepareStatement(insertQuery)) {
             ps.setLong(1, order.getOrderId());
             ps.setDouble(2, order.getTotalPrice());
             ps.setLong(3, order.getProductsQuantity());
-            ps.setString(4, order.getDate());
+            ps.setDate(4, new java.sql.Date(order.getDate().getTime()));
             ps.setLong(5, order.getShippingAddressId());
             ps.setLong(6, order.getOrderStatusId());
             ps.setLong(7, order.getPaymentId());
             ps.setLong(8, order.getShipmentId());
             ps.executeUpdate();
+            logger.info("Inserting record into the Order Table was successful");
         }
         catch (SQLException e) {
             logger.error("Inserting record into the Order Table Failed",e);
@@ -106,13 +118,14 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
     public List<Order> getAllOrders() {
         Connection con = ConnectionPool.getInstance().getConnection();
         List<Order> orderList = new ArrayList<>();
-        try(PreparedStatement ps =con.prepareStatement(readAllQuery)) {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readAllQuery)) {
+            rs = ps.executeQuery();
+            while (rs.next()) {
                 long id = rs.getLong("id");
                 double totalPrice = rs.getDouble("total_price");
                 long productsQuantity = rs.getLong("products_quantity");
-                String date = rs.getString("date");
+                Date date = rs.getDate("date");
                 long shippingAddressId = rs.getLong("shipping_address_id");
                 int orderStatusId = rs.getInt("order_status_id");
                 long paymentId = rs.getLong("payment_id");
@@ -121,9 +134,16 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
                 orderList.add(order);
             }
         } catch (SQLException e) {
-            logger.error("Getting all records from Report Table Failed", e);
+            logger.error("Getting all records from Order Table Failed", e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return orderList;
     }
@@ -133,14 +153,15 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
     public List<Order> getOrderByStatusId(long statusID) {
         Connection con = ConnectionPool.getInstance().getConnection();
         List<Order> orderList = new ArrayList<>();
-        try(PreparedStatement ps =con.prepareStatement(readByStatusIdQuery)) {
-            ps.setLong(1,statusID);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readByStatusIdQuery)) {
+            ps.setLong(1, statusID);
+            rs = ps.executeQuery();
+            while (rs.next()) {
                 long id = rs.getLong("id");
                 double totalPrice = rs.getDouble("total_price");
                 long productsQuantity = rs.getLong("products_quantity");
-                String date = rs.getString("date");
+                Date date = rs.getDate("date");
                 long shippingAddressId = rs.getLong("shipping_address_id");
                 int orderStatusId = rs.getInt("order_status_id");
                 long paymentId = rs.getLong("payment_id");
@@ -153,6 +174,13 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return orderList;
     }

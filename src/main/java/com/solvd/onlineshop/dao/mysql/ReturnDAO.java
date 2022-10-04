@@ -12,26 +12,28 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 public class ReturnDAO extends MySQLDAO implements IReturnDAO {
     private static final Logger logger = LogManager.getLogger(ReturnDAO.class);
-    private static String readQuery = "Select * Return FROM WHERE id = ?";
+    private static String readQuery = "Select * FROM Return WHERE id = ?";
     private static String removeQuery = "DElETE FROM Return WHERE id = ?";
     private static String insertQuery = "INSERT INTO Return VALUES(?,?,?,?)";
-    private static String updateQuery = "UPDATE Cart SET reason = ? WHERE id = ?";
+    private static String updateQuery = "UPDATE Return SET reason = ? WHERE id = ?";
     private static String readAllQuery = "Select * FROM Return";
 
     @Override
     public Return getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps = con.prepareStatement(readQuery)){
-            ps.setLong(1,id);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readQuery)) {
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
                 long orderId = rs.getLong("order_id");
-                String date = rs.getString("date");
+                Date date = rs.getDate("date");
                 String reason = rs.getString("reason");
-                Return returnObject = new Return(id,orderId, date, reason);
+                Return returnObject = new Return(id, orderId, date, reason);
                 return returnObject;
             }
         } catch (SQLException e) {
@@ -39,6 +41,13 @@ public class ReturnDAO extends MySQLDAO implements IReturnDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return null;
     }
@@ -67,7 +76,7 @@ public class ReturnDAO extends MySQLDAO implements IReturnDAO {
         try (PreparedStatement ps = con.prepareStatement(insertQuery)) {
             ps.setLong(1, object.getReturnId());
             ps.setLong(2, object.getOrderId());
-            ps.setString(3, object.getDate());
+            ps.setDate(3, new java.sql.Date(object.getDate().getTime()));
             ps.setString(4, object.getReason());
             ps.executeUpdate();
         }

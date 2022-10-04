@@ -13,7 +13,7 @@ import java.sql.SQLException;
 
 public class OrderStatusDAO extends MySQLDAO implements IOrderStatusDAO {
     private static final Logger logger = LogManager.getLogger(OrderStatusDAO.class);
-    private static String readQuery = "Select * Order_status FROM WHERE id = ?";
+    private static String readQuery = "Select * FROM Order_status WHERE id = ?";
     private static String removeQuery = "DElETE FROM Order_status WHERE id = ?";
     private static String insertQuery = "INSERT INTO Order_status VALUES(?,?)";
     private static String updateQuery = "UPDATE Order_status SET value = ? WHERE id = ?";
@@ -21,10 +21,11 @@ public class OrderStatusDAO extends MySQLDAO implements IOrderStatusDAO {
     @Override
     public OrderStatus getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement(readQuery)) {
-            ps.setLong(1,id);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readQuery)) {
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
                 String value = rs.getString("value");
                 OrderStatus orderStatus = new OrderStatus(id, value);
                 return orderStatus;
@@ -34,6 +35,13 @@ public class OrderStatusDAO extends MySQLDAO implements IOrderStatusDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return null;
     }

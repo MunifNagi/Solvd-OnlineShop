@@ -59,10 +59,11 @@ public class UserDAO extends MySQLDAO implements IUserDAO {
     @Override
     public User getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps = con.prepareStatement(readQuery)) {
-            ps.setLong(1,id);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readQuery)) {
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
                 String firstName = rs.getString("first_name");
                 String lastName = rs.getString("last_name");
                 String middleName = rs.getString("middle_name");
@@ -77,6 +78,13 @@ public class UserDAO extends MySQLDAO implements IUserDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return null;
     }
@@ -101,9 +109,10 @@ public class UserDAO extends MySQLDAO implements IUserDAO {
     public List<User> getAllUsers() {
         Connection con = ConnectionPool.getInstance().getConnection();
         List<User> userList = new ArrayList<>();
-        try(PreparedStatement ps =con.prepareStatement(readAllQuery)) {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readAllQuery)) {
+            rs = ps.executeQuery();
+            while (rs.next()) {
                 long id = rs.getLong("id");
                 String firstName = rs.getString("first_name");
                 String lastName = rs.getString("last_name");
@@ -118,6 +127,13 @@ public class UserDAO extends MySQLDAO implements IUserDAO {
             logger.error("Getting all records from User Table Failed");
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return userList;
     }

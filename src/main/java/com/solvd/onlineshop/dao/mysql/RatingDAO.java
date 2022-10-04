@@ -15,21 +15,22 @@ import java.util.List;
 
 public class RatingDAO extends MySQLDAO implements IRatingDAO {
     private static final Logger logger = LogManager.getLogger(RatingDAO.class);
-    private static String readQuery = "Select * Rating FROM WHERE id = ?";
+    private static String readQuery = "Select * FROM Rating  WHERE id = ?";
     private static String removeQuery = "DElETE FROM Rating WHERE id = ?";
     private static String insertQuery = "INSERT INTO Rating VALUES(?,?,?,?,?)";
     private static String updateQuery = "UPDATE Rating SET rating = ?, review = ? WHERE id = ?";
-    private static String readByProductIdQuery = "Select * Rating FROM WHERE product_id = ?";
+    private static String readByProductIdQuery = "Select * FROM Rating WHERE product_id = ?";
 
-    private static String readByReviewerIdQuery = "Select * Rating FROM WHERE user_id = ?";
+    private static String readByReviewerIdQuery = "Select * FROM Rating WHERE user_id = ?";
 
     @Override
     public Rating getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps = con.prepareStatement(readQuery)){
-            ps.setLong(1,id);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readQuery)) {
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
                 long productId = rs.getLong("product_id");
                 long userId = rs.getLong("user_id");
                 int rating = rs.getInt("rating");
@@ -42,6 +43,13 @@ public class RatingDAO extends MySQLDAO implements IRatingDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return null;
     }
@@ -107,10 +115,11 @@ public class RatingDAO extends MySQLDAO implements IRatingDAO {
     public List<Rating> getRatingsByProduct(long productId) {
         Connection con = ConnectionPool.getInstance().getConnection();
         List<Rating> ratings = new ArrayList<>();
-        try(PreparedStatement ps =con.prepareStatement(readByProductIdQuery)) {
-            ps.setLong(1,productId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readByProductIdQuery)) {
+            ps.setLong(1, productId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
                 long id = rs.getLong("id");
                 long userId = rs.getLong("user_id");
                 int rating = rs.getInt("rating");
@@ -123,6 +132,13 @@ public class RatingDAO extends MySQLDAO implements IRatingDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return ratings;
     }
@@ -131,10 +147,11 @@ public class RatingDAO extends MySQLDAO implements IRatingDAO {
     public List<Rating> getRatingsByReviewer(long reviewerId) {
         Connection con = ConnectionPool.getInstance().getConnection();
         List<Rating> ratings = new ArrayList<>();
-        try(PreparedStatement ps =con.prepareStatement(readByProductIdQuery)) {
-            ps.setLong(1,reviewerId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readByProductIdQuery)) {
+            ps.setLong(1, reviewerId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
                 long id = rs.getLong("id");
                 long productId = rs.getLong("product_id");
                 int rating = rs.getInt("rating");
@@ -147,6 +164,13 @@ public class RatingDAO extends MySQLDAO implements IRatingDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return ratings;
     }

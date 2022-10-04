@@ -1,0 +1,34 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.solvd.onlineshop.dao.IShipmentDAO">
+
+    <resultMap id="shipmentResultMap" type="com.solvd.onlineshop.entities.Shipment">
+        <id column="id" property="id"/>
+        <result column="tracking_number" property="trackingNumber"/>
+        <result column="date" property="date"/>
+        <result column="shipper_id" property="shipperId"/>
+    </resultMap>
+
+    <sql id="body">
+        id, tracking_number, date, shipper_id
+    </sql>
+
+    <select id="getByID" resultMap="shipmentResultMap">
+        SELECT <include refid="body"/>
+        FROM Shipment WHERE id = #{id}
+    </select>
+
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Shipment(id, tracking_number, date, shipper_id)
+        VALUES(#{id},#{trackingNumber},#{date},#{shipperId})
+    </insert>
+
+    <update id="update" useGeneratedKeys="true" keyProperty="id">
+        UPDATE Shipment SET  shipper_id=#{shipperId} WHERE id =#{id}
+    </update>
+
+    <delete id="remove">
+        DELETE FROM Shipment where id = #{id}
+    </delete>
+</mapper>

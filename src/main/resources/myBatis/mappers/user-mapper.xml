@@ -1,0 +1,44 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.solvd.onlineshop.dao.IUserDAO">
+
+    <resultMap id="usersResultMap" type="com.solvd.onlineshop.entities.User">
+        <id column="id" property="id"/>
+        <result column="first_name" property="firstName"/>
+        <result column="last_name" property="lastName"/>
+        <result column="middle_name" property="middleName"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="password" property="password"/>
+    </resultMap>
+
+    <sql id="body">
+        id, first_name, last_name, middle_name, phone, email, password
+    </sql>
+
+    <select id="getByID" resultMap="usersResultMap">
+        SELECT <include refid="body"/>
+        FROM User WHERE id = #{id}
+    </select>
+
+    <select id="getAllUsers" resultMap="usersResultMap">
+        SELECT <include refid="body"/>
+        FROM User u
+    </select>
+
+
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO User(id, first_name, last_name,phone,email,password)
+        VALUES(#{id},#{firstName},#{lastName},#{phone},#{email},#{password})
+    </insert>
+
+    <update id="update" useGeneratedKeys="true" keyProperty="id">
+        UPDATE User SET  phone =#{phone} WHERE id =#{id}
+    </update>
+
+    <delete id="remove">
+        DELETE FROM User where id = #{id}
+    </delete>
+
+</mapper>

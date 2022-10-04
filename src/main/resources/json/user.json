@@ -1,0 +1,25 @@
+[ {
+    "id": "1",
+    "fname": "Tom",
+    "lname": "Alex",
+    "mname": "",
+    "phone": "347-200-0000",
+    "email": "tom@email.com",
+    "password": "tom1234"
+  }, {
+    "id": "2",
+    "fname": "Maria",
+    "lname": "Hernandez",
+    "mname": "",
+    "phone": "347-222-0001",
+    "email": "maria@email.com",
+    "password": "maria1234"
+  }, {
+    "id": "3",
+    "fname": "Marta",
+    "lname": "Tsyndra",
+    "mname": "",
+    "phone": "347-222-1111",
+    "email": "marta@email.com",
+    "password": "marta1234"
+  } ]

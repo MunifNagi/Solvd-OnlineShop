@@ -3,10 +3,12 @@ package com.solvd.onlineshop.entities;
 public class Manufacturer {
     private long id;
     private String manufacturerName;
+    private String phone;
 
-    public Manufacturer(long id, String manufacturerName) {
+    public Manufacturer(long id, String manufacturerName, String phone) {
         this.id = id;
         this.manufacturerName = manufacturerName;
+        this.phone = phone;
     }
 
     public long getManufacturerId() {
@@ -15,5 +17,9 @@ public class Manufacturer {
 
     public String getManufacturerName() {
         return manufacturerName;
+    }
+
+    public String getManufacturerPhone() {
+        return phone;
     }
 }
