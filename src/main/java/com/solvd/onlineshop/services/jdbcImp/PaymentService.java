@@ -3,6 +3,7 @@ package com.solvd.onlineshop.services.jdbcImp;
 import com.solvd.onlineshop.dao.IPaymentDAO;
 import com.solvd.onlineshop.dao.mysql.PaymentDAO;
 import com.solvd.onlineshop.entities.Payment;
+import com.solvd.onlineshop.services.DAOFacotry;
 import com.solvd.onlineshop.services.IPaymentService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PaymentService implements IPaymentService {
-    private IPaymentDAO paymentDAO = new PaymentDAO();
+    private IPaymentDAO paymentDAO = (IPaymentDAO) DAOFacotry.create("Payment");
     private static final Logger logger = LogManager.getLogger(AddressService.class);
     @Override
     public Payment getPaymentByID(long id) {

@@ -5,12 +5,13 @@ import com.solvd.onlineshop.dao.IProductDAO;
 import com.solvd.onlineshop.dao.mysql.OrderDAO;
 import com.solvd.onlineshop.dao.mysql.ProductDAO;
 import com.solvd.onlineshop.entities.Product;
+import com.solvd.onlineshop.services.DAOFacotry;
 import com.solvd.onlineshop.services.IProductService;
 
 import java.util.List;
 
 public class ProductService implements IProductService {
-    private IProductDAO productDAO = new ProductDAO();
+    private IProductDAO productDAO = (IProductDAO) DAOFacotry.create("Product");;
 
     @Override
     public Product getProductByID(long id) {

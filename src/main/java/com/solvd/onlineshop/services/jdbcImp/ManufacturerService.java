@@ -3,12 +3,13 @@ package com.solvd.onlineshop.services.jdbcImp;
 import com.solvd.onlineshop.dao.IManufacturerDAO;
 import com.solvd.onlineshop.dao.mysql.ManufacturerDAO;
 import com.solvd.onlineshop.entities.Manufacturer;
+import com.solvd.onlineshop.services.DAOFacotry;
 import com.solvd.onlineshop.services.IManufacturerService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class ManufacturerService implements IManufacturerService {
-    private IManufacturerDAO manufacturerDAO = new ManufacturerDAO();
+    private IManufacturerDAO manufacturerDAO = (IManufacturerDAO) DAOFacotry.create("Manufacturer");
     private static final Logger logger = LogManager.getLogger(ManufacturerService.class);
 
     @Override

@@ -3,12 +3,13 @@ package com.solvd.onlineshop.services.jdbcImp;
 import com.solvd.onlineshop.dao.IOrderDAO;
 import com.solvd.onlineshop.dao.mysql.OrderDAO;
 import com.solvd.onlineshop.entities.Order;
+import com.solvd.onlineshop.services.DAOFacotry;
 import com.solvd.onlineshop.services.IOrderService;
 
 import java.util.List;
 
 public class OrderService implements IOrderService {
-    private IOrderDAO orderDAO = new OrderDAO();
+    private IOrderDAO orderDAO = (IOrderDAO) DAOFacotry.create("Order");
 
     @Override
     public Order getOrderByID(long id) {

@@ -3,12 +3,13 @@ package com.solvd.onlineshop.services.jdbcImp;
 import com.solvd.onlineshop.dao.IOrderStatusDAO;
 import com.solvd.onlineshop.dao.mysql.OrderStatusDAO;
 import com.solvd.onlineshop.entities.OrderStatus;
+import com.solvd.onlineshop.services.DAOFacotry;
 import com.solvd.onlineshop.services.IOrderStatusService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class OrderStatusService implements IOrderStatusService {
-    private IOrderStatusDAO orderStatusDAO = new OrderStatusDAO();
+    private IOrderStatusDAO orderStatusDAO = (IOrderStatusDAO) DAOFacotry.create("OrderStatus");
     private static final Logger logger = LogManager.getLogger(OrderStatusService.class);
 
     @Override

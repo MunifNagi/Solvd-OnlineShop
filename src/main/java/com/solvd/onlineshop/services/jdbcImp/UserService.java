@@ -3,6 +3,7 @@ package com.solvd.onlineshop.services.jdbcImp;
 import com.solvd.onlineshop.entities.User;
 import com.solvd.onlineshop.dao.IUserDAO;
 import com.solvd.onlineshop.dao.mysql.UserDAO;
+import com.solvd.onlineshop.services.DAOFacotry;
 import com.solvd.onlineshop.services.IUserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 public class UserService implements IUserService {
-    private IUserDAO userDAO = new UserDAO();
+    private IUserDAO userDAO = (IUserDAO) DAOFacotry.create("User");;
 
     private static final Logger logger = LogManager.getLogger(UserService.class);
 

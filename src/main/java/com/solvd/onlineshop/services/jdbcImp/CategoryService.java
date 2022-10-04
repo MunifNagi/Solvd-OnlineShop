@@ -3,6 +3,7 @@ package com.solvd.onlineshop.services.jdbcImp;
 import com.solvd.onlineshop.dao.ICategoryDAO;
 import com.solvd.onlineshop.dao.mysql.CategoryDAO;
 import com.solvd.onlineshop.entities.Category;
+import com.solvd.onlineshop.services.DAOFacotry;
 import com.solvd.onlineshop.services.ICategoryService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 public class CategoryService implements ICategoryService {
-    private ICategoryDAO categoryDAO = new CategoryDAO();
+    private ICategoryDAO categoryDAO = (ICategoryDAO) DAOFacotry.create("Category");
     private static final Logger logger = LogManager.getLogger(CategoryService.class);
 
     @Override

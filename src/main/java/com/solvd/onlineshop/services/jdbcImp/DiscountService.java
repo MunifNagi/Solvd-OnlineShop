@@ -4,6 +4,7 @@ import com.solvd.onlineshop.dao.IDiscountDAO;
 import com.solvd.onlineshop.dao.mysql.DiscountDAO;
 import com.solvd.onlineshop.entities.Discount;
 import com.solvd.onlineshop.entities.User;
+import com.solvd.onlineshop.services.DAOFacotry;
 import com.solvd.onlineshop.services.IDiscountService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 public class DiscountService implements IDiscountService {
-    private IDiscountDAO discountDAO = new DiscountDAO();
+    private IDiscountDAO discountDAO = (IDiscountDAO) DAOFacotry.create("Discount");
 
     private static final Logger logger = LogManager.getLogger(DiscountService.class);
 
