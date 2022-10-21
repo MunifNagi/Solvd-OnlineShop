@@ -1,5 +1,7 @@
 package com.solvd.onlineshop.entities;
 
+import java.util.Objects;
+
 public class Manufacturer {
     private long id;
     private String manufacturerName;
@@ -21,5 +23,26 @@ public class Manufacturer {
 
     public String getManufacturerPhone() {
         return phone;
+    }
+
+    public void setManufacturerName(String manufacturerName) {
+        this.manufacturerName = manufacturerName;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Manufacturer that = (Manufacturer) o;
+        return id == that.id && manufacturerName.equals(that.manufacturerName) && phone.equals(that.phone);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, manufacturerName, phone);
     }
 }

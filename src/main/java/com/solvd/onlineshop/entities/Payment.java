@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class Payment {
     @JsonProperty
@@ -70,5 +71,18 @@ public class Payment {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Payment payment = (Payment) o;
+        return id == payment.id && Double.compare(payment.amount, amount) == 0 && userId == payment.userId && type.equals(payment.type) && date.equals(payment.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, type, amount, date, userId);
     }
 }

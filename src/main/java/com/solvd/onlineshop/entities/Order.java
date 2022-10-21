@@ -8,6 +8,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
+import java.util.Objects;
+
 @XmlRootElement(name="Order")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Order {
@@ -122,5 +124,18 @@ public class Order {
 
     public void setOrderStatusId(int orderStatusId) {
         this.orderStatusId = orderStatusId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return id == order.id && Double.compare(order.totalPrice, totalPrice) == 0 && productsQuantity == order.productsQuantity && shippingAddressId == order.shippingAddressId && orderStatusId == order.orderStatusId && paymentId == order.paymentId && shipmentId == order.shipmentId && date.equals(order.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, totalPrice, productsQuantity, date, shippingAddressId, orderStatusId, paymentId, shipmentId);
     }
 }

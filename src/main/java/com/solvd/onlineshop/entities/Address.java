@@ -3,6 +3,7 @@ package com.solvd.onlineshop.entities;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Objects;
 
 @XmlRootElement(name="Address")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -83,5 +84,18 @@ public class Address {
 
     public void setStreet(String street) {
         this.street = street;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return id == address.id && country.equals(address.country) && state.equals(address.state) && city.equals(address.city) && zipcode.equals(address.zipcode) && street.equals(address.street);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, country, state, city, zipcode, street);
     }
 }

@@ -381,18 +381,4 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-Insert INTO OnlineShop.Shipper VALUES (1,"USP",false);
-Insert INTO OnlineShop.Shipper VALUES (2,"FEDEX",true);
-INSERT INTO OnlineShop.Order_status 
-VALUES (1,"Processed");
-INSERT INTO OnlineShop.User
-VALUES (1,'Alex','John',null,'646-000-0001','alex@email.com','alex1234');
- INSERT INTO OnlineShop.User
-VALUES (2,'Laurie','Evans',null,'929-000-0021','laurie@email.com','laurie1234');
-Insert Into OnlineShop.Payment Values(1,"VISA",1109,curdate(),2);
-Insert Into OnlineShop.Payment Values(2,"MasterCard",900.34,curdate(),1);
-INSERT INTO OnlineShop.Shipment VALUES (1,"ABCTRACKING123",curdate(),1);
-INSERT INTO OnlineShop.Category VALUES (1,"Tech");
-INSERT INTO OnlineShop.Manufacturer VALUES (1,"Apple","347-200-1000");
-INSERT INTO OnlineShop.Discount VALUES(1,"25%",0.25);
-Select * FROM OnlineShop.Manufacturer;
+

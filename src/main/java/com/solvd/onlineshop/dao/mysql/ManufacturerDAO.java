@@ -2,7 +2,6 @@ package com.solvd.onlineshop.dao.mysql;
 
 import com.solvd.onlineshop.ConnectionPool;
 import com.solvd.onlineshop.dao.IManufacturerDAO;
-import com.solvd.onlineshop.entities.Category;
 import com.solvd.onlineshop.entities.Manufacturer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ManufacturerDAO extends MySQLDAO implements IManufacturerDAO {
     private static final Logger logger = LogManager.getLogger(ManufacturerDAO.class);
@@ -18,6 +19,8 @@ public class ManufacturerDAO extends MySQLDAO implements IManufacturerDAO {
     private static String removeQuery = "DElETE FROM Manufacturer WHERE id = ?";
     private static String insertQuery = "INSERT INTO Manufacturer VALUES(?,?,?)";
     private static String updateQuery = "UPDATE Manufacturer SET name = ?, phone = ? WHERE id = ?";
+    private static String readAllQuery = "SELECT * FROM Manufacturer";
+
 
     @Override
     public Manufacturer getByID(long id) {
@@ -101,5 +104,34 @@ public class ManufacturerDAO extends MySQLDAO implements IManufacturerDAO {
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
+    }
+
+    @Override
+    public List<Manufacturer> getAllManufacturers() {
+        Connection con = ConnectionPool.getInstance().getConnection();
+        List<Manufacturer> manufacturers = new ArrayList<>();
+        ResultSet rs = null;
+        try (PreparedStatement ps = con.prepareStatement(readAllQuery)) {
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                long id = rs.getLong("id");
+                String name = rs.getString("name");
+                String phone = rs.getString("phone");
+                Manufacturer manufacturer = new Manufacturer(id, name, phone);
+                manufacturers.add(manufacturer);
+            }
+        } catch (SQLException e) {
+            logger.error("Failed getting all categories records", e);
+        } finally {
+            ConnectionPool.getInstance().returnConnection(con);
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return manufacturers;
     }
 }

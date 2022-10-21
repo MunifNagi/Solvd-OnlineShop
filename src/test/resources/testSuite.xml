@@ -1,0 +1,30 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Testing suit1" verbose="1" parallel="tests" thread-count="5">
+    <test name="jdbc">
+        <classes>
+            <class name="com.solvd.onlineshop.jdbc.ProductServiceTest"/>
+            <class name="com.solvd.onlineshop.jdbc.CategoryServiceTest"/>
+            <class name="com.solvd.onlineshop.jdbc.UserServiceTest"/>
+            <class name="com.solvd.onlineshop.jdbc.ManufacturerServiceTest"/>
+            <class name="com.solvd.onlineshop.jdbc.DiscountServiceTest"/>
+        </classes>
+    </test>
+    <test name="myBatis">
+        <classes>
+            <class name="com.solvd.onlineshop.myBatis.UserServiceTest"/>
+        </classes>
+    </test>
+    <test name="XML">
+        <classes>
+            <class name="com.solvd.onlineshop.xml.AbstractXML"/>
+            <class name="com.solvd.onlineshop.xml.JAXBTest"/>
+            <class name="com.solvd.onlineshop.xml.XMLParserTest"/>
+        </classes>
+    </test>
+    <test name="JSON">
+        <classes>
+            <class name="com.solvd.onlineshop.json.AbstractJson"/>
+            <class name="com.solvd.onlineshop.json.JsonMapperTest"/>
+        </classes>
+    </test>
+</suite>

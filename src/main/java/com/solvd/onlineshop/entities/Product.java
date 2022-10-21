@@ -1,6 +1,7 @@
 package com.solvd.onlineshop.entities;
 
 import javax.xml.bind.annotation.*;
+import java.util.Objects;
 
 @XmlRootElement(name="Product")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -120,5 +121,18 @@ public class Product {
 
     public void setManufacturerId(long manufacturerId) {
         this.manufacturerId = manufacturerId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return id == product.id && Double.compare(product.price, price) == 0 && categoryId == product.categoryId && Double.compare(product.weight, weight) == 0 && inStock == product.inStock && manufacturerId == product.manufacturerId && name.equals(product.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, categoryId, weight, inStock, manufacturerId);
     }
 }
