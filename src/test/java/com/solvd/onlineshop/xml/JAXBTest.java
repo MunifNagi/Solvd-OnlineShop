@@ -17,28 +17,19 @@ public class JAXBTest extends AbstractXML {
     @BeforeClass
     public void setUp() {
         xmlParser = new JAXBHandler();
-        userXMLPath = "src/main/resources/xml/user.xml";
-        orderXMLPath = "src/main/resources/xml/order.xml";
-        addressXMLPath = "src/main/resources/xml/address.xml";
-        expectedUserList.add(new User(5, "Laurie", "John", null, "646-000-0001", "laurie@email.com", "laurie1234"));
-        expectedUserList.add(new User(6, "Munif", "Nagi", null, "642-555-0001", "munif@email.com", "Munif1234"));
-        expectedAddressList.add(new Address(1, "USA", "NY", "Queens", "11106", "3735 35th st"));
-        expectedAddressList.add(new Address(2, "USA", "VA", "Hrendon", "20170", "1817 Forest Drive"));
-        expectedOrderList.add(new Order(1, 1109.0, 3, StringToDate("2022-07-23 00:00:00"), 1, 1, 1, 1));
-        expectedOrderList.add(new Order(2, 1209.0, 4, StringToDate("2022-09-22 00:00:00"), 2, 1, 1, 2));
     }
 
     @Test
     public void testReadXML() {
-        List<User> userList = xmlParser.readXML(userXMLPath, User.class);
+        List<User> userList = xmlParser.readXML(USER_XML_PATH, User.class);
         Assert.assertEquals(userList, expectedUserList);
-        List<Address> addressList = xmlParser.readXML(addressXMLPath, Address.class);
+        List<Address> addressList = xmlParser.readXML(ADDRESS_XML_PATH, Address.class);
         Assert.assertEquals(addressList, expectedAddressList);
-        List<Order> orderList = xmlParser.readXML(orderXMLPath, Order.class);
+        List<Order> orderList = xmlParser.readXML(ORDER_XML_PATH, Order.class);
         Assert.assertEquals(orderList, expectedOrderList);
     }
 
-    @Test(priority = 1)
+    @Test
     void testWriteXML() {
         JAXBHandler jaxbHandler = new JAXBHandler();
         jaxbHandler.writeXML(expectedUserList, User.class, "src/main/resources/xml/new-user.xml");

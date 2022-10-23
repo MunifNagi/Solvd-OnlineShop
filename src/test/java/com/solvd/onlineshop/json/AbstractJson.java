@@ -1,22 +1,14 @@
 package com.solvd.onlineshop.json;
 
-import com.solvd.onlineshop.entities.Address;
-import com.solvd.onlineshop.entities.Order;
-import com.solvd.onlineshop.entities.Payment;
 import com.solvd.onlineshop.entities.User;
-import com.solvd.onlineshop.services.IParseXML;
 import com.solvd.onlineshop.services.JsonMapper;
-import org.testng.annotations.AfterSuite;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AbstractJson {
     protected JsonMapper jsonMapper = new JsonMapper();
-    protected String userJSONPath = "src/main/resources/json/user.json";
-    protected List<User> expectedUserList = new ArrayList<User>();
-    @AfterSuite
-    public void destroy() {
-        expectedUserList.clear();
-    }
+    protected final String READ_PATH = "src/main/resources/json/user.json";
+    protected final String WRITE_PATH = "src/main/resources/json/new-user.json";
+    protected List<User> expectedUserList = List.of(new User(1, "Tom", "Alex", null, "347-200-0000", "tom@email.com", "tom1234"), new User(2, "Maria", "Hernandez", null, "347-222-0001", "maria@email.com", "maria1234"), new User(3, "Marta", "Tsyndra", null, "347-222-1111", "marta@email.com", "marta1234"));
+
 }
