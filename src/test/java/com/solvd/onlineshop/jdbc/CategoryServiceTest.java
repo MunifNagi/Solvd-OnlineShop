@@ -3,9 +3,7 @@ package com.solvd.onlineshop.jdbc;
 import com.solvd.onlineshop.entities.Category;
 import com.solvd.onlineshop.services.ICategoryService;
 import org.testng.Assert;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.util.List;
 
@@ -16,7 +14,11 @@ public class CategoryServiceTest {
     @BeforeClass
     public void setUp() {
         categoryService = new com.solvd.onlineshop.services.jdbcImp.CategoryService();
-        category = new Category(1, "Furniture");
+    }
+
+    @BeforeMethod
+    public void createCategory() {
+        category = new Category(2, "Furniture");
     }
 
     @Test
@@ -24,29 +26,29 @@ public class CategoryServiceTest {
         List<Category> categories = categoryService.getAllCategories();
         int categoriesSize = categories.size();
         categoryService.createCategory(category);
-        Assert.assertEquals(categoryService.getAllCategories().size(), categoriesSize + 1);
+        Assert.assertEquals(categoryService.getAllCategories().size(), categoriesSize + 1, "Number of categories should have been incremented after insertion");
     }
 
-    @Test(priority = 1)
+    @Test
     public void testGetCategoryById() {
-        Category c = categoryService.getCategoryById(1);
-        Assert.assertEquals(c.getCategoryId(), 1);
-        Assert.assertEquals(c.getName(), "Furniture");
-        Assert.assertEquals(c, category);
+        Category c = categoryService.getCategoryById(2);
+        Assert.assertEquals(c.getCategoryId(), 2, "Category id didn't match");
+        Assert.assertEquals(c.getName(), "Furniture", "Category name didn't match");
+        Assert.assertEquals(c, category, "Category selected from database didn't match with expected Category");
     }
 
-    @Test(priority = 2)
+    @Test
     public void testUpdateCategory() {
-        Category testCategory = categoryService.getCategoryById(1);
+        Category testCategory = categoryService.getCategoryById(2);
         testCategory.setName("Electronics");
         categoryService.updateCategory(testCategory);
-        Category c = categoryService.getCategoryById(1);
-        Assert.assertEquals(c.getName(), "Electronics");
-        Assert.assertEquals(c, testCategory);
+        Category c = categoryService.getCategoryById(2);
+        Assert.assertEquals(c.getName(), "Electronics", "Category name was expected to be updated");
+        Assert.assertEquals(c, testCategory, "Category was expected to be updated");
     }
 
-    @AfterSuite
+    @AfterClass
     public void destroy() {
-        categoryService.removeCategory(1);
+        categoryService.removeCategory(2);
     }
 }

@@ -4,9 +4,7 @@ import com.solvd.onlineshop.entities.Address;
 import com.solvd.onlineshop.entities.Order;
 import com.solvd.onlineshop.entities.User;
 import com.solvd.onlineshop.services.IParseXML;
-import org.testng.annotations.AfterSuite;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.solvd.onlineshop.services.DateAdaptor.StringToDate;

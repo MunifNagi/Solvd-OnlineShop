@@ -19,10 +19,10 @@ public class XMLParserTest extends AbstractXML {
     @Test
     public void testReadXML() {
         List<User> userList = xmlParser.readXML(USER_XML_PATH, User.class);
-        Assert.assertEquals(userList, expectedUserList);
+        Assert.assertEquals(userList, expectedUserList, "Users from XML must match expected users");
         List<Address> addressList = xmlParser.readXML(ADDRESS_XML_PATH, Address.class);
-        Assert.assertEquals(addressList, expectedAddressList);
+        Assert.assertEquals(addressList, expectedAddressList, "Addresses from XML must match expected addresses");
         List<Order> orderList = xmlParser.readXML(ORDER_XML_PATH, Order.class);
-        Assert.assertEquals(orderList, expectedOrderList);
+        Assert.assertEquals(orderList, expectedOrderList, "Orders from XML must match expected users");
     }
 }

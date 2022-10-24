@@ -34,7 +34,6 @@ CREATE TABLE IF NOT EXISTS `OnlineShop`.`User` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-
 -- -----------------------------------------------------
 -- Table `OnlineShop`.`Category`
 -- -----------------------------------------------------
@@ -394,5 +393,5 @@ Insert Into OnlineShop.Payment Values(2,"MasterCard",900.34,curdate(),1);
 INSERT INTO OnlineShop.Shipment VALUES (1,"ABCTRACKING123",curdate(),1);
 INSERT INTO OnlineShop.Category VALUES (1,"Tech");
 INSERT INTO OnlineShop.Manufacturer VALUES (1,"Apple","347-200-1000");
-INSERT INTO OnlineShop.Discount VALUES(1,"25%",0.25);
+INSERT INTO OnlineShop.Discount VALUES(1,"40%",0.40);
 Select * FROM OnlineShop.Manufacturer;
