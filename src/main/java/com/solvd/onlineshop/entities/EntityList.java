@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
+
 @XmlRootElement
 public class EntityList<T> {
     @XmlAnyElement(lax = true)
@@ -13,7 +14,8 @@ public class EntityList<T> {
 
     public EntityList() {
     }
-    public void addEntity(T entity){
+
+    public void addEntity(T entity) {
         entities.add(entity);
     }
 
@@ -21,7 +23,7 @@ public class EntityList<T> {
         this.entities = entities;
     }
 
-    public List<T> getEntities(){
+    public List<T> getEntities() {
         return entities;
     }
 }

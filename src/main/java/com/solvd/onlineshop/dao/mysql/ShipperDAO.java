@@ -23,10 +23,10 @@ public class ShipperDAO extends MySQLDAO implements IShipperDAO {
     public Shipper getByID(long id) {
         ResultSet rs = null;
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement(readQuery)) {
+        try (PreparedStatement ps = con.prepareStatement(readQuery)) {
             ps.setLong(1, id);
             rs = ps.executeQuery();
-            if(rs.next()) {
+            if (rs.next()) {
                 String name = rs.getString("company_name");
                 boolean isInternational = rs.getBoolean("internationalShipping");
                 Shipper shipper = new Shipper(id, name, isInternational);
@@ -37,7 +37,7 @@ public class ShipperDAO extends MySQLDAO implements IShipperDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
-            if(rs != null) {
+            if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
@@ -51,9 +51,9 @@ public class ShipperDAO extends MySQLDAO implements IShipperDAO {
     @Override
     public void remove(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
+        try (PreparedStatement ps = con.prepareStatement(removeQuery)) {
             ps.setLong(1, id);
-            if (ps.executeUpdate()>0) {
+            if (ps.executeUpdate() > 0) {
                 String message = String.format("Shipper with ID: %d was removed successfully", id);
                 logger.info(message);
             }
@@ -73,11 +73,9 @@ public class ShipperDAO extends MySQLDAO implements IShipperDAO {
             ps.setString(2, shipper.getCompanyName());
             ps.setBoolean(3, shipper.isInternational());
             ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            logger.error("Inserting record into the Shipper Table Failed",e);
-        }
-        finally {
+        } catch (SQLException e) {
+            logger.error("Inserting record into the Shipper Table Failed", e);
+        } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
 
@@ -87,14 +85,14 @@ public class ShipperDAO extends MySQLDAO implements IShipperDAO {
     public void update(Shipper shipper) {
         Connection con = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
-            ps.setString(1,shipper.getCompanyName());
-            ps.setLong(2,shipper.getShipperId());
-            if (ps.executeUpdate()>0) {
-                String message = String.format("Shipper with ID: %d was updated successfully",shipper.getShipperId());
+            ps.setString(1, shipper.getCompanyName());
+            ps.setLong(2, shipper.getShipperId());
+            if (ps.executeUpdate() > 0) {
+                String message = String.format("Shipper with ID: %d was updated successfully", shipper.getShipperId());
                 logger.info(message);
             }
         } catch (SQLException e) {
-            String message = String.format("Shipper with ID: %d was not updated successfully",shipper.getShipperId());
+            String message = String.format("Shipper with ID: %d was not updated successfully", shipper.getShipperId());
             logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);

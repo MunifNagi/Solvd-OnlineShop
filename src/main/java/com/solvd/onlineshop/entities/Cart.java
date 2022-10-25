@@ -15,7 +15,7 @@ public class Cart {
         this.productId = productId;
         this.quantity = quantity;
         this.price = price;
-        this.total= total;
+        this.total = total;
     }
 
     public long getCartId() {

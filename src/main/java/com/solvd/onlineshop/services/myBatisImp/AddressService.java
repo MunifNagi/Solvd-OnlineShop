@@ -14,12 +14,13 @@ import java.util.List;
 public class AddressService implements IAddressService {
     private static final Logger logger = LogManager.getLogger(AddressService.class);
     private final static SqlSessionFactory sessionFactory = MyBatisFactory.getSessionFactory();
+
     @Override
     public Address getAddressByID(long id) {
-        try(SqlSession session = sessionFactory.openSession()) {
+        try (SqlSession session = sessionFactory.openSession()) {
             IAddressDAO addressDAO = session.getMapper(IAddressDAO.class);
             Address address = addressDAO.getByID(id);
-            if(address==null) {
+            if (address == null) {
                 logger.error("Address with id " + id + " wasn't found!");
             }
             return address;
@@ -28,7 +29,7 @@ public class AddressService implements IAddressService {
 
     @Override
     public List<Address> getAllAddresses() {
-        try(SqlSession session = sessionFactory.openSession()) {
+        try (SqlSession session = sessionFactory.openSession()) {
             IAddressDAO addressDAO = session.getMapper(IAddressDAO.class);
             return addressDAO.getAllAddresses();
         }
@@ -36,14 +37,14 @@ public class AddressService implements IAddressService {
 
     @Override
     public void removeAddress(long id) {
-        try( SqlSession session = sessionFactory.openSession()) {
+        try (SqlSession session = sessionFactory.openSession()) {
             IAddressDAO addressDAO = session.getMapper(IAddressDAO.class);
             try {
                 addressDAO.remove(id);
                 session.commit();
                 logger.info("Address was removed Successfully");
             } catch (Exception e) {
-                logger.error("Removing address with id " + id + " wasn't successful",e);
+                logger.error("Removing address with id " + id + " wasn't successful", e);
                 session.rollback();
             }
         }
@@ -51,14 +52,14 @@ public class AddressService implements IAddressService {
 
     @Override
     public void createAddress(Address address) {
-        try( SqlSession session = sessionFactory.openSession()){
+        try (SqlSession session = sessionFactory.openSession()) {
             IAddressDAO addressDAO = session.getMapper(IAddressDAO.class);
             try {
                 addressDAO.create(address);
                 session.commit();
                 logger.info("Address was inserted Successfully");
             } catch (Exception e) {
-                logger.error(e.getMessage(),e);
+                logger.error(e.getMessage(), e);
                 session.rollback();
                 logger.error("Inserting Address wasn't successful");
             }
@@ -68,14 +69,14 @@ public class AddressService implements IAddressService {
 
     @Override
     public void updateAddress(Address address) {
-        try( SqlSession session = sessionFactory.openSession()){
+        try (SqlSession session = sessionFactory.openSession()) {
             IAddressDAO addressDAO = session.getMapper(IAddressDAO.class);
             try {
                 addressDAO.update(address);
                 session.commit();
                 logger.info("Address was updated Successfully");
             } catch (Exception e) {
-                logger.error(e.getMessage(),e);
+                logger.error(e.getMessage(), e);
                 session.rollback();
             }
         }

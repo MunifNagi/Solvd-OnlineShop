@@ -6,9 +6,13 @@ import com.solvd.onlineshop.entities.Product;
 import java.util.List;
 
 public interface IAddressService {
-    Address getAddressByID (long id);
+    Address getAddressByID(long id);
+
     List<Address> getAllAddresses();
+
     void removeAddress(long id);
+
     void createAddress(Address address);
+
     void updateAddress(Address address);
 }

@@ -53,9 +53,9 @@ public class CategoryDAO extends MySQLDAO implements ICategoryDAO {
     @Override
     public void remove(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
-            ps.setLong(1,id);
-            if (ps.executeUpdate()>0) {
+        try (PreparedStatement ps = con.prepareStatement(removeQuery)) {
+            ps.setLong(1, id);
+            if (ps.executeUpdate() > 0) {
                 String message = String.format("Category with ID: %d was removed successfully", id);
                 logger.info(message);
             }
@@ -74,11 +74,9 @@ public class CategoryDAO extends MySQLDAO implements ICategoryDAO {
             ps.setLong(1, category.getCategoryId());
             ps.setString(2, category.getName());
             ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            logger.error("Inserting record into the Category Table Failed",e);
-        }
-        finally {
+        } catch (SQLException e) {
+            logger.error("Inserting record into the Category Table Failed", e);
+        } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
 
@@ -88,14 +86,14 @@ public class CategoryDAO extends MySQLDAO implements ICategoryDAO {
     public void update(Category category) {
         Connection con = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
-            ps.setString(1,category.getName());
-            ps.setLong(2,category.getCategoryId());
-            if (ps.executeUpdate()>0) {
-                String message = String.format("Category with ID: %d was updated successfully",category.getCategoryId());
+            ps.setString(1, category.getName());
+            ps.setLong(2, category.getCategoryId());
+            if (ps.executeUpdate() > 0) {
+                String message = String.format("Category with ID: %d was updated successfully", category.getCategoryId());
                 logger.info(message);
             }
         } catch (SQLException e) {
-            String message = String.format("Category with ID: %d was not updated successfully",category.getCategoryId());
+            String message = String.format("Category with ID: %d was not updated successfully", category.getCategoryId());
             logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);

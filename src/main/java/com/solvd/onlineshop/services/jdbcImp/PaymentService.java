@@ -13,11 +13,12 @@ import java.util.List;
 public class PaymentService implements IPaymentService {
     private IPaymentDAO paymentDAO = new PaymentDAO();
     private static final Logger logger = LogManager.getLogger(AddressService.class);
+
     @Override
     public Payment getPaymentByID(long id) {
         Payment payment = paymentDAO.getByID(id);
-        if(payment==null) {
-            logger.error("Payment with id "+ id + " wasn't found!");
+        if (payment == null) {
+            logger.error("Payment with id " + id + " wasn't found!");
         }
         return payment;
     }

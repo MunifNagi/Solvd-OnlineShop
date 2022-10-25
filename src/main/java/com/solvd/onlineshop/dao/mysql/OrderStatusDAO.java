@@ -49,9 +49,9 @@ public class OrderStatusDAO extends MySQLDAO implements IOrderStatusDAO {
     @Override
     public void remove(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
-            ps.setLong(1,id);
-            if (ps.executeUpdate()>0) {
+        try (PreparedStatement ps = con.prepareStatement(removeQuery)) {
+            ps.setLong(1, id);
+            if (ps.executeUpdate() > 0) {
                 String message = String.format("OrderStatus with ID: %d was removed successfully", id);
                 logger.info(message);
             }
@@ -70,11 +70,9 @@ public class OrderStatusDAO extends MySQLDAO implements IOrderStatusDAO {
             ps.setLong(1, orderStatus.getStatusId());
             ps.setString(2, orderStatus.getValue());
             ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            logger.error("Inserting record into the OrderStatus Table Failed",e);
-        }
-        finally {
+        } catch (SQLException e) {
+            logger.error("Inserting record into the OrderStatus Table Failed", e);
+        } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
 
@@ -84,14 +82,14 @@ public class OrderStatusDAO extends MySQLDAO implements IOrderStatusDAO {
     public void update(OrderStatus orderStatus) {
         Connection con = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
-            ps.setString(1,orderStatus.getValue());
-            ps.setLong(2,orderStatus.getStatusId());
-            if (ps.executeUpdate()>0) {
-                String message = String.format("OrderStatus with ID: %d was updated successfully",orderStatus.getStatusId());
+            ps.setString(1, orderStatus.getValue());
+            ps.setLong(2, orderStatus.getStatusId());
+            if (ps.executeUpdate() > 0) {
+                String message = String.format("OrderStatus with ID: %d was updated successfully", orderStatus.getStatusId());
                 logger.info(message);
             }
         } catch (SQLException e) {
-            String message = String.format("OrderStatus with ID: %d was not updated successfully",orderStatus.getStatusId());
+            String message = String.format("OrderStatus with ID: %d was not updated successfully", orderStatus.getStatusId());
             logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);

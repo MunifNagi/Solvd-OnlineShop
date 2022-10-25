@@ -19,10 +19,10 @@ public class ProductService implements IProductService {
 
     @Override
     public Product getProductByID(long id) {
-        try(SqlSession session = sessionFactory.openSession()) {
+        try (SqlSession session = sessionFactory.openSession()) {
             IProductDAO productDAO = session.getMapper(IProductDAO.class);
             Product product = productDAO.getByID(id);
-            if(product==null) {
+            if (product == null) {
                 logger.error("Product with id " + id + " wasn't found!");
             }
             return product;
@@ -31,7 +31,7 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> getAllProducts() {
-        try(SqlSession session = sessionFactory.openSession()) {
+        try (SqlSession session = sessionFactory.openSession()) {
             IProductDAO productDAO = session.getMapper(IProductDAO.class);
             return productDAO.getAllProduct();
         }
@@ -39,14 +39,14 @@ public class ProductService implements IProductService {
 
     @Override
     public void removeProduct(long id) {
-        try( SqlSession session = sessionFactory.openSession()) {
+        try (SqlSession session = sessionFactory.openSession()) {
             IProductDAO productDAO = session.getMapper(IProductDAO.class);
             try {
                 productDAO.remove(id);
                 session.commit();
                 logger.info("Product was removed Successfully");
             } catch (Exception e) {
-                logger.error("Removing product with id " + id + " wasn't successful",e);
+                logger.error("Removing product with id " + id + " wasn't successful", e);
                 session.rollback();
             }
         }
@@ -54,14 +54,14 @@ public class ProductService implements IProductService {
 
     @Override
     public void createProduct(Product product) {
-        try( SqlSession session = sessionFactory.openSession()){
+        try (SqlSession session = sessionFactory.openSession()) {
             IProductDAO productDAO = session.getMapper(IProductDAO.class);
             try {
                 productDAO.create(product);
                 session.commit();
                 logger.info("Product was inserted Successfully");
             } catch (Exception e) {
-                logger.error("Inserting Product ",e);
+                logger.error("Inserting Product ", e);
                 session.rollback();
             }
         }
@@ -69,14 +69,14 @@ public class ProductService implements IProductService {
 
     @Override
     public void updateProduct(Product product) {
-        try( SqlSession session = sessionFactory.openSession()){
+        try (SqlSession session = sessionFactory.openSession()) {
             IProductDAO productDAO = session.getMapper(IProductDAO.class);
             try {
                 productDAO.update(product);
                 session.commit();
                 logger.info("product was updated Successfully");
             } catch (Exception e) {
-                logger.error("Updating product wasn't successful",e);
+                logger.error("Updating product wasn't successful", e);
                 session.rollback();
             }
         }
@@ -85,7 +85,7 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> getProductByCategoryId(long categoryID) {
-        try(SqlSession session = sessionFactory.openSession()) {
+        try (SqlSession session = sessionFactory.openSession()) {
             IProductDAO productDAO = session.getMapper(IProductDAO.class);
             return productDAO.getProductByCategoryId(categoryID);
         }
@@ -93,7 +93,7 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> getProductByManufacturerId(long manufacturerId) {
-        try(SqlSession session = sessionFactory.openSession()) {
+        try (SqlSession session = sessionFactory.openSession()) {
             IProductDAO productDAO = session.getMapper(IProductDAO.class);
             return productDAO.getProductByManufacturerId(manufacturerId);
         }

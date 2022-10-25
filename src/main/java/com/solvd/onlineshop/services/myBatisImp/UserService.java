@@ -20,10 +20,10 @@ public class UserService implements IUserService {
 
     @Override
     public User getUserByID(long id) {
-        try(SqlSession session = sessionFactory.openSession()) {
+        try (SqlSession session = sessionFactory.openSession()) {
             IUserDAO userDAO = session.getMapper(IUserDAO.class);
             User u = userDAO.getByID(id);
-            if(u==null) {
+            if (u == null) {
                 logger.error("User with id " + id + " wasn't found!");
             }
             logger.info("User was removed Successfully");
@@ -33,14 +33,14 @@ public class UserService implements IUserService {
 
     @Override
     public void createUser(User user) {
-        try( SqlSession session = sessionFactory.openSession()){
+        try (SqlSession session = sessionFactory.openSession()) {
             IUserDAO userDAO = session.getMapper(IUserDAO.class);
             try {
                 userDAO.create(user);
                 session.commit();
                 logger.info("User was inserted Successfully");
             } catch (Exception e) {
-                logger.error("Inserting user wasn't successful",e);
+                logger.error("Inserting user wasn't successful", e);
                 session.rollback();
             }
         }
@@ -48,14 +48,14 @@ public class UserService implements IUserService {
 
     @Override
     public void updateUser(User user) {
-        try( SqlSession session = sessionFactory.openSession()){
+        try (SqlSession session = sessionFactory.openSession()) {
             IUserDAO userDAO = session.getMapper(IUserDAO.class);
             try {
                 userDAO.update(user);
                 session.commit();
                 logger.info("User was updated Successfully");
             } catch (Exception e) {
-                logger.error("updating user wasn't successful",e);
+                logger.error("updating user wasn't successful", e);
                 session.rollback();
             }
         }
@@ -63,14 +63,14 @@ public class UserService implements IUserService {
 
     @Override
     public void removeUser(long id) {
-        try( SqlSession session = sessionFactory.openSession()) {
+        try (SqlSession session = sessionFactory.openSession()) {
             IUserDAO userDAO = session.getMapper(IUserDAO.class);
             try {
                 userDAO.remove(id);
                 session.commit();
                 logger.info("User was removed Successfully");
             } catch (Exception e) {
-                logger.error("Removing user with id " + id + " wasn't successful",e);
+                logger.error("Removing user with id " + id + " wasn't successful", e);
                 session.rollback();
             }
         }
@@ -78,7 +78,7 @@ public class UserService implements IUserService {
 
     @Override
     public List<User> getAllUsers() {
-        try(SqlSession session = sessionFactory.openSession()) {
+        try (SqlSession session = sessionFactory.openSession()) {
             IUserDAO userDAO = session.getMapper(IUserDAO.class);
             return userDAO.getAllUsers();
         }

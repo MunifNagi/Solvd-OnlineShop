@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class OrderDAO extends  MySQLDAO implements IOrderDAO {
+public class OrderDAO extends MySQLDAO implements IOrderDAO {
     private static final Logger logger = LogManager.getLogger(OrderDAO.class);
     private static String readQuery = "SELECT * FROM Order where id=?";
     private static String removeQuery = "DElETE FROM Order WHERE id = ?";
@@ -28,10 +28,10 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
     public Order getByID(long id) {
         ResultSet rs = null;
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps = con.prepareStatement(readQuery)) {
-            ps.setLong(1,id);
+        try (PreparedStatement ps = con.prepareStatement(readQuery)) {
+            ps.setLong(1, id);
             rs = ps.executeQuery();
-            if(rs.next()) {
+            if (rs.next()) {
                 double totalPrice = rs.getDouble("total_price");
                 long productsQuantity = rs.getLong("products_quantity");
                 Date date = rs.getDate("date");
@@ -47,7 +47,7 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
             logger.error(message, e);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
-            if(rs != null) {
+            if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
@@ -72,25 +72,24 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
             ps.setLong(8, order.getShipmentId());
             ps.executeUpdate();
             logger.info("Inserting record into the Order Table was successful");
-        }
-        catch (SQLException e) {
-            logger.error("Inserting record into the Order Table Failed",e);
-        }
-        finally {
+        } catch (SQLException e) {
+            logger.error("Inserting record into the Order Table Failed", e);
+        } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
     }
+
     public void update(Order order) {
         Connection con = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
-            ps.setLong(1,order.getOrderStatusId());
-            ps.setLong(2,order.getOrderId());
-            if (ps.executeUpdate()>0) {
-                String message = String.format("Order with ID: %d was updated successfully",order.getOrderId());
+            ps.setLong(1, order.getOrderStatusId());
+            ps.setLong(2, order.getOrderId());
+            if (ps.executeUpdate() > 0) {
+                String message = String.format("Order with ID: %d was updated successfully", order.getOrderId());
                 logger.info(message);
             }
         } catch (SQLException e) {
-            String message = String.format("Order with ID: %d was not updated successfully",order.getOrderId());
+            String message = String.format("Order with ID: %d was not updated successfully", order.getOrderId());
             logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
@@ -99,9 +98,9 @@ public class OrderDAO extends  MySQLDAO implements IOrderDAO {
 
     public void remove(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
-            ps.setLong(1,id);
-            if (ps.executeUpdate()>0) {
+        try (PreparedStatement ps = con.prepareStatement(removeQuery)) {
+            ps.setLong(1, id);
+            if (ps.executeUpdate() > 0) {
                 String message = String.format("Order with ID: %d was removed successfully", id);
                 logger.info(message);
             }

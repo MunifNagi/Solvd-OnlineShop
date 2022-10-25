@@ -1,6 +1,7 @@
 package com.solvd.onlineshop.services;
 
-/** To get generic type
+/**
+ * To get generic type
  * of class at runtime
  */
 

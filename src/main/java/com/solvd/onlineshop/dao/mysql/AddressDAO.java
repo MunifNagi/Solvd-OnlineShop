@@ -18,13 +18,14 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
     private static String insertQuery = "INSERT INTO Address VALUES(?,?,?,?,?,?)";
     private static String updateQuery = "UPDATE Address SET country = ? , state = ? , city = ? , zipcode = ? , street = ? WHERE id = ?";
     private static String readAllQuery = "SELECT * FROM Address";
-    public Address getByID(long id){
+
+    public Address getByID(long id) {
         ResultSet rs = null;
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps = con.prepareStatement(readQuery)){
+        try (PreparedStatement ps = con.prepareStatement(readQuery)) {
             ps.setLong(1, id);
             rs = ps.executeQuery();
-            if(rs.next()) {
+            if (rs.next()) {
                 String country = rs.getString("country");
                 String state = rs.getString("state");
                 String city = rs.getString("city");
@@ -39,7 +40,7 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
             return null;
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
-            if(rs != null) {
+            if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
@@ -53,9 +54,9 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
     @Override
     public void remove(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
-            ps.setLong(1,id);
-            if (ps.executeUpdate()>0) {
+        try (PreparedStatement ps = con.prepareStatement(removeQuery)) {
+            ps.setLong(1, id);
+            if (ps.executeUpdate() > 0) {
                 String message = String.format("Address with ID: %d was removed successfully", id);
                 logger.info(message);
             }
@@ -79,11 +80,9 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
             ps.setString(5, address.getZipcode());
             ps.setString(6, address.getStreet());
             ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            logger.error("Inserting record into the Address Table Failed",e);
-        }
-        finally {
+        } catch (SQLException e) {
+            logger.error("Inserting record into the Address Table Failed", e);
+        } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
     }
@@ -92,17 +91,17 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
     public void update(Address address) {
         Connection con = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
-            ps.setString(1,address.getCountry());
-            ps.setString(2,address.getState());
-            ps.setString(3,address.getCity());
-            ps.setString(4,address.getZipcode());
-            ps.setString(5,address.getStreet());
-            if (ps.executeUpdate()>0) {
-                String message = String.format("Address with ID: %d was updated successfully",address.getAddressId());
+            ps.setString(1, address.getCountry());
+            ps.setString(2, address.getState());
+            ps.setString(3, address.getCity());
+            ps.setString(4, address.getZipcode());
+            ps.setString(5, address.getStreet());
+            if (ps.executeUpdate() > 0) {
+                String message = String.format("Address with ID: %d was updated successfully", address.getAddressId());
                 logger.info(message);
             }
         } catch (SQLException e) {
-            String message = String.format("Address with ID: %d was not updated successfully",address.getAddressId());
+            String message = String.format("Address with ID: %d was not updated successfully", address.getAddressId());
             logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
@@ -114,9 +113,9 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
         ResultSet rs = null;
         Connection con = ConnectionPool.getInstance().getConnection();
         List<Address> addressList = new ArrayList<>();
-        try(PreparedStatement ps =con.prepareStatement(readAllQuery)) {
+        try (PreparedStatement ps = con.prepareStatement(readAllQuery)) {
             rs = ps.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 long id = rs.getLong("id");
                 String country = rs.getString("country");
                 String state = rs.getString("state");
@@ -130,7 +129,7 @@ public class AddressDAO extends MySQLDAO implements IAddressDAO {
             logger.error("Getting all records from Address Table Failed");
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
-            if(rs != null) {
+            if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {

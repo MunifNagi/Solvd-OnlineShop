@@ -57,9 +57,9 @@ public class RatingDAO extends MySQLDAO implements IRatingDAO {
     @Override
     public void remove(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
-            ps.setLong(1,id);
-            if (ps.executeUpdate()>0) {
+        try (PreparedStatement ps = con.prepareStatement(removeQuery)) {
+            ps.setLong(1, id);
+            if (ps.executeUpdate() > 0) {
                 String message = String.format("Rating with ID: %d was removed successfully", id);
                 logger.info(message);
             }
@@ -81,11 +81,9 @@ public class RatingDAO extends MySQLDAO implements IRatingDAO {
             ps.setInt(4, rate.getRating());
             ps.setString(5, rate.getReview());
             ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            logger.error("Inserting record into the Rating Table Failed",e);
-        }
-        finally {
+        } catch (SQLException e) {
+            logger.error("Inserting record into the Rating Table Failed", e);
+        } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
 
@@ -98,12 +96,12 @@ public class RatingDAO extends MySQLDAO implements IRatingDAO {
             ps.setInt(1, rating.getRating());
             ps.setString(2, rating.getReview());
             ps.setLong(3, rating.getRatingId());
-            if (ps.executeUpdate()>0) {
-                String message = String.format("Rating with ID: %d was updated successfully",rating.getRatingId());
+            if (ps.executeUpdate() > 0) {
+                String message = String.format("Rating with ID: %d was updated successfully", rating.getRatingId());
                 logger.info(message);
             }
         } catch (SQLException e) {
-            String message = String.format("Rating with ID: %d was not updated successfully",rating.getRatingId());
+            String message = String.format("Rating with ID: %d was not updated successfully", rating.getRatingId());
             logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);

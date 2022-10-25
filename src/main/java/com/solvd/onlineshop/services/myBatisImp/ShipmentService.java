@@ -15,10 +15,10 @@ public class ShipmentService implements IShipmentService {
 
     @Override
     public Shipment getShipmentById(long id) {
-        try(SqlSession session = sessionFactory.openSession()) {
+        try (SqlSession session = sessionFactory.openSession()) {
             IShipmentDAO shipmentDAO = session.getMapper(IShipmentDAO.class);
             Shipment shipment = shipmentDAO.getByID(id);
-            if(shipment==null) {
+            if (shipment == null) {
                 logger.error("Shipment with id " + id + " wasn't found!");
             }
             return shipment;
@@ -27,14 +27,14 @@ public class ShipmentService implements IShipmentService {
 
     @Override
     public void createShipment(Shipment shipment) {
-        try( SqlSession session = sessionFactory.openSession()){
+        try (SqlSession session = sessionFactory.openSession()) {
             IShipmentDAO shipmentDAO = session.getMapper(IShipmentDAO.class);
             try {
                 shipmentDAO.create(shipment);
                 session.commit();
                 logger.info("shipment was inserted Successfully");
             } catch (Exception e) {
-                logger.error("Inserting shipment wasn't successful",e);
+                logger.error("Inserting shipment wasn't successful", e);
                 session.rollback();
             }
         }
@@ -42,14 +42,14 @@ public class ShipmentService implements IShipmentService {
 
     @Override
     public void updateShipment(Shipment shipment) {
-        try( SqlSession session = sessionFactory.openSession()){
+        try (SqlSession session = sessionFactory.openSession()) {
             IShipmentDAO shipmentDAO = session.getMapper(IShipmentDAO.class);
             try {
                 shipmentDAO.update(shipment);
                 session.commit();
                 logger.info("Shipment was updated Successfully");
             } catch (Exception e) {
-                logger.error(e.getMessage(),e);
+                logger.error(e.getMessage(), e);
                 session.rollback();
             }
         }
@@ -57,14 +57,14 @@ public class ShipmentService implements IShipmentService {
 
     @Override
     public void removeShipment(long id) {
-        try( SqlSession session = sessionFactory.openSession()) {
+        try (SqlSession session = sessionFactory.openSession()) {
             IShipmentDAO shipmentDAO = session.getMapper(IShipmentDAO.class);
             try {
                 shipmentDAO.remove(id);
                 session.commit();
                 logger.info("Shipment was removed Successfully");
             } catch (Exception e) {
-                logger.error("Removing Shipment with id " + id + " wasn't successful",e);
+                logger.error("Removing Shipment with id " + id + " wasn't successful", e);
                 session.rollback();
             }
         }

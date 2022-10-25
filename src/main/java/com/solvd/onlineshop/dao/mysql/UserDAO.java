@@ -18,38 +18,35 @@ public class UserDAO extends MySQLDAO implements IUserDAO {
     private static String updateQuery = "UPDATE User SET  phone = ? WHERE id = ?";
     private static String readAllQuery = "SELECT * FROM User";
 
-
     public void create(User user) {
-         Connection con = ConnectionPool.getInstance().getConnection();
-         try (PreparedStatement ps = con.prepareStatement(insertQuery)) {
-             ps.setLong(1, user.getUserId());
-             ps.setString(2, user.getFirstName());
-             ps.setString(3, user.getLastName());
-             ps.setString(4, user.getMiddleName());
-             ps.setString(5, user.getPhone());
-             ps.setString(6, user.getEmail());
-             ps.setString(7, user.getPassword());
-             ps.executeUpdate();
-         }
-         catch (SQLException e) {
-             logger.error("Inserting record into the User Table Failed",e);
-         }
-         finally {
-             ConnectionPool.getInstance().returnConnection(con);
-         }
-     }
+        Connection con = ConnectionPool.getInstance().getConnection();
+        try (PreparedStatement ps = con.prepareStatement(insertQuery)) {
+            ps.setLong(1, user.getUserId());
+            ps.setString(2, user.getFirstName());
+            ps.setString(3, user.getLastName());
+            ps.setString(4, user.getMiddleName());
+            ps.setString(5, user.getPhone());
+            ps.setString(6, user.getEmail());
+            ps.setString(7, user.getPassword());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Inserting record into the User Table Failed", e);
+        } finally {
+            ConnectionPool.getInstance().returnConnection(con);
+        }
+    }
 
     public void update(User user) {
         Connection con = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
-            ps.setString(1,user.getPhone());
-            ps.setLong(2,user.getUserId());
-            if (ps.executeUpdate()>0) {
-                String message = String.format("User with ID: %d was updated successfully",user.getUserId());
+            ps.setString(1, user.getPhone());
+            ps.setLong(2, user.getUserId());
+            if (ps.executeUpdate() > 0) {
+                String message = String.format("User with ID: %d was updated successfully", user.getUserId());
                 logger.info(message);
             }
         } catch (SQLException e) {
-            String message = String.format("User with ID: %d was not updated successfully",user.getUserId());
+            String message = String.format("User with ID: %d was not updated successfully", user.getUserId());
             logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);
@@ -91,9 +88,9 @@ public class UserDAO extends MySQLDAO implements IUserDAO {
 
     public void remove(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
-            ps.setLong(1,id);
-            if (ps.executeUpdate()>0) {
+        try (PreparedStatement ps = con.prepareStatement(removeQuery)) {
+            ps.setLong(1, id);
+            if (ps.executeUpdate() > 0) {
                 String message = String.format("User with ID: %d was removed successfully", id);
                 logger.info(message);
             }

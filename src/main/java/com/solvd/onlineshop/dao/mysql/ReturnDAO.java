@@ -55,9 +55,9 @@ public class ReturnDAO extends MySQLDAO implements IReturnDAO {
     @Override
     public void remove(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
-            ps.setLong(1,id);
-            if (ps.executeUpdate()>0) {
+        try (PreparedStatement ps = con.prepareStatement(removeQuery)) {
+            ps.setLong(1, id);
+            if (ps.executeUpdate() > 0) {
                 String message = String.format("Return with ID: %d was removed successfully", id);
                 logger.info(message);
             }
@@ -79,11 +79,9 @@ public class ReturnDAO extends MySQLDAO implements IReturnDAO {
             ps.setDate(3, new java.sql.Date(object.getDate().getTime()));
             ps.setString(4, object.getReason());
             ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            logger.error("Inserting record into the Return Table Failed",e);
-        }
-        finally {
+        } catch (SQLException e) {
+            logger.error("Inserting record into the Return Table Failed", e);
+        } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
 
@@ -93,14 +91,14 @@ public class ReturnDAO extends MySQLDAO implements IReturnDAO {
     public void update(Return object) {
         Connection con = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
-            ps.setString(1,object.getReason());
-            ps.setLong(2,object.getReturnId());
-            if (ps.executeUpdate()>0) {
-                String message = String.format("Return with ID: %d was updated successfully",object.getReturnId());
+            ps.setString(1, object.getReason());
+            ps.setLong(2, object.getReturnId());
+            if (ps.executeUpdate() > 0) {
+                String message = String.format("Return with ID: %d was updated successfully", object.getReturnId());
                 logger.info(message);
             }
         } catch (SQLException e) {
-            String message = String.format("Return with ID: %d was not updated successfully",object.getReturnId());
+            String message = String.format("Return with ID: %d was not updated successfully", object.getReturnId());
             logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);

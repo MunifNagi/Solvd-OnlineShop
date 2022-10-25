@@ -17,8 +17,8 @@ public class AddressService implements IAddressService {
     @Override
     public Address getAddressByID(long id) {
         Address address = addressDAO.getByID(id);
-        if(address==null) {
-            logger.error("Address with id "+ id + " wasn't found!");
+        if (address == null) {
+            logger.error("Address with id " + id + " wasn't found!");
         }
         return address;
     }

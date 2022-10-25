@@ -18,6 +18,7 @@ public class UserAddressDAO extends MySQLDAO implements IUserAddressDAO {
     private static String removeQuery = "DElETE FROM UserAddress WHERE id = ?";
     private static String insertQuery = "INSERT INTO UserAddress VALUES(?,?,?)";
     private static String updateQuery = "UPDATE UserAddress SET address_id = ? WHERE id = ?";
+
     @Override
     public UserAddress getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
@@ -50,9 +51,9 @@ public class UserAddressDAO extends MySQLDAO implements IUserAddressDAO {
     @Override
     public void remove(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
-            ps.setLong(1,id);
-            if (ps.executeUpdate()>0) {
+        try (PreparedStatement ps = con.prepareStatement(removeQuery)) {
+            ps.setLong(1, id);
+            if (ps.executeUpdate() > 0) {
                 String message = String.format("UserAddress with ID: %d was removed successfully", id);
                 logger.info(message);
             }
@@ -73,11 +74,9 @@ public class UserAddressDAO extends MySQLDAO implements IUserAddressDAO {
             ps.setLong(2, object.getUserId());
             ps.setLong(3, object.getAddressId());
             ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            logger.error("Inserting record into the UserAddress Table Failed",e);
-        }
-        finally {
+        } catch (SQLException e) {
+            logger.error("Inserting record into the UserAddress Table Failed", e);
+        } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
 
@@ -87,14 +86,14 @@ public class UserAddressDAO extends MySQLDAO implements IUserAddressDAO {
     public void update(UserAddress object) {
         Connection con = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
-            ps.setLong(1,object.getAddressId());
-            ps.setLong(2,object.getUserAddressId());
-            if (ps.executeUpdate()>0) {
-                String message = String.format("UserAddress with ID: %d was updated successfully",object.getUserAddressId());
+            ps.setLong(1, object.getAddressId());
+            ps.setLong(2, object.getUserAddressId());
+            if (ps.executeUpdate() > 0) {
+                String message = String.format("UserAddress with ID: %d was updated successfully", object.getUserAddressId());
                 logger.info(message);
             }
         } catch (SQLException e) {
-            String message = String.format("UserAddress with ID: %d was not updated successfully",object.getUserAddressId());
+            String message = String.format("UserAddress with ID: %d was not updated successfully", object.getUserAddressId());
             logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);

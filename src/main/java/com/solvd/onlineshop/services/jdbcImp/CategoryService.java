@@ -16,10 +16,10 @@ public class CategoryService implements ICategoryService {
     @Override
     public Category getCategoryById(long id) {
         Category category = categoryDAO.getByID(id);
-        if(category==null) {
-            logger.error("category with id "+ id + " wasn't found!");
+        if (category == null) {
+            logger.error("category with id " + id + " wasn't found!");
         }
-        return  category;
+        return category;
     }
 
     @Override

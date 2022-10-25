@@ -14,10 +14,10 @@ public class OrderStatusService implements IOrderStatusService {
     @Override
     public OrderStatus getOrderStatusById(long id) {
         OrderStatus orderStatus = orderStatusDAO.getByID(id);
-        if(orderStatus==null) {
-            logger.error("Status with id "+ id + " wasn't found!");
+        if (orderStatus == null) {
+            logger.error("Status with id " + id + " wasn't found!");
         }
-        return  orderStatus;
+        return orderStatus;
     }
 
     @Override

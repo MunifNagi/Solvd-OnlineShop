@@ -18,10 +18,10 @@ public class DiscountService implements IDiscountService {
     @Override
     public Discount getDiscountByID(long id) {
         Discount discount = discountDAO.getByID(id);
-        if(discount==null) {
-            logger.error("Discount with id "+ id + " wasn't found!");
+        if (discount == null) {
+            logger.error("Discount with id " + id + " wasn't found!");
         }
-        return  discount;
+        return discount;
     }
 
     @Override

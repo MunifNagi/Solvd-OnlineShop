@@ -16,12 +16,13 @@ import java.util.List;
 public class PaymentService implements IPaymentService {
     private static final Logger logger = LogManager.getLogger(PaymentService.class);
     private final static SqlSessionFactory sessionFactory = MyBatisFactory.getSessionFactory();
+
     @Override
     public Payment getPaymentByID(long id) {
-        try(SqlSession session = sessionFactory.openSession()) {
+        try (SqlSession session = sessionFactory.openSession()) {
             IPaymentDAO paymentDAO = session.getMapper(IPaymentDAO.class);
             Payment payment = paymentDAO.getByID(id);
-            if(payment==null) {
+            if (payment == null) {
                 logger.error("Payment with id " + id + " wasn't found!");
             }
             return payment;
@@ -30,7 +31,7 @@ public class PaymentService implements IPaymentService {
 
     @Override
     public List<Payment> getAllPayments() {
-        try(SqlSession session = sessionFactory.openSession()) {
+        try (SqlSession session = sessionFactory.openSession()) {
             IPaymentDAO paymentDAO = session.getMapper(IPaymentDAO.class);
             return paymentDAO.getAllPayments();
         }
@@ -38,14 +39,14 @@ public class PaymentService implements IPaymentService {
 
     @Override
     public void removePayment(long id) {
-        try( SqlSession session = sessionFactory.openSession()) {
+        try (SqlSession session = sessionFactory.openSession()) {
             IPaymentDAO paymentDAO = session.getMapper(IPaymentDAO.class);
             try {
                 paymentDAO.remove(id);
                 session.commit();
                 logger.info("Payment was removed Successfully");
             } catch (Exception e) {
-                logger.error("Removing payment with id " + id + " wasn't successful",e);
+                logger.error("Removing payment with id " + id + " wasn't successful", e);
                 session.rollback();
             }
         }
@@ -53,14 +54,14 @@ public class PaymentService implements IPaymentService {
 
     @Override
     public void createPayment(Payment payment) {
-        try( SqlSession session = sessionFactory.openSession()){
+        try (SqlSession session = sessionFactory.openSession()) {
             IPaymentDAO paymentDAO = session.getMapper(IPaymentDAO.class);
             try {
                 paymentDAO.create(payment);
                 session.commit();
                 logger.info("Payment was inserted Successfully");
             } catch (Exception e) {
-                logger.error("Inserting Payment wasn't successful",e);
+                logger.error("Inserting Payment wasn't successful", e);
                 session.rollback();
             }
         }
@@ -68,14 +69,14 @@ public class PaymentService implements IPaymentService {
 
     @Override
     public void updatePayment(Payment payment) {
-        try( SqlSession session = sessionFactory.openSession()){
+        try (SqlSession session = sessionFactory.openSession()) {
             IPaymentDAO paymentDAO = session.getMapper(IPaymentDAO.class);
             try {
                 paymentDAO.update(payment);
                 session.commit();
                 logger.info("payment was updated Successfully");
             } catch (Exception e) {
-                logger.error(e.getMessage(),e);
+                logger.error(e.getMessage(), e);
                 session.rollback();
             }
         }
@@ -83,10 +84,10 @@ public class PaymentService implements IPaymentService {
 
     @Override
     public List<Payment> getPaymentsByUserId(long userId) {
-        try(SqlSession session = sessionFactory.openSession()) {
+        try (SqlSession session = sessionFactory.openSession()) {
             IPaymentDAO paymentDAO = session.getMapper(IPaymentDAO.class);
             List<Payment> payments = paymentDAO.getPaymentByUserId(userId);
-            if(payments==null) {
+            if (payments == null) {
                 logger.error("No Payments with user id " + userId + " were found!");
             }
             return payments;

@@ -27,7 +27,6 @@ public class XMLParser implements IParseXML {
 
     private static final Logger logger = LogManager.getLogger(XMLParser.class);
 
-
     private static List<User> readUserXML(String filePath) {
         List<User> usersList = new ArrayList<>();
         User user = null;
@@ -36,18 +35,17 @@ public class XMLParser implements IParseXML {
         boolean lastName = false;
         boolean middleName = false;
         boolean phone = false;
-        boolean email= false;
-        boolean password= false;
+        boolean email = false;
+        boolean password = false;
 
         try {
             XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-            XMLEventReader reader =
-                    xmlInputFactory.createXMLEventReader(new FileReader(filePath));
+            XMLEventReader reader = xmlInputFactory.createXMLEventReader(new FileReader(filePath));
 
-            while(reader.hasNext()) {
+            while (reader.hasNext()) {
                 XMLEvent event = reader.nextEvent();
 
-                switch(event.getEventType()) {
+                switch (event.getEventType()) {
 
                     case XMLStreamConstants.START_ELEMENT:
                         StartElement startElement = event.asStartElement();
@@ -63,14 +61,11 @@ public class XMLParser implements IParseXML {
                             lastName = true;
                         } else if (nodeName.equalsIgnoreCase("middle_name")) {
                             middleName = true;
-                        }
-                        else if (nodeName.equalsIgnoreCase("phone")) {
+                        } else if (nodeName.equalsIgnoreCase("phone")) {
                             phone = true;
-                        }
-                        else if (nodeName.equalsIgnoreCase("email")) {
+                        } else if (nodeName.equalsIgnoreCase("email")) {
                             email = true;
-                        }
-                        else if (nodeName.equalsIgnoreCase("password")) {
+                        } else if (nodeName.equalsIgnoreCase("password")) {
                             password = true;
                         }
                         break;
@@ -78,30 +73,30 @@ public class XMLParser implements IParseXML {
                     case XMLStreamConstants.CHARACTERS:
                         Characters characters = event.asCharacters();
                         if (id) {
-                            user.setUserId((Integer. parseInt(characters.getData())));
+                            user.setUserId((Integer.parseInt(characters.getData())));
                             id = false;
                         }
-                        if(firstName) {
+                        if (firstName) {
                             user.setFirstName(characters.getData());
                             firstName = false;
                         }
-                        if(lastName) {
+                        if (lastName) {
                             user.setLastName(characters.getData());
                             lastName = false;
                         }
-                        if(middleName) {
+                        if (middleName) {
                             user.setMiddleName(characters.getData());
                             middleName = false;
                         }
-                        if(phone) {
+                        if (phone) {
                             user.setPhone(characters.getData());
                             phone = false;
                         }
-                        if(email) {
+                        if (email) {
                             user.setEmail(characters.getData());
                             email = false;
                         }
-                        if(password) {
+                        if (password) {
                             user.setPassword(characters.getData());
                             password = false;
                         }
@@ -110,9 +105,9 @@ public class XMLParser implements IParseXML {
                     case XMLStreamConstants.END_ELEMENT:
                         EndElement endElement = event.asEndElement();
 
-                        if(endElement.getName().getLocalPart().equalsIgnoreCase("user")) {
+                        if (endElement.getName().getLocalPart().equalsIgnoreCase("user")) {
                             usersList.add(user);
-                            user= null;
+                            user = null;
                         }
                         break;
                 }
@@ -125,6 +120,7 @@ public class XMLParser implements IParseXML {
         usersList.forEach((parsedUser -> logger.info(parsedUser)));
         return usersList;
     }
+
     private static List<Order> readOrderXML(String filePath) {
         List<Order> orderList = new ArrayList<>();
         Order order = null;
@@ -133,21 +129,20 @@ public class XMLParser implements IParseXML {
         boolean productsQuantity = false;
         boolean date = false;
         boolean shippingAddressId = false;
-        boolean orderStatusId= false;
-        boolean paymentId= false;
-        boolean shipmentId= false;
+        boolean orderStatusId = false;
+        boolean paymentId = false;
+        boolean shipmentId = false;
         DateAdaptor dateAdaptor = new DateAdaptor();
 
 
         try {
             XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-            XMLEventReader reader =
-                    xmlInputFactory.createXMLEventReader(new FileReader(filePath));
+            XMLEventReader reader = xmlInputFactory.createXMLEventReader(new FileReader(filePath));
 
-            while(reader.hasNext()) {
+            while (reader.hasNext()) {
                 XMLEvent event = reader.nextEvent();
 
-                switch(event.getEventType()) {
+                switch (event.getEventType()) {
 
                     case XMLStreamConstants.START_ELEMENT:
                         StartElement startElement = event.asStartElement();
@@ -163,17 +158,13 @@ public class XMLParser implements IParseXML {
                             productsQuantity = true;
                         } else if (nodeName.equalsIgnoreCase("date")) {
                             date = true;
-                        }
-                        else if (nodeName.equalsIgnoreCase("shipping_address_id")) {
+                        } else if (nodeName.equalsIgnoreCase("shipping_address_id")) {
                             shippingAddressId = true;
-                        }
-                        else if (nodeName.equalsIgnoreCase("status_id")) {
+                        } else if (nodeName.equalsIgnoreCase("status_id")) {
                             orderStatusId = true;
-                        }
-                        else if (nodeName.equalsIgnoreCase("payment_id")) {
+                        } else if (nodeName.equalsIgnoreCase("payment_id")) {
                             paymentId = true;
-                        }
-                        else if (nodeName.equalsIgnoreCase("shipment_id")) {
+                        } else if (nodeName.equalsIgnoreCase("shipment_id")) {
                             shipmentId = true;
                         }
                         break;
@@ -181,35 +172,35 @@ public class XMLParser implements IParseXML {
                     case XMLStreamConstants.CHARACTERS:
                         Characters characters = event.asCharacters();
                         if (id) {
-                            order.setOrderId((Integer. parseInt(characters.getData())));
+                            order.setOrderId((Integer.parseInt(characters.getData())));
                             id = false;
                         }
-                        if(totalPrice) {
+                        if (totalPrice) {
                             order.setTotalPrice(Double.parseDouble(characters.getData()));
                             totalPrice = false;
                         }
-                        if(productsQuantity) {
-                            order.setProductsQuantity((Integer. parseInt(characters.getData())));
+                        if (productsQuantity) {
+                            order.setProductsQuantity((Integer.parseInt(characters.getData())));
                             productsQuantity = false;
                         }
-                        if(date) {
+                        if (date) {
                             order.setOrderDate(dateAdaptor.unmarshal(characters.getData()));
                             date = false;
                         }
-                        if(shippingAddressId) {
-                            order.setShippingAddressId((Integer. parseInt(characters.getData())));
+                        if (shippingAddressId) {
+                            order.setShippingAddressId((Integer.parseInt(characters.getData())));
                             shippingAddressId = false;
                         }
-                        if(orderStatusId) {
-                            order.setOrderStatusId((Integer. parseInt(characters.getData())));
+                        if (orderStatusId) {
+                            order.setOrderStatusId((Integer.parseInt(characters.getData())));
                             orderStatusId = false;
                         }
-                        if(paymentId) {
-                            order.setPaymentId((Integer. parseInt(characters.getData())));
+                        if (paymentId) {
+                            order.setPaymentId((Integer.parseInt(characters.getData())));
                             paymentId = false;
                         }
-                        if(shipmentId) {
-                            order.setShipmentId((Integer. parseInt(characters.getData())));
+                        if (shipmentId) {
+                            order.setShipmentId((Integer.parseInt(characters.getData())));
                             shipmentId = false;
                         }
                         break;
@@ -217,9 +208,9 @@ public class XMLParser implements IParseXML {
                     case XMLStreamConstants.END_ELEMENT:
                         EndElement endElement = event.asEndElement();
 
-                        if(endElement.getName().getLocalPart().equalsIgnoreCase("order")) {
+                        if (endElement.getName().getLocalPart().equalsIgnoreCase("order")) {
                             orderList.add(order);
-                            order= null;
+                            order = null;
                         }
                         break;
                 }
@@ -240,18 +231,17 @@ public class XMLParser implements IParseXML {
         boolean country = false;
         boolean state = false;
         boolean city = false;
-        boolean zipcode= false;
-        boolean street= false;
+        boolean zipcode = false;
+        boolean street = false;
 
         try {
             XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-            XMLEventReader reader =
-                    xmlInputFactory.createXMLEventReader(new FileReader(filePath));
+            XMLEventReader reader = xmlInputFactory.createXMLEventReader(new FileReader(filePath));
 
-            while(reader.hasNext()) {
+            while (reader.hasNext()) {
                 XMLEvent event = reader.nextEvent();
 
-                switch(event.getEventType()) {
+                switch (event.getEventType()) {
 
                     case XMLStreamConstants.START_ELEMENT:
                         StartElement startElement = event.asStartElement();
@@ -266,41 +256,38 @@ public class XMLParser implements IParseXML {
                             country = true;
                         } else if (nodeName.equalsIgnoreCase("state")) {
                             state = true;
-                        }
-                        else if (nodeName.equalsIgnoreCase("city")) {
+                        } else if (nodeName.equalsIgnoreCase("city")) {
                             city = true;
-                        }
-                        else if (nodeName.equalsIgnoreCase("zipcode")) {
+                        } else if (nodeName.equalsIgnoreCase("zipcode")) {
                             zipcode = true;
-                        }
-                        else if (nodeName.equalsIgnoreCase("street")) {
+                        } else if (nodeName.equalsIgnoreCase("street")) {
                             street = true;
                         }
                         break;
 
                     case XMLStreamConstants.CHARACTERS:
                         Characters characters = event.asCharacters();
-                        if(id) {
+                        if (id) {
                             address.setaddressId(Integer.parseInt(characters.getData()));
                             id = false;
                         }
-                        if(country) {
+                        if (country) {
                             address.setCountry(characters.getData());
                             country = false;
                         }
-                        if(state) {
+                        if (state) {
                             address.setState(characters.getData());
                             state = false;
                         }
-                        if(city) {
+                        if (city) {
                             address.setCity(characters.getData());
                             city = false;
                         }
-                        if(zipcode) {
+                        if (zipcode) {
                             address.setZipcode(characters.getData());
                             zipcode = false;
                         }
-                        if(street) {
+                        if (street) {
                             address.setStreet(characters.getData());
                             street = false;
                         }
@@ -309,9 +296,9 @@ public class XMLParser implements IParseXML {
                     case XMLStreamConstants.END_ELEMENT:
                         EndElement endElement = event.asEndElement();
 
-                        if(endElement.getName().getLocalPart().equalsIgnoreCase("address")) {
+                        if (endElement.getName().getLocalPart().equalsIgnoreCase("address")) {
                             addressList.add(address);
-                            address= null;
+                            address = null;
                         }
                         break;
                 }
@@ -333,20 +320,19 @@ public class XMLParser implements IParseXML {
         boolean name = false;
         boolean price = false;
         boolean description = false;
-        boolean categoryId= false;
-        boolean weight= false;
-        boolean inStock= false;
-        boolean discountId= false;
-        boolean manufacturerId= false;
+        boolean categoryId = false;
+        boolean weight = false;
+        boolean inStock = false;
+        boolean discountId = false;
+        boolean manufacturerId = false;
         try {
             XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-            XMLEventReader reader =
-                    xmlInputFactory.createXMLEventReader(new FileReader(filePath));
+            XMLEventReader reader = xmlInputFactory.createXMLEventReader(new FileReader(filePath));
 
-            while(reader.hasNext()) {
+            while (reader.hasNext()) {
                 XMLEvent event = reader.nextEvent();
 
-                switch(event.getEventType()) {
+                switch (event.getEventType()) {
 
                     case XMLStreamConstants.START_ELEMENT:
                         StartElement startElement = event.asStartElement();
@@ -377,39 +363,39 @@ public class XMLParser implements IParseXML {
 
                     case XMLStreamConstants.CHARACTERS:
                         Characters characters = event.asCharacters();
-                        if(id) {
+                        if (id) {
                             product.setProductId(Integer.parseInt(characters.getData()));
                             id = false;
                         }
-                        if(name) {
+                        if (name) {
                             product.setProductName(characters.getData());
                             name = false;
                         }
-                        if(price) {
+                        if (price) {
                             product.setPrice(Double.parseDouble(characters.getData()));
                             price = false;
                         }
-                        if(description) {
+                        if (description) {
                             product.setDescription(characters.getData());
                             description = false;
                         }
-                        if(categoryId) {
+                        if (categoryId) {
                             product.setCategoryId(Integer.parseInt(characters.getData()));
                             categoryId = false;
                         }
-                        if(weight) {
+                        if (weight) {
                             product.setWeight(Double.parseDouble(characters.getData()));
                             weight = false;
                         }
-                        if(inStock) {
+                        if (inStock) {
                             product.setInStock(Integer.parseInt(characters.getData()));
                             inStock = false;
                         }
-                        if(discountId) {
+                        if (discountId) {
                             product.setDiscountId(Integer.parseInt(characters.getData()));
                             discountId = false;
                         }
-                        if(manufacturerId) {
+                        if (manufacturerId) {
                             product.setManufacturerId(Integer.parseInt(characters.getData()));
                             manufacturerId = false;
                         }
@@ -418,9 +404,9 @@ public class XMLParser implements IParseXML {
                     case XMLStreamConstants.END_ELEMENT:
                         EndElement endElement = event.asEndElement();
 
-                        if(endElement.getName().getLocalPart().equalsIgnoreCase("product")) {
+                        if (endElement.getName().getLocalPart().equalsIgnoreCase("product")) {
                             productList.add(product);
-                            product= null;
+                            product = null;
                         }
                         break;
                 }
@@ -436,28 +422,28 @@ public class XMLParser implements IParseXML {
 
     @Override
     public <T> List<T> readXML(String xmlFile, Class<T> classRef) {
-        switch(classRef.getSimpleName()) {
+        switch (classRef.getSimpleName()) {
             case "Product":
-                if(!validate(xmlFile,productSchema,Product.class)) {
+                if (!validate(xmlFile, productSchema, Product.class)) {
                     logger.error("The document provided is not valid");
                     return new ArrayList<>();
                 }
                 return (List<T>) readProductXML(xmlFile);
 
             case "Address":
-                if(!validate(xmlFile,addressSchema,Address.class)) {
+                if (!validate(xmlFile, addressSchema, Address.class)) {
                     logger.error("The document provided is not valid");
                     return new ArrayList<>();
                 }
                 return (List<T>) readAddressXML(xmlFile);
             case "User":
-                if(!validate(xmlFile,userSchema,User.class)) {
+                if (!validate(xmlFile, userSchema, User.class)) {
                     logger.error("The document provided is not valid");
                     return new ArrayList<>();
                 }
                 return (List<T>) readUserXML(xmlFile);
             case "Order":
-                if(!validate(xmlFile,orderSchema,Order.class)) {
+                if (!validate(xmlFile, orderSchema, Order.class)) {
                     logger.error("The document provided is not valid");
                     return new ArrayList<>();
                 }
@@ -485,9 +471,10 @@ public class XMLParser implements IParseXML {
         } catch (FileNotFoundException e) {
             logger.error("FNFE error");
         } catch (SAXException e) {
-            logger.error("SAXException error",e.getMessage());
+            logger.error("SAXException error", e.getMessage());
         } catch (IOException e) {
-            logger.error("IO error");;
+            logger.error("IO error");
+            ;
         }
         return false;
     }

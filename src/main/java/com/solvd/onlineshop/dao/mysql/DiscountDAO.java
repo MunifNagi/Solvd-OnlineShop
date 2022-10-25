@@ -21,6 +21,7 @@ public class DiscountDAO extends MySQLDAO implements IDiscountDAO {
     private static String insertQuery = "INSERT INTO Discount VALUES(?,?,?)";
     private static String updateQuery = "UPDATE Discount SET name = ?, percentage = ? WHERE id = ?";
     private static String readAllQuery = "SELECT * FROM Discount";
+
     @Override
     public Discount getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
@@ -53,9 +54,9 @@ public class DiscountDAO extends MySQLDAO implements IDiscountDAO {
     @Override
     public void remove(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
-            ps.setLong(1,id);
-            if (ps.executeUpdate()>0) {
+        try (PreparedStatement ps = con.prepareStatement(removeQuery)) {
+            ps.setLong(1, id);
+            if (ps.executeUpdate() > 0) {
                 String message = String.format("Discount with ID: %d was removed successfully", id);
                 logger.info(message);
             }
@@ -74,13 +75,11 @@ public class DiscountDAO extends MySQLDAO implements IDiscountDAO {
         try (PreparedStatement ps = con.prepareStatement(insertQuery)) {
             ps.setLong(1, discount.getDiscountId());
             ps.setString(2, discount.getName());
-            ps.setDouble(3,discount.getPercentage());
+            ps.setDouble(3, discount.getPercentage());
             ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            logger.error("Inserting record into the Discount Table Failed",e);
-        }
-        finally {
+        } catch (SQLException e) {
+            logger.error("Inserting record into the Discount Table Failed", e);
+        } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
 
@@ -90,15 +89,15 @@ public class DiscountDAO extends MySQLDAO implements IDiscountDAO {
     public void update(Discount discount) {
         Connection con = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
-            ps.setString(1,discount.getName());
-            ps.setDouble(2,discount.getPercentage());
-            ps.setLong(3,discount.getDiscountId());
-            if (ps.executeUpdate()>0) {
-                String message = String.format("Discount with ID: %d was updated successfully",discount.getDiscountId());
+            ps.setString(1, discount.getName());
+            ps.setDouble(2, discount.getPercentage());
+            ps.setLong(3, discount.getDiscountId());
+            if (ps.executeUpdate() > 0) {
+                String message = String.format("Discount with ID: %d was updated successfully", discount.getDiscountId());
                 logger.info(message);
             }
         } catch (SQLException e) {
-            String message = String.format("Discount with ID: %d was not updated successfully",discount.getDiscountId());
+            String message = String.format("Discount with ID: %d was not updated successfully", discount.getDiscountId());
             logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);

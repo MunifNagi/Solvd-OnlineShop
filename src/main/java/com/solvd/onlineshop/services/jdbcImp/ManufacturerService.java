@@ -16,10 +16,10 @@ public class ManufacturerService implements IManufacturerService {
     @Override
     public Manufacturer getManufacturerById(long id) {
         Manufacturer manufacturer = manufacturerDAO.getByID(id);
-        if(manufacturer==null) {
-            logger.error("category with id "+ id + " wasn't found!");
+        if (manufacturer == null) {
+            logger.error("category with id " + id + " wasn't found!");
         }
-        return  manufacturer;
+        return manufacturer;
     }
 
     @Override

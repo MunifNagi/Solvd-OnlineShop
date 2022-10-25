@@ -54,9 +54,9 @@ public class ManufacturerDAO extends MySQLDAO implements IManufacturerDAO {
     @Override
     public void remove(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
-            ps.setLong(1,id);
-            if (ps.executeUpdate()>0) {
+        try (PreparedStatement ps = con.prepareStatement(removeQuery)) {
+            ps.setLong(1, id);
+            if (ps.executeUpdate() > 0) {
                 String message = String.format("Manufacturer with ID: %d was removed successfully", id);
                 logger.info(message);
             }
@@ -74,13 +74,11 @@ public class ManufacturerDAO extends MySQLDAO implements IManufacturerDAO {
         try (PreparedStatement ps = con.prepareStatement(insertQuery)) {
             ps.setLong(1, manufacturer.getManufacturerId());
             ps.setString(2, manufacturer.getManufacturerName());
-            ps.setString(3,manufacturer.getManufacturerPhone());
+            ps.setString(3, manufacturer.getManufacturerPhone());
             ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            logger.error("Inserting record into the Manufacturer Table Failed",e);
-        }
-        finally {
+        } catch (SQLException e) {
+            logger.error("Inserting record into the Manufacturer Table Failed", e);
+        } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
 
@@ -90,16 +88,16 @@ public class ManufacturerDAO extends MySQLDAO implements IManufacturerDAO {
     public void update(Manufacturer manufacturer) {
         Connection con = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
-            ps.setString(1,manufacturer.getManufacturerName());
-            ps.setString(2,manufacturer.getManufacturerPhone());
-            ps.setLong(3,manufacturer.getManufacturerId());
+            ps.setString(1, manufacturer.getManufacturerName());
+            ps.setString(2, manufacturer.getManufacturerPhone());
+            ps.setLong(3, manufacturer.getManufacturerId());
 
-            if (ps.executeUpdate()>0) {
-                String message = String.format("Manufacturer with ID: %d was updated successfully",manufacturer.getManufacturerId());
+            if (ps.executeUpdate() > 0) {
+                String message = String.format("Manufacturer with ID: %d was updated successfully", manufacturer.getManufacturerId());
                 logger.info(message);
             }
         } catch (SQLException e) {
-            String message = String.format("Manufacturer with ID: %d was not updated successfully",manufacturer.getManufacturerId());
+            String message = String.format("Manufacturer with ID: %d was not updated successfully", manufacturer.getManufacturerId());
             logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);

@@ -14,6 +14,7 @@ import java.util.Date;
 public class DateAdaptor extends XmlAdapter<String, Date> {
     private static final Logger logger = LogManager.getLogger(DateAdaptor.class);
     private static final String CUSTOM_FORMAT_STRING = "yyyy-MM-dd";
+
     @Override
     public Date unmarshal(String s) {
         try {

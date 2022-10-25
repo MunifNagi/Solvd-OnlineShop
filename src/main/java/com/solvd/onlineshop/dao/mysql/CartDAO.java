@@ -18,6 +18,7 @@ public class CartDAO extends MySQLDAO implements ICartDAO {
     private static String removeQuery = "DElETE FROM Cart WHERE id = ?";
     private static String insertQuery = "INSERT INTO Cart VALUES(?,?,?,?,?,?)";
     private static String updateQuery = "UPDATE Cart SET quantity = ? WHERE id = ? AND product_id = ?";
+
     @Override
     public Cart getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
@@ -53,9 +54,9 @@ public class CartDAO extends MySQLDAO implements ICartDAO {
     @Override
     public void remove(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
-            ps.setLong(1,id);
-            if (ps.executeUpdate()>0) {
+        try (PreparedStatement ps = con.prepareStatement(removeQuery)) {
+            ps.setLong(1, id);
+            if (ps.executeUpdate() > 0) {
                 String message = String.format("Cart with ID: %d was removed successfully", id);
                 logger.info(message);
             }
@@ -79,11 +80,9 @@ public class CartDAO extends MySQLDAO implements ICartDAO {
             ps.setDouble(5, cart.getPrice());
             ps.setDouble(6, cart.getTotal());
             ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            logger.error("Inserting record into the Cart Table Failed",e);
-        }
-        finally {
+        } catch (SQLException e) {
+            logger.error("Inserting record into the Cart Table Failed", e);
+        } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
 
@@ -94,15 +93,15 @@ public class CartDAO extends MySQLDAO implements ICartDAO {
     public void update(Cart cart) {
         Connection con = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
-            ps.setLong(1,cart.getQuantity());
-            ps.setLong(2,cart.getCartId());
-            ps.setLong(3,cart.getProductId());
-            if (ps.executeUpdate()>0) {
-                String message = String.format("Cart with ID: %d was updated successfully",cart.getCartId());
+            ps.setLong(1, cart.getQuantity());
+            ps.setLong(2, cart.getCartId());
+            ps.setLong(3, cart.getProductId());
+            if (ps.executeUpdate() > 0) {
+                String message = String.format("Cart with ID: %d was updated successfully", cart.getCartId());
                 logger.info(message);
             }
         } catch (SQLException e) {
-            String message = String.format("Cart with ID: %d was not updated successfully",cart.getCartId());
+            String message = String.format("Cart with ID: %d was not updated successfully", cart.getCartId());
             logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);

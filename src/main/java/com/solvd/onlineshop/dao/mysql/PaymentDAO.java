@@ -22,6 +22,7 @@ public class PaymentDAO extends MySQLDAO implements IPaymentDAO {
     private static String updateQuery = "UPDATE Payment SET type = ?, amount= ? WHERE id = ?";
     private static String readByUserIdQuery = "Select * FROM Payment WHERE user_id = ?";
     private static String readAllQuery = "SELECT * FROM Payment";
+
     @Override
     public Payment getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
@@ -56,9 +57,9 @@ public class PaymentDAO extends MySQLDAO implements IPaymentDAO {
     @Override
     public void remove(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
-            ps.setLong(1,id);
-            if (ps.executeUpdate()>0) {
+        try (PreparedStatement ps = con.prepareStatement(removeQuery)) {
+            ps.setLong(1, id);
+            if (ps.executeUpdate() > 0) {
                 String message = String.format("Payment with ID: %d was removed successfully", id);
                 logger.info(message);
             }
@@ -80,11 +81,9 @@ public class PaymentDAO extends MySQLDAO implements IPaymentDAO {
             ps.setDate(4, new java.sql.Date(payment.getDate().getTime()));
             ps.setLong(5, payment.getUserId());
             ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            logger.error("Inserting record into the Payment Table Failed",e);
-        }
-        finally {
+        } catch (SQLException e) {
+            logger.error("Inserting record into the Payment Table Failed", e);
+        } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
 
@@ -97,12 +96,12 @@ public class PaymentDAO extends MySQLDAO implements IPaymentDAO {
             ps.setString(1, payment.getType());
             ps.setDouble(2, payment.getAmount());
             ps.setLong(3, payment.getPaymentId());
-            if (ps.executeUpdate()>0) {
-                String message = String.format("Payment with ID: %d was updated successfully",payment.getPaymentId());
+            if (ps.executeUpdate() > 0) {
+                String message = String.format("Payment with ID: %d was updated successfully", payment.getPaymentId());
                 logger.info(message);
             }
         } catch (SQLException e) {
-            String message = String.format("Payment with ID: %d was not updated successfully",payment.getPaymentId());
+            String message = String.format("Payment with ID: %d was not updated successfully", payment.getPaymentId());
             logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);

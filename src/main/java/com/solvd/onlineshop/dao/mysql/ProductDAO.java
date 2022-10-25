@@ -22,6 +22,7 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
     private static String readAllQuery = "SELECT * FROM Product";
     private static String readByManuIdQuery = "select * from Product where manufacturer_id = ?";
     private static String readByCategoryIdQuery = "select * from Product where category_id = ?";
+
     @Override
     public Product getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
@@ -58,11 +59,11 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
     }
 
     @Override
-    public void remove(long id){
+    public void remove(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
-            ps.setLong(1,id);
-            if (ps.executeUpdate()>0) {
+        try (PreparedStatement ps = con.prepareStatement(removeQuery)) {
+            ps.setLong(1, id);
+            if (ps.executeUpdate() > 0) {
                 String message = String.format("Product with ID: %d was removed successfully", id);
                 logger.info(message);
             }
@@ -89,11 +90,9 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
             ps.setLong(8, product.getDiscountId());
             ps.setLong(9, product.getManufacturerId());
             ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            logger.error("Inserting record into the Product Table Failed",e);
-        }
-        finally {
+        } catch (SQLException e) {
+            logger.error("Inserting record into the Product Table Failed", e);
+        } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
     }
@@ -102,17 +101,17 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
     public void update(Product product) {
         Connection con = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
-            ps.setDouble(1,product.getPrice());
-            ps.setString(2,product.getDescription());
-            ps.setLong(3,product.getCategoryId());
-            ps.setLong(4,product.getInStock());
-            ps.setLong(5,product.getProductId());
-            if (ps.executeUpdate()>0) {
-                String message = String.format("Product with ID: %d was updated successfully",product.getProductId());
+            ps.setDouble(1, product.getPrice());
+            ps.setString(2, product.getDescription());
+            ps.setLong(3, product.getCategoryId());
+            ps.setLong(4, product.getInStock());
+            ps.setLong(5, product.getProductId());
+            if (ps.executeUpdate() > 0) {
+                String message = String.format("Product with ID: %d was updated successfully", product.getProductId());
                 logger.info(message);
             }
         } catch (SQLException e) {
-            String message = String.format("Product with ID: %d was not updated successfully",product.getProductId());
+            String message = String.format("Product with ID: %d was not updated successfully", product.getProductId());
             logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);

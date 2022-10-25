@@ -22,8 +22,9 @@ public class ReportDAO extends MySQLDAO implements IReportDAO {
     private static String insertQuery = "INSERT INTO Report VALUES(?,?,?,?)";
     private static String updateQuery = "UPDATE Report SET user_id = ?, product_id = ?, order_id = ? WHERE id = ?";
     private static String readAllQuery = "SELECT * FROM Report";
-    private static String readByUserIdQuery = "SELECT * FROM Report WHERE user_id = ?" ;
+    private static String readByUserIdQuery = "SELECT * FROM Report WHERE user_id = ?";
     private static String readByProductIdQuery = "SELECT * FROM Report WHERE product_id = ?";
+
     @Override
     public Report getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
@@ -57,9 +58,9 @@ public class ReportDAO extends MySQLDAO implements IReportDAO {
     @Override
     public void remove(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
-            ps.setLong(1,id);
-            if (ps.executeUpdate()>0) {
+        try (PreparedStatement ps = con.prepareStatement(removeQuery)) {
+            ps.setLong(1, id);
+            if (ps.executeUpdate() > 0) {
                 String message = String.format("Report with ID: %d was removed successfully", id);
                 logger.info(message);
             }
@@ -81,11 +82,9 @@ public class ReportDAO extends MySQLDAO implements IReportDAO {
             ps.setLong(3, report.getProductId());
             ps.setLong(4, report.getOrderId());
             ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            logger.error("Inserting record into the Report Table Failed",e);
-        }
-        finally {
+        } catch (SQLException e) {
+            logger.error("Inserting record into the Report Table Failed", e);
+        } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
 
@@ -95,16 +94,16 @@ public class ReportDAO extends MySQLDAO implements IReportDAO {
     public void update(Report report) {
         Connection con = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
-            ps.setLong(1,report.getUserId());
-            ps.setLong(2,report.getProductId());
-            ps.setLong(3,report.getOrderId());
-            ps.setLong(4,report.getReportId());
-            if (ps.executeUpdate()>0) {
-                String message = String.format("Report with ID: %d was updated successfully",report.getReportId());
+            ps.setLong(1, report.getUserId());
+            ps.setLong(2, report.getProductId());
+            ps.setLong(3, report.getOrderId());
+            ps.setLong(4, report.getReportId());
+            if (ps.executeUpdate() > 0) {
+                String message = String.format("Report with ID: %d was updated successfully", report.getReportId());
                 logger.info(message);
             }
         } catch (SQLException e) {
-            String message = String.format("report with ID: %d was not updated successfully",report.getReportId());
+            String message = String.format("report with ID: %d was not updated successfully", report.getReportId());
             logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);

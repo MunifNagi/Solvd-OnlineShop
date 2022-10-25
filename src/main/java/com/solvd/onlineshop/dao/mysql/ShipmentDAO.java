@@ -20,6 +20,7 @@ public class ShipmentDAO extends MySQLDAO implements IShipmentDAO {
     private static String removeQuery = "DElETE FROM Shipment WHERE id = ?";
     private static String insertQuery = "INSERT INTO Shipment VALUES(?,?,?,?)";
     private static String updateQuery = "UPDATE Shipment SET shipper_id = ? WHERE id = ?";
+
     @Override
     public Shipment getByID(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
@@ -54,9 +55,9 @@ public class ShipmentDAO extends MySQLDAO implements IShipmentDAO {
     @Override
     public void remove(long id) {
         Connection con = ConnectionPool.getInstance().getConnection();
-        try(PreparedStatement ps =con.prepareStatement(removeQuery)) {
-            ps.setLong(1,id);
-            if (ps.executeUpdate()>0) {
+        try (PreparedStatement ps = con.prepareStatement(removeQuery)) {
+            ps.setLong(1, id);
+            if (ps.executeUpdate() > 0) {
                 String message = String.format("Shipment with ID: %d was removed successfully", id);
                 logger.info(message);
             }
@@ -78,11 +79,9 @@ public class ShipmentDAO extends MySQLDAO implements IShipmentDAO {
             ps.setDate(3, new java.sql.Date(shipment.getDate().getTime()));
             ps.setLong(4, shipment.getShipperId());
             ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            logger.error("Inserting record into the Shipment Table Failed",e);
-        }
-        finally {
+        } catch (SQLException e) {
+            logger.error("Inserting record into the Shipment Table Failed", e);
+        } finally {
             ConnectionPool.getInstance().returnConnection(con);
         }
 
@@ -92,14 +91,14 @@ public class ShipmentDAO extends MySQLDAO implements IShipmentDAO {
     public void update(Shipment shipment) {
         Connection con = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement ps = con.prepareStatement(updateQuery)) {
-            ps.setLong(1,shipment.getShipperId());
-            ps.setLong(2,shipment.getShipmentId());
-            if (ps.executeUpdate()>0) {
-                String message = String.format("Shipment with ID: %d was updated successfully",shipment.getShipmentId());
+            ps.setLong(1, shipment.getShipperId());
+            ps.setLong(2, shipment.getShipmentId());
+            if (ps.executeUpdate() > 0) {
+                String message = String.format("Shipment with ID: %d was updated successfully", shipment.getShipmentId());
                 logger.info(message);
             }
         } catch (SQLException e) {
-            String message = String.format("Shipment with ID: %d was not updated successfully",shipment.getShipmentId());
+            String message = String.format("Shipment with ID: %d was not updated successfully", shipment.getShipmentId());
             logger.error(message);
         } finally {
             ConnectionPool.getInstance().returnConnection(con);

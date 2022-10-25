@@ -21,7 +21,7 @@ public class ConnectionPool {
     private static ConnectionPool pool;
     private static List<Connection> connectionPool = new ArrayList<>(5);
 
-    private ConnectionPool(){
+    private ConnectionPool() {
         Properties properties = new Properties();
         try {
             properties.load(new FileReader("src/main/resources/sqlconfig.properties"));
@@ -32,17 +32,17 @@ public class ConnectionPool {
                 connectionPool.add(DriverManager.getConnection(url, user, password));
             }
         } catch (SQLException e) {
-            logger.error("connection to database failed",e);
+            logger.error("connection to database failed", e);
         } catch (FileNotFoundException fnfe) {
-            logger.error("connection to database failed, could not find properties file",fnfe);
+            logger.error("connection to database failed, could not find properties file", fnfe);
         } catch (IOException ioe) {
-            logger.error("connection to database failed, could not load properties file",ioe);
+            logger.error("connection to database failed, could not load properties file", ioe);
         }
     }
 
 
-    public static ConnectionPool getInstance(){
-        if(pool == null) {
+    public static ConnectionPool getInstance() {
+        if (pool == null) {
             pool = new ConnectionPool();
         }
         return pool;
@@ -51,7 +51,7 @@ public class ConnectionPool {
     public synchronized Connection getConnection() {
         if (connectionPool.isEmpty()) {
             throw new InvalidDataBaseConnection("There are no more available connections!");
-            }
+        }
         Connection connection = connectionPool.remove(connectionPool.size() - 1);
         return connection;
     }
