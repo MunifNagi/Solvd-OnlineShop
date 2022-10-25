@@ -28,4 +28,17 @@ public class DateAdaptor extends XmlAdapter<String, Date> {
     public String marshal(Date date) {
         return new SimpleDateFormat(CUSTOM_FORMAT_STRING).format(date);
     }
+
+    public static Date StringToDate(String s) {
+
+        Date result = null;
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            result = dateFormat.parse(s);
+        } catch (ParseException e) {
+            e.printStackTrace();
+
+        }
+        return result;
+    }
 }

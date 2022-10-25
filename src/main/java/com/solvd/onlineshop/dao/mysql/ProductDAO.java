@@ -133,7 +133,7 @@ public class ProductDAO extends MySQLDAO implements IProductDAO {
                 double price = rs.getDouble("price");
                 String description = rs.getString("description");
                 long categoryId = rs.getLong("category_id");
-                double weight = rs.getDouble("weights");
+                double weight = rs.getDouble("weight");
                 int inStock = rs.getInt("in_stock");
                 long discountId = rs.getInt("discount_id");
                 long manufacturerId = rs.getInt("manufacturer_id");

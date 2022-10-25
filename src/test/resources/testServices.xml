@@ -1,0 +1,16 @@
+<suite name="Testing services" verbose="1" parallel="classes" thread-count="5">
+    <test name="jdbc">
+        <classes>
+            <class name="com.solvd.onlineshop.jdbc.ProductServiceTest"/>
+            <class name="com.solvd.onlineshop.jdbc.CategoryServiceTest"/>
+            <class name="com.solvd.onlineshop.jdbc.UserServiceTest"/>
+            <class name="com.solvd.onlineshop.jdbc.ManufacturerServiceTest"/>
+            <class name="com.solvd.onlineshop.jdbc.DiscountServiceTest"/>
+        </classes>
+    </test>
+    <test name="myBatis">
+        <classes>
+            <class name="com.solvd.onlineshop.myBatis.UserServiceTest"/>
+        </classes>
+    </test>
+</suite>

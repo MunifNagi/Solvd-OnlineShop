@@ -28,7 +28,6 @@ public class JAXBHandler implements IParseXML {
     }
 
     public <T> List<T> readXML(String xmlPath, Class<T> classRef) {
-
         Source source = new StreamSource(new File(xmlPath));
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(classRef, EntityList.class);
@@ -38,6 +37,8 @@ public class JAXBHandler implements IParseXML {
             return entityList;
         } catch (JAXBException e) {
             logger.error(e.getMessage());
+        } catch (NullPointerException npe) {
+            logger.error(npe.getMessage());
         }
         return new ArrayList<>();
     }

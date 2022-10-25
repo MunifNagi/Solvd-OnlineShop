@@ -34,7 +34,6 @@ CREATE TABLE IF NOT EXISTS `OnlineShop`.`User` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-
 -- -----------------------------------------------------
 -- Table `OnlineShop`.`Category`
 -- -----------------------------------------------------
@@ -55,7 +54,7 @@ DROP TABLE IF EXISTS `OnlineShop`.`Discount` ;
 CREATE TABLE IF NOT EXISTS `OnlineShop`.`Discount` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  `percentage` DECIMAL(2) NOT NULL,
+  `percentage` DECIMAL(5,2) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -392,7 +391,7 @@ VALUES (2,'Laurie','Evans',null,'929-000-0021','laurie@email.com','laurie1234');
 Insert Into OnlineShop.Payment Values(1,"VISA",1109,curdate(),2);
 Insert Into OnlineShop.Payment Values(2,"MasterCard",900.34,curdate(),1);
 INSERT INTO OnlineShop.Shipment VALUES (1,"ABCTRACKING123",curdate(),1);
-INSERT INTO OnlineShop.Shipment VALUES (2,"ABCTRACKING345",curdate(),2);
 INSERT INTO OnlineShop.Category VALUES (1,"Tech");
 INSERT INTO OnlineShop.Manufacturer VALUES (1,"Apple","347-200-1000");
-INSERT INTO OnlineShop.Discount VALUES(1,"25%",0.25);
+INSERT INTO OnlineShop.Discount VALUES(1,"40%",0.40);
+Select * FROM OnlineShop.Manufacturer;

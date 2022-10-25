@@ -17,10 +17,10 @@ public class UserService implements IUserService {
 
     public User getUserByID(long id) {
         User u = userDAO.getByID(id);
-        if(u==null) {
-            logger.error("User with id "+ id + " wasn't found!");
+        if (u == null) {
+            logger.error("User with id " + id + " wasn't found!");
         }
-        return  u;
+        return u;
     }
 
     public void createUser(User user) {

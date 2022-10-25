@@ -7,6 +7,8 @@ import com.solvd.onlineshop.services.IManufacturerService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
+
 public class ManufacturerService implements IManufacturerService {
     private IManufacturerDAO manufacturerDAO = new ManufacturerDAO();
     private static final Logger logger = LogManager.getLogger(ManufacturerService.class);
@@ -33,5 +35,12 @@ public class ManufacturerService implements IManufacturerService {
     @Override
     public void removeManufacturer(long id) {
         this.manufacturerDAO.remove(id);
+    }
+
+    @Override
+    public List<Manufacturer> getAllManufacturers() {
+        List<Manufacturer> manufacturers = null;
+        manufacturers = manufacturerDAO.getAllManufacturers();
+        return manufacturers;
     }
 }

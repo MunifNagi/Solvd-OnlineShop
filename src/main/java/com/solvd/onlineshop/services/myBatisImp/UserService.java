@@ -26,6 +26,7 @@ public class UserService implements IUserService {
             if(u==null) {
                 logger.error("User with id " + id + " wasn't found!");
             }
+            logger.info("User was removed Successfully");
             return u;
         }
     }

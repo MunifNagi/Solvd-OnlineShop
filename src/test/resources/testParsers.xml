@@ -1,0 +1,16 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Testing parsers" verbose="1" parallel="tests" thread-count="5">
+    <test name="XML">
+        <classes>
+            <class name="com.solvd.onlineshop.xml.AbstractXML"/>
+            <class name="com.solvd.onlineshop.xml.JAXBTest"/>
+            <class name="com.solvd.onlineshop.xml.XMLParserTest"/>
+        </classes>
+    </test>
+    <test name="JSON">
+        <classes>
+            <class name="com.solvd.onlineshop.json.AbstractJson"/>
+            <class name="com.solvd.onlineshop.json.JsonMapperTest"/>
+        </classes>
+    </test>
+</suite>
